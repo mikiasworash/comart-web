@@ -1,18 +1,59 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { useRegisterMutation } from "../../redux/slices/usersApiSlice";
+import { setCredentials } from "../../redux/slices/authSlice";
+import { toast } from "react-toastify";
+import Spinner from "../components/Spinner";
 
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
-  const [phonenumber, setPhonenumber] = useState("");
+  const [phoneNumber, setPhonenumber] = useState("");
   const [role, setRole] = useState("buyer");
+
+  const AcceptTermsRef = useRef();
+
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const [register, { isLoading }] = useRegisterMutation();
+
+  useEffect(() => {
+    if (userInfo) {
+      router.replace("/");
+    }
+  }, [router, userInfo]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    console.log("sign up");
+    const acceptTerms = AcceptTermsRef.current.checked;
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+    } else if (!acceptTerms) {
+      toast.error("Please accept the terms and conditions");
+    } else {
+      try {
+        const res = await register({
+          name,
+          email,
+          password,
+          phoneNumber,
+          role,
+        }).unwrap();
+        dispatch(setCredentials({ ...res }));
+        router.replace("/");
+      } catch (err) {
+        toast.error(err?.data?.message) || err.error;
+      }
+    }
   };
 
   return (
@@ -41,7 +82,6 @@ function Register() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Enter your name"
-                  autoComplete="name"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -81,7 +121,7 @@ function Register() {
                   id="phonenumber"
                   name="phonenumber"
                   type="text"
-                  value={phonenumber}
+                  value={phoneNumber}
                   onChange={(e) => setPhonenumber(e.target.value)}
                   placeholder="Enter your phone number"
                   autoComplete="phonenumber"
@@ -108,7 +148,6 @@ function Register() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  autoComplete="current-password"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -132,7 +171,6 @@ function Register() {
                   value={confirmPassword}
                   onChange={(e) => setconfirmPassword(e.target.value)}
                   placeholder="Confirm your password"
-                  autoComplete="current-confirmPassword"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -152,6 +190,7 @@ function Register() {
                       value="buyer"
                       name="list-radio"
                       onChange={(e) => setRole(e.target.value)}
+                      checked
                       class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                     />
                     <label
@@ -167,7 +206,7 @@ function Register() {
                     <input
                       id="list-radio-id"
                       type="radio"
-                      value="seller"
+                      value="vendor"
                       onChange={(e) => setRole(e.target.value)}
                       name="list-radio"
                       class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
@@ -190,6 +229,7 @@ function Register() {
                     id="acceptTerms"
                     aria-describedby="acceptTerms"
                     type="checkbox"
+                    ref={AcceptTermsRef}
                     className="w-4 h-4 border border-gray-300 rounded bg-gray-50 text-indigo-600"
                     required=""
                   />
@@ -197,16 +237,19 @@ function Register() {
                 <div className="ml-3 text-sm">
                   <label htmlFor="acceptTerms" className="text-gray-500">
                     I accept the{" "}
-                    <a
-                      className="font-medium hover:underline"
+                    <Link
                       href="/terms-and-conditions"
+                      target="_blank"
+                      className="font-medium hover:underline"
                     >
                       Terms and Conditions
-                    </a>
+                    </Link>
                   </label>
                 </div>
               </div>
             </div>
+
+            {isLoading && <Spinner />}
 
             <div>
               <button
