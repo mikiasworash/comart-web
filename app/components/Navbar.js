@@ -10,8 +10,8 @@ import Link from "next/link";
 
 const navigation = [
   { name: "Home", href: "/", current: false },
-  { name: "Login", href: "/login", current: false },
-  { name: "Register", href: "/register", current: false },
+  { name: "Login", href: "/signin", current: false },
+  { name: "Register", href: "/signup", current: false },
 ];
 
 function classNames(...classes) {
