@@ -7,6 +7,7 @@ import {
   MagnifyingGlassIcon,
   ShoppingBagIcon,
 } from "@heroicons/react/24/outline";
+import { LuLayoutDashboard } from "react-icons/lu";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { useLogoutMutation } from "../../redux/slices/usersApiSlice";
@@ -15,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 const navigation = [
+  { name: "Home", href: "/", current: false },
   { name: "About", href: "/about", current: false },
   { name: "Contact", href: "/contact", current: false },
 ];
@@ -97,22 +99,41 @@ export default function Navbar() {
                   </a>
                 </div>
 
-                {/* Cart */}
-                <div className="ml-4 flow-root">
-                  <Link
-                    href="/cart"
-                    className="group -m-2 flex items-center p-2"
-                  >
-                    <ShoppingBagIcon
-                      className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                      aria-hidden="true"
-                    />
-                    <span className="ml-2 text-sm font-medium text-gray-400 group-hover:text-gray-500">
-                      0
-                    </span>
-                    <span className="sr-only">items in cart, view bag</span>
-                  </Link>
-                </div>
+                {!userInfo || userInfo.role == "buyer" ? (
+                  <div className="mx-4 flow-root">
+                    <Link
+                      href="/cart"
+                      className="group -m-2 flex items-center p-2"
+                    >
+                      <ShoppingBagIcon
+                        className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                        aria-hidden="true"
+                      />
+                      <span className="ml-2 text-sm font-medium text-gray-400 group-hover:text-gray-500">
+                        0
+                      </span>
+                      <span className="sr-only">items in cart, view bag</span>
+                    </Link>
+                  </div>
+                ) : userInfo.role == "admin" ? (
+                  <div className="mx-4 flow-root">
+                    <Link
+                      href="/admindashboard"
+                      className="group -m-2 flex items-center p-2"
+                    >
+                      <LuLayoutDashboard className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500" />
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="mx-4 flow-root">
+                    <Link
+                      href="/vendordashboard"
+                      className="group -m-2 flex items-center p-2"
+                    >
+                      <LuLayoutDashboard className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500" />
+                    </Link>
+                  </div>
+                )}
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-4">
@@ -151,6 +172,37 @@ export default function Navbar() {
                             </Link>
                           )}
                         </Menu.Item>
+                        {userInfo.role === "vendor" ? (
+                          <Menu.Item>
+                            {({ active }) => (
+                              <Link
+                                href="/vendordashboard"
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
+                                )}
+                              >
+                                Dashboard
+                              </Link>
+                            )}
+                          </Menu.Item>
+                        ) : userInfo.role === "admin" ? (
+                          <Menu.Item>
+                            {({ active }) => (
+                              <Link
+                                href="/admindashboard"
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
+                                )}
+                              >
+                                Dashboard
+                              </Link>
+                            )}
+                          </Menu.Item>
+                        ) : (
+                          <></>
+                        )}
                         <Menu.Item onClick={logoutHandler}>
                           {({ active }) => (
                             <Link

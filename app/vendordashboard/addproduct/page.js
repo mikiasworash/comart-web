@@ -1,63 +1,44 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, Fragment } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { useUpdateUserMutation } from "../../redux/slices/usersApiSlice";
-import { setCredentials } from "../../redux/slices/authSlice";
 import { toast } from "react-toastify";
-import Spinner from "../components/Spinner";
+import Spinner from "../../components/Spinner";
 
-function Profile() {
+function Register() {
+  const [categories, setCategories] = useState([]);
+  const [isLoading, setLoading] = useState(true);
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setconfirmPassword] = useState("");
-  const [phoneNumber, setPhonenumber] = useState("");
-  const [role, setRole] = useState("buyer");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [quantity, setQuantity] = useState("");
+
+  const AcceptTermsRef = useRef();
 
   const router = useRouter();
   const dispatch = useDispatch();
 
   const { userInfo } = useSelector((state) => state.auth);
 
-  const [updateProfile, { isLoading }] = useUpdateUserMutation();
-
   useEffect(() => {
-    if (!userInfo) {
-      router.replace("/signin");
+    if (!userInfo || userInfo.role !== "vendor") {
+      router.replace("/");
     } else {
-      setName(userInfo.name);
-      setEmail(userInfo.email);
-      setPhonenumber(userInfo.phoneNumber);
-      setRole(userInfo.role);
+      fetch("/api/categories")
+        .then((res) => res.json())
+        .then((data) => {
+          setCategories(data.data);
+          setLoading(false);
+        });
     }
   }, [router, userInfo]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
-    } else {
-      try {
-        const res = await updateProfile({
-          _id: userInfo._id,
-          name,
-          email,
-          password,
-          phoneNumber,
-          role,
-        }).unwrap();
-        dispatch(setCredentials({ ...res }));
-        toast.success("Profile updated successfully");
-        router.replace("/");
-      } catch (err) {
-        toast.error(err?.data?.message) || err.error;
-      }
-    }
   };
 
-  if (!userInfo) {
+  if (isLoading || !userInfo || userInfo.role !== "vendor") {
     return (
       <div className="mt-16">
         <Spinner />
@@ -70,7 +51,7 @@ function Profile() {
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 mb-16 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Profile
+            Add a product
           </h2>
         </div>
 
@@ -78,10 +59,10 @@ function Profile() {
           <form className="space-y-6" onSubmit={submitHandler}>
             <div>
               <label
-                htmlFor="fullname"
+                htmlFor="productname"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Full name
+                Product name
               </label>
               <div className="mt-2">
                 <input
@@ -90,7 +71,7 @@ function Profile() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Enter your name"
+                  placeholder="Enter product name"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -99,40 +80,19 @@ function Profile() {
 
             <div>
               <label
-                htmlFor="email"
+                htmlFor="description"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Email address
+                Description
               </label>
               <div className="mt-2">
                 <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="phonenumber"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Phone number
-              </label>
-              <div className="mt-2">
-                <input
-                  id="phonenumber"
-                  name="phonenumber"
+                  id="description"
+                  name="description"
                   type="text"
-                  value={phoneNumber}
-                  onChange={(e) => setPhonenumber(e.target.value)}
-                  placeholder="Enter your phone number"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Enter description"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -141,18 +101,19 @@ function Profile() {
 
             <div>
               <label
-                htmlFor="role"
+                htmlFor="price"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Account Type
+                Price
               </label>
               <div className="mt-2">
                 <input
-                  id="role"
-                  name="role"
+                  id="price"
+                  name="price"
                   type="text"
-                  value={role}
-                  disabled
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  placeholder="Enter price"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -162,20 +123,20 @@ function Profile() {
             <div>
               <div className="flex items-center justify-between">
                 <label
-                  htmlFor="password"
+                  htmlFor="quantity"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Password
+                  Quantity
                 </label>
               </div>
               <div className="mt-2">
                 <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
+                  id="quantity"
+                  name="quantity"
+                  type="text"
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
+                  placeholder="Enter quantity"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -185,34 +146,32 @@ function Profile() {
             <div>
               <div className="flex items-center justify-between">
                 <label
-                  htmlFor="confirmPassword"
+                  htmlFor="category"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Confirm Password
+                  Category
                 </label>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setconfirmPassword(e.target.value)}
-                  placeholder="Confirm your password"
-                  required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
+                <div className="mt-2">
+                  <select className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    {/* <option disabled selected>
+                      Choose Category
+                    </option> */}
+                    {categories.map((category) => (
+                      <Fragment key={category._id}>
+                        <option>{category.name}</option>
+                      </Fragment>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
-
-            {isLoading && <Spinner />}
 
             <div>
               <button
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Update Profile
+                Add product
               </button>
             </div>
           </form>
@@ -222,4 +181,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default Register;
