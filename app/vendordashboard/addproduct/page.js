@@ -6,15 +6,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Spinner from "../../components/Spinner";
 
-function Register() {
+function AddProduct() {
   const [categories, setCategories] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
-
-  const AcceptTermsRef = useRef();
+  const [category, setCategory] = useState("");
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -22,7 +21,9 @@ function Register() {
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (!userInfo || userInfo.role !== "vendor") {
+    if (!userInfo) {
+      router.replace("/");
+    } else if (userInfo.role !== "vendor") {
       router.replace("/");
     } else {
       fetch("/api/categories")
@@ -36,6 +37,35 @@ function Register() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    if (!category) {
+      toast.error("Please select a category");
+    } else {
+      fetch("/api/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          description,
+          category,
+          price,
+          quantity,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data) {
+            toast.success("Product added successfully");
+            router.replace("/vendordashboard");
+          }
+        })
+        .catch((error) => {
+          toast.error("Adding Product failed");
+          console.error("Error:", error);
+        });
+    }
   };
 
   if (isLoading || !userInfo || userInfo.role !== "vendor") {
@@ -152,13 +182,16 @@ function Register() {
                   Category
                 </label>
                 <div className="mt-2">
-                  <select className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                    {/* <option disabled selected>
+                  <select
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  >
+                    <option disabled selected>
                       Choose Category
-                    </option> */}
+                    </option>
                     {categories.map((category) => (
                       <Fragment key={category._id}>
-                        <option>{category.name}</option>
+                        <option value={category._id}>{category.name}</option>
                       </Fragment>
                     ))}
                   </select>
@@ -181,4 +214,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default AddProduct;

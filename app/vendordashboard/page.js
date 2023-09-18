@@ -4,30 +4,22 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import Spinner from "../components/Spinner";
-import { useGetProductsMutation } from "../../redux/slices/productsApiSlice";
 
 function VendorDashboard() {
   const [products, setProducts] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNumber, setPhonenumber] = useState("");
-  const [role, setRole] = useState("buyer");
-
   const router = useRouter();
 
   const { userInfo } = useSelector((state) => state.auth);
 
-  const [getProducts] = useGetProductsMutation();
-
   useEffect(() => {
     if (!userInfo) {
       router.replace("/signin");
+    } else if (userInfo.role !== "vendor") {
+      router.replace("/admindashboard");
     } else {
       setName(userInfo.name);
-      setEmail(userInfo.email);
-      setPhonenumber(userInfo.phoneNumber);
-      setRole(userInfo.role);
 
       fetch(`/api/products/${userInfo._id}`)
         .then((res) => res.json())
@@ -58,7 +50,7 @@ function VendorDashboard() {
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:max-w-7xl lg:px-8">
           <h1 className="text-sm font-bold tracking-tight text-gray-900">
-            DASHBOARD
+            VENDOR DASHBOARD
           </h1>
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
             Welcome, {name}!
