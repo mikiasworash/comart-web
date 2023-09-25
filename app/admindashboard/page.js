@@ -1,22 +1,21 @@
 "use client";
-import Link from "next/link";
-import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import { useState, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import Spinner from "../components/Spinner";
-import FormModal from "../components/formModal";
-import { AiFillDelete, AiTwotoneEdit } from "react-icons/ai";
-import { toast } from "react-toastify";
+import CategoryContext from "../context/CategoryContext";
+import CategoryList from "../components/categories/categoryList";
 
 function AdminDashboard() {
-  const [categories, setCategories] = useState([]);
-  const [isLoading, setLoading] = useState(true);
-  const [name, setName] = useState("");
   const [tabIndex, setTabIndex] = useState("1");
+  const [name, setName] = useState("");
 
   const router = useRouter();
 
   const { userInfo } = useSelector((state) => state.auth);
+
+  const { isCategoryLoading, searchCategories } = useContext(CategoryContext);
 
   useEffect(() => {
     if (!userInfo) {
@@ -26,17 +25,11 @@ function AdminDashboard() {
     } else {
       setName(userInfo.name);
       setTabIndex(1);
-
-      fetch(`/api/categories`)
-        .then((res) => res.json())
-        .then((data) => {
-          setCategories(data.data);
-          setLoading(false);
-        });
+      searchCategories();
     }
-  }, [router, userInfo, isLoading]);
+  }, [router, userInfo, isCategoryLoading]);
 
-  if (isLoading || !userInfo) {
+  if (isCategoryLoading || !userInfo) {
     return (
       <div className="mt-16">
         <Spinner />
@@ -44,25 +37,8 @@ function AdminDashboard() {
     );
   }
 
-  function handleDeleteCategory(categoryId) {
-    fetch(`/api/categories/${categoryId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        toast.success("Category deleted successfully");
-      })
-      .catch((error) => {
-        toast.error("Deleting Category failed");
-        console.error("Error:", error);
-      });
-  }
-
   return (
-    <div class="flex flex-col h-screen bg-gray-100">
+    <div className="flex flex-col h-screen bg-gray-100">
       <div className="flex-1 flex">
         <div
           className="p-2 bg-white w-60 flex flex-col hidden md:flex"
@@ -102,120 +78,11 @@ function AdminDashboard() {
         </div>
 
         {tabIndex === 1 ? (
-          <div className="flex-1 p-4">
-            {/* Category Management */}
-
-            <div className="flex justify-between">
-              <h2 className="mt-4 text-2xl tracking-tight text-gray-900">
-                Manage Categories
-              </h2>
-              <Link
-                href="/admindashboard/addcategory"
-                className="w-48 rounded-md flex items-center justify-center bg-indigo-600 px-3 py-1.5 text-md font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Add a new Category
-              </Link>
-            </div>
-
-            <div className="mt-6  gap-x-6 gap-y-10">
-              <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table className="w-full text-sm text-left text-gray-500 ">
-                  <thead className="text-xs text-gray-900 uppercase bg-gray-50">
-                    <tr>
-                      <th scope="col" className="px-6 py-3">
-                        Category name
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex items-center">Description</div>
-                      </th>
-
-                      <th scope="col" className="px-6 py-3 text-right">
-                        Action
-                      </th>
-                    </tr>
-                  </thead>
-                  {categories.map((category) => (
-                    <tbody key={category._id}>
-                      <tr className="bg-white border-b">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowra"
-                        >
-                          {category.name}
-                        </th>
-                        <td className="px-6 py-4">{category.description}</td>
-                        <td className="px-6 py-4">
-                          <div className="flex gap-4 justify-end">
-                            <Link
-                              href={`/admindashboard/updatecategory/${category._id}`}
-                            >
-                              <AiTwotoneEdit />
-                            </Link>
-                            <button
-                              onClick={() => handleDeleteCategory(category._id)}
-                            >
-                              <AiFillDelete />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  ))}
-                </table>
-              </div>
-            </div>
-          </div>
+          <CategoryList />
+        ) : tabIndex === 2 ? (
+          <h1>Vendors</h1>
         ) : (
-          <div className="flex-1 p-4">
-            {/* Vendor Management */}
-            <h2 className="mt-4 text-2xl tracking-tight text-gray-900">
-              Manage Vendors
-            </h2>
-
-            <div className="mt-6  gap-x-6 gap-y-10">
-              <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table className="w-full text-sm text-left text-gray-500 ">
-                  <thead className="text-xs text-gray-900 uppercase bg-gray-50">
-                    <tr>
-                      <th scope="col" className="px-6 py-3">
-                        Vendor name
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex items-center">Account Status</div>
-                      </th>
-
-                      <th scope="col" className="px-6 py-3 text-right">
-                        Action
-                      </th>
-                    </tr>
-                  </thead>
-                  {categories.map((category) => (
-                    <tbody key={category._id}>
-                      <tr className="bg-white border-b">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowra"
-                        >
-                          to do
-                        </th>
-                        <td className="px-6 py-4">to do</td>
-                        <td className="px-6 py-4 text-right">
-                          <div className="flex gap-4 justify-end">
-                            <button className="font-medium hover:underline">
-                              Approve
-                            </button>
-                            <button className="font-medium hover:underline">
-                              Reject
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  ))}
-                </table>
-              </div>
-            </div>
-          </div>
+          <h1>Orders</h1>
         )}
       </div>
     </div>

@@ -16,9 +16,9 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 const navigation = [
-  { name: "Home", href: "/", current: false },
-  { name: "About", href: "/about", current: false },
-  { name: "Contact", href: "/contact", current: false },
+  { name: "Products", href: "/", current: false },
+  { name: "Sell", href: "/signin", current: false },
+  { name: "Buy", href: "/signin", current: false },
 ];
 
 function classNames(...classes) {
