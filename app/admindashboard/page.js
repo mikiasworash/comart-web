@@ -1,5 +1,4 @@
 "use client";
-import dynamic from "next/dynamic";
 import { useState, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
@@ -11,11 +10,10 @@ function AdminDashboard() {
   const [tabIndex, setTabIndex] = useState("1");
   const [name, setName] = useState("");
 
-  const router = useRouter();
-
-  const { userInfo } = useSelector((state) => state.auth);
-
   const { isCategoryLoading, searchCategories } = useContext(CategoryContext);
+
+  const router = useRouter();
+  const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (!userInfo) {
@@ -74,15 +72,24 @@ function AdminDashboard() {
             >
               <i className="fas fa-file-alt mr-2"></i>Vendor Management
             </button>
+            <button
+              onClick={() => setTabIndex(3)}
+              className={`block text-gray-500 w-56 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-indigo-400 hover:to-indigo-300 hover:text-white ${
+                tabIndex === 3 ? "bg-indigo-500 text-white" : ""
+              }`}
+              href="#"
+            >
+              <i className="fas fa-file-alt mr-2"></i>Order Management
+            </button>
           </nav>
         </div>
 
         {tabIndex === 1 ? (
           <CategoryList />
         ) : tabIndex === 2 ? (
-          <h1>Vendors</h1>
+          <h1 className="text-center text-4xl m-32">Vendor Management</h1>
         ) : (
-          <h1>Orders</h1>
+          <h1 className="text-center text-4xl m-32">Order Management</h1>
         )}
       </div>
     </div>

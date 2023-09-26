@@ -1,6 +1,5 @@
 "use client";
 import { createContext, useState } from "react";
-import { toast } from "react-toastify";
 
 const CategoryContext = createContext();
 

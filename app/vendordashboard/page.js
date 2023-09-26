@@ -1,16 +1,18 @@
 "use client";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect, useContext } from "react";
+import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import Spinner from "../components/Spinner";
-import { AiFillDelete, AiTwotoneEdit } from "react-icons/ai";
+import ProductContext from "../context/ProductContext";
+import ProductList from "../components/products/productList";
 
 function VendorDashboard() {
-  const [products, setProducts] = useState([]);
-  const [isLoading, setLoading] = useState(true);
   const [name, setName] = useState("");
   const [tabIndex, setTabIndex] = useState("1");
+
+  const { isProductLoading, searchProducts, products } =
+    useContext(ProductContext);
 
   const router = useRouter();
 
@@ -24,17 +26,11 @@ function VendorDashboard() {
     } else {
       setName(userInfo.name);
       setTabIndex(1);
-
-      fetch(`/api/products/${userInfo._id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setProducts(data.data);
-          setLoading(false);
-        });
+      searchProducts(userInfo._id);
     }
-  }, [router, userInfo]);
+  }, [router, userInfo, isProductLoading]);
 
-  if (isLoading || !userInfo) {
+  if (isProductLoading || !userInfo) {
     return (
       <div className="mt-16">
         <Spinner />
@@ -43,7 +39,7 @@ function VendorDashboard() {
   }
 
   return (
-    <div class="flex flex-col h-screen bg-gray-100">
+    <div className="flex flex-col h-screen bg-gray-100">
       <div className="flex-1 flex">
         <div
           className="p-2 bg-white w-60 flex flex-col hidden md:flex"
@@ -83,92 +79,15 @@ function VendorDashboard() {
         </div>
 
         {tabIndex === 1 ? (
-          <div className="flex-1 p-4">
-            <div className="flex justify-between">
-              <h2 className="mt-4 text-2xl tracking-tight text-gray-900">
-                Manage Products
-              </h2>
-              <Link
-                href="/vendordashboard/addproduct"
-                className="w-48 rounded-md flex items-center justify-center bg-indigo-600 px-3 py-1.5 text-md font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Add a new product
-              </Link>
-            </div>
-
-            <div className="mt-6  gap-x-6 gap-y-10">
-              <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table className="w-full text-sm text-left text-gray-500 ">
-                  <thead className="text-xs text-gray-900 uppercase bg-gray-50">
-                    <tr>
-                      <th scope="col" className="px-6 py-3">
-                        Product name
-                      </th>
-
-                      <th scope="col" className="px-6 py-3">
-                        Product category
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex items-center">Price</div>
-                      </th>
-
-                      <th scope="col" className="px-6 py-3 text-right">
-                        Quantity
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-right">
-                        Action
-                      </th>
-                    </tr>
-                  </thead>
-                  {products.map((product) => (
-                    <tbody key={product._id}>
-                      <tr className="bg-white border-b">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowra"
-                        >
-                          {product.name}
-                        </th>
-                        <td className="px-6 py-4">{product.category.name}</td>
-                        <td className="px-6 py-4">{product.price}</td>
-                        <td className="px-6 py-4 text-right">
-                          {product.quantity}
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex gap-4 justify-end">
-                            <Link
-                              href={`/vendordashboard/updateproduct/${product._id}`}
-                            >
-                              <AiTwotoneEdit />
-                            </Link>
-                            <button
-                              onClick={() => handleDeleteCategory(product._id)}
-                            >
-                              <AiFillDelete />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  ))}
-                </table>
-              </div>
-            </div>
-          </div>
+          <ProductList />
         ) : (
           <div className="flex-1 p-4">
             <div className="flex justify-between">
               <h2 className="mt-4 text-2xl tracking-tight text-gray-900">
-                Manage Products
+                Other Management
               </h2>
-              <Link
-                href="/vendordashboard/addproduct"
-                className="w-48 rounded-md flex items-center justify-center bg-indigo-600 px-3 py-1.5 text-md font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Add a new product
-              </Link>
             </div>
-            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+            {/* <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
               {products.map((product) => (
                 <div key={product._id} className="group relative">
                   <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
@@ -199,7 +118,7 @@ function VendorDashboard() {
                   </div>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
         )}
       </div>
