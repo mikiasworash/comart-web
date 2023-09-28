@@ -5,12 +5,17 @@ import { useRouter } from "next/navigation";
 import Spinner from "../components/Spinner";
 import CategoryContext from "../context/CategoryContext";
 import CategoryList from "../components/categories/categoryList";
+import ProductContext from "../context/ProductContext";
+import ProductList from "../components/products/productList";
+import VendorList from "../components/vendors/vendorList";
 
 function AdminDashboard() {
   const [tabIndex, setTabIndex] = useState("1");
   const [name, setName] = useState("");
 
   const { isCategoryLoading, searchCategories } = useContext(CategoryContext);
+  const { isProductLoading, searchAllProducts, products } =
+    useContext(ProductContext);
 
   const router = useRouter();
   const { userInfo } = useSelector((state) => state.auth);
@@ -24,10 +29,11 @@ function AdminDashboard() {
       setName(userInfo.name);
       setTabIndex(1);
       searchCategories();
+      searchAllProducts();
     }
   }, [router, userInfo, isCategoryLoading]);
 
-  if (isCategoryLoading || !userInfo) {
+  if (isCategoryLoading || isProductLoading || !userInfo) {
     return (
       <div className="mt-16">
         <Spinner />
@@ -70,12 +76,21 @@ function AdminDashboard() {
               }`}
               href="#"
             >
-              <i className="fas fa-file-alt mr-2"></i>Vendor Management
+              <i className="fas fa-file-alt mr-2"></i>Product Management
             </button>
             <button
               onClick={() => setTabIndex(3)}
               className={`block text-gray-500 w-56 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-indigo-400 hover:to-indigo-300 hover:text-white ${
                 tabIndex === 3 ? "bg-indigo-500 text-white" : ""
+              }`}
+              href="#"
+            >
+              <i className="fas fa-file-alt mr-2"></i>Vendor Management
+            </button>
+            <button
+              onClick={() => setTabIndex(4)}
+              className={`block text-gray-500 w-56 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-indigo-400 hover:to-indigo-300 hover:text-white ${
+                tabIndex === 4 ? "bg-indigo-500 text-white" : ""
               }`}
               href="#"
             >
@@ -87,7 +102,9 @@ function AdminDashboard() {
         {tabIndex === 1 ? (
           <CategoryList />
         ) : tabIndex === 2 ? (
-          <h1 className="text-center text-4xl m-32">Vendor Management</h1>
+          <ProductList />
+        ) : tabIndex === 3 ? (
+          <VendorList />
         ) : (
           <h1 className="text-center text-4xl m-32">Order Management</h1>
         )}

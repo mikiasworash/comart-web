@@ -4,6 +4,8 @@ import { useState, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 import ProductContext from "../../context/ProductContext";
 import { AiFillDelete, AiTwotoneEdit } from "react-icons/ai";
+import { toast } from "react-toastify";
+
 const AddProductModal = dynamic(
   () => import("../modals/product/addProductModal"),
   {
@@ -31,11 +33,34 @@ function ProductList() {
 
   const { userInfo } = useSelector((state) => state.auth);
 
-  const { products, searchProducts } = useContext(ProductContext);
+  const { products, searchProducts, searchAllProducts } =
+    useContext(ProductContext);
 
   useEffect(() => {
-    searchProducts(userInfo._id);
+    userInfo.role == "vendor"
+      ? searchProducts(userInfo._id)
+      : searchAllProducts();
   }, [showAddModal, showEditModal, showDeleteModal]);
+
+  function handleFeature(product) {
+    fetch(`/api/products/feature/${product._id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          toast.success("Feature status updated");
+          searchAllProducts();
+        }
+      })
+      .catch((error) => {
+        toast.error("Feature status update failed");
+        console.error("Error:", error);
+      });
+  }
 
   return (
     <div className="flex-1 p-4">
@@ -43,12 +68,14 @@ function ProductList() {
         <h2 className="mt-4 text-2xl tracking-tight text-gray-900">
           Manage Products
         </h2>
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="w-40 rounded-md flex items-center justify-center bg-indigo-600 px-3 py-1.5 text-md font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          Add Product
-        </button>
+        {userInfo.role == "vendor" && (
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="w-40 rounded-md flex items-center justify-center bg-indigo-600 px-3 py-1.5 text-md font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Add Product
+          </button>
+        )}
       </div>
 
       <div className="mt-6  gap-x-6 gap-y-10">
@@ -66,9 +93,11 @@ function ProductList() {
                 <th scope="col" className="px-6 py-3">
                   <div className="flex items-center">Price</div>
                 </th>
-
                 <th scope="col" className="px-6 py-3 text-right">
                   Quantity
+                </th>
+                <th scope="col" className="px-6 py-3 text-right">
+                  Status
                 </th>
                 <th scope="col" className="px-6 py-3 text-right">
                   Action
@@ -87,24 +116,41 @@ function ProductList() {
                   <td className="px-6 py-4">{product.category.name}</td>
                   <td className="px-6 py-4">{product.price}</td>
                   <td className="px-6 py-4 text-right">{product.quantity}</td>
+                  <td className="px-6 py-4 text-right">
+                    {product.featured ? "Featured" : "Not Featured"}
+                  </td>
                   <td className="px-6 py-4">
                     <div className="flex gap-4 justify-end">
-                      <button
-                        onClick={() => {
-                          setProduct(product);
-                          setShowEditModal(true);
-                        }}
-                      >
-                        <AiTwotoneEdit />
-                      </button>
-                      <button
-                        onClick={() => {
-                          setProduct(product);
-                          setShowDeleteModal(true);
-                        }}
-                      >
-                        <AiFillDelete />
-                      </button>
+                      {userInfo.role === "vendor" ? (
+                        <>
+                          <button
+                            onClick={() => {
+                              setProduct(product);
+                              setShowEditModal(true);
+                            }}
+                          >
+                            <AiTwotoneEdit />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setProduct(product);
+                              setShowDeleteModal(true);
+                            }}
+                          >
+                            <AiFillDelete />
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            setProduct(product);
+                            handleFeature(product);
+                          }}
+                          className="hover:text-indigo-500"
+                        >
+                          {product.featured ? "Unfeature" : "Feature"}
+                        </button>
+                      )}
                     </div>
                     <div>
                       {showEditModal && (
