@@ -1,5 +1,7 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
+import logo from "../assets/img/logo.png";
 
 const Footer = () => {
   return (
@@ -11,7 +13,7 @@ const Footer = () => {
               <div className="w-full px-4 sm:w-2/3 lg:w-3/12">
                 <div className="w-full mb-10">
                   <Link href="/" className="mb-6 inline-block max-w-[160px]">
-                    <img className="h-4 w-auto" src="img/logo.png" alt="" />
+                    <Image className="h-5 w-auto" src={logo} alt="" />
                   </Link>
                   <p className="mb-7 text-white">
                     Elevate your construction projects with us.

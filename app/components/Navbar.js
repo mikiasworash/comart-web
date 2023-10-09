@@ -1,5 +1,8 @@
 "use client";
 import { Fragment } from "react";
+import Image from "next/image";
+import avatar from "../assets/img/user.png";
+import logo from "../assets/img/logo.png";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -16,7 +19,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 const navigation = [
-  { name: "Products", href: "/", current: false },
+  { name: "Products", href: "/products", current: false },
   { name: "Sell", href: "/signin", current: false },
   { name: "Buy", href: "/signin", current: false },
 ];
@@ -64,7 +67,7 @@ export default function Navbar() {
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
                   <Link href="/">
-                    <img className="h-4 w-auto" src="img/logo.png" alt="" />
+                    <Image className="h-4 w-auto" src={logo} alt="" />
                   </Link>
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
@@ -118,7 +121,7 @@ export default function Navbar() {
                 ) : userInfo.role == "admin" ? (
                   <div className="mx-4 flow-root">
                     <Link
-                      href="/admindashboard"
+                      href="/admin-dashboard"
                       className="group -m-2 flex items-center p-2"
                     >
                       <LuLayoutDashboard className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500" />
@@ -127,7 +130,7 @@ export default function Navbar() {
                 ) : (
                   <div className="mx-4 flow-root">
                     <Link
-                      href="/vendordashboard"
+                      href="/vendor-dashboard"
                       className="group -m-2 flex items-center p-2"
                     >
                       <LuLayoutDashboard className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500" />
@@ -141,10 +144,16 @@ export default function Navbar() {
                     <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
-                      <img
+
+                      <Image
                         className="h-8 w-8 rounded-full"
-                        src="img/user.png"
-                        alt="photo"
+                        src={
+                          userInfo?.photo == "default" ||
+                          userInfo?.photo == null
+                            ? avatar
+                            : userInfo.photo
+                        }
+                        alt=""
                       />
                     </Menu.Button>
                   </div>

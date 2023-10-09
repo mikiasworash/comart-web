@@ -4,28 +4,24 @@ import Link from "next/link";
 import ProductContext from "../../context/ProductContext";
 import Spinner from "../Spinner";
 
-function FeaturedProductsList() {
-  const {
-    featuredProducts,
-    searchFeaturedProducts,
-    isFeaturedProductsLoading,
-    setProduct,
-  } = useContext(ProductContext);
+function AllProductsList() {
+  const { products, searchAllProducts, isProductLoading, setProduct } =
+    useContext(ProductContext);
 
   useEffect(() => {
-    searchFeaturedProducts();
+    searchAllProducts();
   }, []);
 
-  if (isFeaturedProductsLoading) {
+  if (isProductLoading) {
     return (
       <div className="h-screen mt-32">
         <Spinner />
-        <h1 className="text-center mt-8">Loading Products...</h1>
+        <h1 className="text-center mt-8">Loading All Products...</h1>
       </div>
     );
   }
 
-  if (!featuredProducts)
+  if (!products)
     return (
       <h1 className="text-2xl w-56 mx-auto my-64">No products to show yet!</h1>
     );
@@ -33,13 +29,11 @@ function FeaturedProductsList() {
   return (
     <div className="flex flex-col p-4 mt-8 max-w-6xl mx-auto">
       <div className="">
-        <h2 className="text-2xl tracking-tight text-gray-900">
-          Featured Products
-        </h2>
+        <h2 className="text-2xl tracking-tight text-gray-900">All Products</h2>
       </div>
       <div className="bg-white">
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          {featuredProducts.map((product) => (
+          {products.map((product) => (
             <Link
               href={`/products/${product._id}`}
               key={product._id}
@@ -81,4 +75,4 @@ function FeaturedProductsList() {
   );
 }
 
-export default FeaturedProductsList;
+export default AllProductsList;

@@ -7,6 +7,7 @@ export const ProductProvider = ({ children }) => {
   const [isFeaturedProductsLoading, setFeaturedProductsLoading] =
     useState(true);
   const [products, setProducts] = useState([]);
+  const [product, setProduct] = useState(null);
   const [featuredProducts, setFeaturedProducts] = useState([]);
 
   // Search for products owned by a vendor
@@ -21,7 +22,7 @@ export const ProductProvider = ({ children }) => {
 
   // Search for products owned by a vendor
   const searchProducts = (userId) => {
-    fetch(`/api/products/${userId}`)
+    fetch(`/api/products/vendor/${userId}`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.data);
@@ -39,16 +40,29 @@ export const ProductProvider = ({ children }) => {
       });
   };
 
+  // Get for a product
+  const getProduct = (productId) => {
+    fetch(`/api/products/product/${productId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setProduct(data.data);
+        setLoading(false);
+      });
+  };
+
   return (
     <ProductContext.Provider
       value={{
         isProductLoading,
         products,
+        product,
         featuredProducts,
         isFeaturedProductsLoading,
         searchProducts,
         searchAllProducts,
         searchFeaturedProducts,
+        getProduct,
+        setProduct,
       }}
     >
       {children}
