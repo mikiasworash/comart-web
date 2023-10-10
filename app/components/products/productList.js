@@ -78,6 +78,15 @@ function ProductList() {
         )}
       </div>
 
+      <div>
+        {showAddModal && (
+          <AddProductModal
+            showAddModal={showAddModal}
+            closeAddModal={() => setShowAddModal(false)}
+          />
+        )}
+      </div>
+
       <div className="mt-6  gap-x-6 gap-y-10">
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left text-gray-500 ">
@@ -152,36 +161,28 @@ function ProductList() {
                         </button>
                       )}
                     </div>
-                    <div>
-                      {showEditModal && (
-                        <EditProductModal
-                          showEditModal={showEditModal}
-                          product={productToChange}
-                          closeEditModal={() => setShowEditModal(false)}
-                        />
-                      )}
-
-                      {showDeleteModal && (
-                        <DeleteProductModal
-                          showDeleteModal={showDeleteModal}
-                          product={productToChange}
-                          closeDeleteModal={() => setShowDeleteModal(false)}
-                        />
-                      )}
-                    </div>
-                    <div>
-                      {showAddModal && (
-                        <AddProductModal
-                          showAddModal={showAddModal}
-                          closeAddModal={() => setShowAddModal(false)}
-                        />
-                      )}
-                    </div>
                   </td>
                 </tr>
               </tbody>
             ))}
           </table>
+          <div>
+            {showEditModal && (
+              <EditProductModal
+                showEditModal={showEditModal}
+                product={productToChange}
+                closeEditModal={() => setShowEditModal(false)}
+              />
+            )}
+
+            {showDeleteModal && (
+              <DeleteProductModal
+                showDeleteModal={showDeleteModal}
+                product={productToChange}
+                closeDeleteModal={() => setShowDeleteModal(false)}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>

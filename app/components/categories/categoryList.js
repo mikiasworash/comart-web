@@ -48,6 +48,15 @@ function CategoryList() {
         </button>
       </div>
 
+      <div>
+        {showAddModal && (
+          <AddCategoryModal
+            showAddModal={showAddModal}
+            closeAddModal={() => setAddShowModal(false)}
+          />
+        )}
+      </div>
+
       <div className="mt-6  gap-x-6 gap-y-10">
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left text-gray-500 ">
@@ -94,36 +103,28 @@ function CategoryList() {
                         <AiFillDelete />
                       </button>
                     </div>
-                    <div>
-                      {showEditModal && (
-                        <EditCategoryModal
-                          showEditModal={showEditModal}
-                          category={categoryToChange}
-                          closeEditModal={() => setEditShowModal(false)}
-                        />
-                      )}
-
-                      {showDeleteModal && (
-                        <DeleteCategoryModal
-                          showDeleteModal={showDeleteModal}
-                          category={categoryToChange}
-                          closeDeleteModal={() => setDeleteShowModal(false)}
-                        />
-                      )}
-                    </div>
-                    <div>
-                      {showAddModal && (
-                        <AddCategoryModal
-                          showAddModal={showAddModal}
-                          closeAddModal={() => setAddShowModal(false)}
-                        />
-                      )}
-                    </div>
                   </td>
                 </tr>
               </tbody>
             ))}
           </table>
+          <div>
+            {showEditModal && (
+              <EditCategoryModal
+                showEditModal={showEditModal}
+                category={categoryToChange}
+                closeEditModal={() => setEditShowModal(false)}
+              />
+            )}
+
+            {showDeleteModal && (
+              <DeleteCategoryModal
+                showDeleteModal={showDeleteModal}
+                category={categoryToChange}
+                closeDeleteModal={() => setDeleteShowModal(false)}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>

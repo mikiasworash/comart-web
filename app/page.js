@@ -1,5 +1,5 @@
-import FeaturedProductsList from "./components/products/featuredProductsList";
+import FeaturedProductsListComponent from "./components/products/featuredProductsList";
 
 export default function Home() {
-  return <FeaturedProductsList />;
+  return <FeaturedProductsListComponent />;
 }

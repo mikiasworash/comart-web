@@ -1,8 +1,8 @@
 import React from "react";
-import AllProducts from "../components/products/allProductsList";
+import AllProductsComponent from "../components/products/allProductsList";
 
 function Products() {
-  return <AllProducts />;
+  return <AllProductsComponent />;
 }
 
 export default Products;

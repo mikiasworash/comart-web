@@ -108,31 +108,27 @@ function VendorList() {
                         Approve
                       </button>
                     )}
-                    <div>
-                      {showApproveVendorModal && (
-                        <ApproveVendorModal
-                          showApproveVendorModal={showApproveVendorModal}
-                          vendor={vendorToChange}
-                          closeApproveVendorModal={() =>
-                            setShowApproveVendorModal(false)
-                          }
-                        />
-                      )}
-                      {showRejectVendorModal && (
-                        <RejectVendorModal
-                          showRejectVendorModal={showRejectVendorModal}
-                          vendor={vendorToChange}
-                          closeRejectVendorModal={() =>
-                            setShowRejectVendorModal(false)
-                          }
-                        />
-                      )}
-                    </div>
                   </td>
                 </tr>
               </tbody>
             ))}
           </table>
+          <div>
+            {showApproveVendorModal && (
+              <ApproveVendorModal
+                showApproveVendorModal={showApproveVendorModal}
+                vendor={vendorToChange}
+                closeApproveVendorModal={() => setShowApproveVendorModal(false)}
+              />
+            )}
+            {showRejectVendorModal && (
+              <RejectVendorModal
+                showRejectVendorModal={showRejectVendorModal}
+                vendor={vendorToChange}
+                closeRejectVendorModal={() => setShowRejectVendorModal(false)}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>
