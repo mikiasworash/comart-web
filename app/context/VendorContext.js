@@ -1,5 +1,6 @@
 "use client";
 import { createContext, useState } from "react";
+import axios from "axios";
 
 const VendorContext = createContext();
 
@@ -8,15 +9,16 @@ export const VendorProvider = ({ children }) => {
   const [vendors, setVendors] = useState([]);
 
   // Search for all vendors
-  const searchVendors = () => {
-    fetch(`/api/users/vendors`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setVendors(data.data);
-          setLoading(false);
-        }
-      });
+  const searchVendors = async () => {
+    try {
+      const res = await axios.get(`/api/users/vendors`);
+      if (res.data.success) {
+        setVendors(res.data.data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (

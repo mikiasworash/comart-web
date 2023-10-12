@@ -1,31 +1,25 @@
 import React from "react";
-import { toast } from "react-toastify";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 function ApproveVendorModal({
   showApproveVendorModal,
   vendor,
   closeApproveVendorModal,
 }) {
-  function handleAprrove() {
-    fetch(`/api/users/vendors/${vendor._id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ active: "active" }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          toast.success("Vendor approved");
-          closeApproveVendorModal();
-        }
-      })
-      .catch((error) => {
-        toast.error("Vendor approval failed");
-        console.error("Error:", error);
+  const handleAprrove = async () => {
+    try {
+      const res = await axios.put(`/api/users/vendors/${vendor._id}`, {
+        active: "active",
       });
-  }
+
+      toast.success("Vendor approved");
+      closeApproveVendorModal();
+    } catch (error) {
+      toast.error("Vendor approval failed");
+      console.error("Error:", error);
+    }
+  };
 
   if (!showApproveVendorModal) return null;
 

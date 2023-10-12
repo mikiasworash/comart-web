@@ -1,5 +1,6 @@
 "use client";
 import { createContext, useState } from "react";
+import axios from "axios";
 
 const CategoryContext = createContext();
 
@@ -7,14 +8,15 @@ export const CategoryProvider = ({ children }) => {
   const [isCategoryLoading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
 
-  // Search for all categories
-  const searchCategories = () => {
-    fetch(`/api/categories`)
-      .then((res) => res.json())
-      .then((data) => {
-        setCategories(data.data);
-        setLoading(false);
-      });
+  // Get all categories
+  const searchCategories = async () => {
+    try {
+      const res = await axios.get(`/api/categories`);
+      setCategories(res.data.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (

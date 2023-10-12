@@ -1,5 +1,6 @@
 "use client";
 import { createContext, useState } from "react";
+import axios from "axios";
 const ProductContext = createContext();
 
 export const ProductProvider = ({ children }) => {
@@ -10,44 +11,48 @@ export const ProductProvider = ({ children }) => {
   const [product, setProduct] = useState(null);
   const [featuredProducts, setFeaturedProducts] = useState([]);
 
-  // Search for products owned by a vendor
-  const searchAllProducts = (userId) => {
-    fetch(`/api/products`)
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data.data);
-        setLoading(false);
-      });
+  // Get all products
+  const searchAllProducts = async () => {
+    try {
+      const res = await axios.get("/api/products");
+      setProducts(res.data.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
-  // Search for products owned by a vendor
-  const searchProducts = (userId) => {
-    fetch(`/api/products/vendor/${userId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data.data);
-        setLoading(false);
-      });
+  // Get products owned by a vendor
+  const searchProducts = async (userId) => {
+    try {
+      const res = await axios.get(`/api/products/vendor/${userId}`);
+      setProducts(res.data.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
-  // Search for featured products
-  const searchFeaturedProducts = () => {
-    fetch(`/api/products/featured`)
-      .then((res) => res.json())
-      .then((data) => {
-        setFeaturedProducts(data.data);
-        setFeaturedProductsLoading(false);
-      });
+  // Get featured products
+  const searchFeaturedProducts = async () => {
+    try {
+      const res = await axios.get("/api/products/featured");
+      setFeaturedProducts(res.data.data);
+      setFeaturedProductsLoading(false);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
-  // Get for a product
-  const getProduct = (productId) => {
-    fetch(`/api/products/product/${productId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setProduct(data.data);
-        setLoading(false);
-      });
+  // Get a single product
+  const getProduct = async (productId) => {
+    try {
+      const res = await axios.get(`/api/products/product/${productId}`);
+      setProduct(res.data.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (

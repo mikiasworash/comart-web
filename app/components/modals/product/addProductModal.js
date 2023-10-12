@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
+import axios from "axios";
 import { Fragment } from "react";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import CategoryContext from "../../../context/CategoryContext";
 
 function addProductModal({ showAddModal, closeAddModal }) {
@@ -10,42 +11,57 @@ function addProductModal({ showAddModal, closeAddModal }) {
   const [quantity, setQuantity] = useState("");
   const [category, setCategory] = useState("");
 
+  const [selectedImage, setSelectedImage] = useState(null);
+
   const { categories, searchCategories } = useContext(CategoryContext);
 
   useEffect(() => {
     searchCategories();
   }, []);
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedImage(file);
+  };
+
   const submitHandler = async (e) => {
     e.preventDefault();
 
     if (!category) {
       toast.error("Please select a category");
-    } else {
-      fetch("/api/products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          description,
-          category,
-          price,
-          quantity,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data) {
-            toast.success("Product added successfully");
-            closeAddModal();
-          }
-        })
-        .catch((error) => {
-          toast.error("Adding Product failed");
-          console.error("Error:", error);
-        });
+      return;
+    }
+
+    try {
+      let productPhoto = product.photo;
+      if (selectedImage) {
+        const formData = new FormData();
+        formData.append("file", selectedImage);
+        formData.append("upload_preset", "comart_product_images");
+
+        const cloudinaryRes = await axios.post(
+          process.env.cloudinaryURL,
+          formData
+        );
+
+        const { secure_url } = cloudinaryRes.data;
+        productPhoto = secure_url;
+      }
+
+      await axios.post("/api/products", {
+        name,
+        description,
+        category,
+        price,
+        quantity,
+        photo: productPhoto,
+      });
+
+      toast.success("Product added");
+      closeAddModal();
+    } catch (error) {
+      toast.error("Adding Product failed");
+      console.error("Error:", error);
     }
   };
 
@@ -64,6 +80,28 @@ function addProductModal({ showAddModal, closeAddModal }) {
             {/*body*/}
             <div className="relative p-6 flex-auto">
               <form className="space-y-6" onSubmit={submitHandler}>
+                <div>
+                  <label
+                    htmlFor="photo"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Product photo
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      type="file"
+                      onChange={handleImageChange}
+                      className="w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-md file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-indigo-400 file:text-white
+                    hover:file:bg-indigo-500
+                  "
+                    />
+                  </div>
+                </div>
+
                 <div>
                   <label
                     htmlFor="productname"

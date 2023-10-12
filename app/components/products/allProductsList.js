@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import Link from "next/link";
 import ProductContext from "../../context/ProductContext";
 import Spinner from "../Spinner";

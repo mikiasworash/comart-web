@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ReduxProvider from "../redux/provider";
 import { ToastContainer } from "react-toastify";
+import { Toaster } from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
 import { CategoryProvider } from "./context/CategoryContext";
 import { ProductProvider } from "./context/ProductContext";
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
                 <ToastContainer />
                 {children}
                 <Footer />
+                <Toaster />
               </VendorProvider>
             </ProductProvider>
           </CategoryProvider>

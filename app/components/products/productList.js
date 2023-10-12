@@ -1,10 +1,11 @@
 "use client";
+import axios from "axios";
 import dynamic from "next/dynamic";
 import { useState, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 import ProductContext from "../../context/ProductContext";
 import { AiFillDelete, AiTwotoneEdit } from "react-icons/ai";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
 const AddProductModal = dynamic(
   () => import("../modals/product/addProductModal"),
@@ -42,25 +43,21 @@ function ProductList() {
       : searchAllProducts();
   }, [showAddModal, showEditModal, showDeleteModal]);
 
-  function handleFeature(product) {
-    fetch(`/api/products/feature/${product._id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          toast.success("Feature status updated");
-          searchAllProducts();
-        }
-      })
-      .catch((error) => {
-        toast.error("Feature status update failed");
-        console.error("Error:", error);
+  const handleFeature = async (product) => {
+    try {
+      const res = await axios.put(`/api/products/feature/${product._id}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
-  }
+
+      toast.success("Feature status updated");
+      searchAllProducts();
+    } catch (error) {
+      toast.error("Feature status update failed");
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <div className="flex-1 p-4">
@@ -87,11 +84,14 @@ function ProductList() {
         )}
       </div>
 
-      <div className="mt-6  gap-x-6 gap-y-10">
+      <div className="mt-6 gap-x-6 gap-y-10">
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left text-gray-500 ">
             <thead className="text-xs text-gray-900 uppercase bg-gray-50">
               <tr>
+                <th scope="col" className="px-6 py-3">
+                  Product photo
+                </th>
                 <th scope="col" className="px-6 py-3">
                   Product name
                 </th>
@@ -116,6 +116,22 @@ function ProductList() {
             {products.map((product) => (
               <tbody key={product._id}>
                 <tr className="bg-white border-b">
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowra"
+                  >
+                    <img
+                      className="h-12 w-12 rounded-full"
+                      src={
+                        product.photo == "default"
+                          ? "https://placehold.co/100x100"
+                          : product.photo
+                      }
+                      alt="user image"
+                      width={300}
+                      height={300}
+                    />
+                  </th>
                   <th
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowra"

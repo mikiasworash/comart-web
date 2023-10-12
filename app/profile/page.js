@@ -1,20 +1,24 @@
 "use client";
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import axios from "axios";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateUserMutation } from "../../redux/slices/usersApiSlice";
 import { setCredentials } from "../../redux/slices/authSlice";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import Spinner from "../components/Spinner";
+import avatar from "../assets/img/user.png";
 
 function Profile() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
-  const [phoneNumber, setPhonenumber] = useState("");
+  const [phone, setPhone] = useState("");
   const [role, setRole] = useState("buyer");
+  const [photo, setPhoto] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -29,10 +33,16 @@ function Profile() {
     } else {
       setName(userInfo.name);
       setEmail(userInfo.email);
-      setPhonenumber(userInfo.phoneNumber);
+      setPhone(userInfo.phone);
       setRole(userInfo.role);
+      setPhoto(userInfo.photo);
     }
   }, [router, userInfo]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedImage(file);
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -40,19 +50,38 @@ function Profile() {
       toast.error("Passwords do not match");
     } else {
       try {
+        let profilePhotoLink = photo;
+        if (selectedImage) {
+          const formData = new FormData();
+          formData.append("file", selectedImage);
+          formData.append("upload_preset", "comart_user_images");
+
+          const cloudinaryRes = await axios.post(
+            process.env.cloudinaryURL,
+            formData
+          );
+
+          const { secure_url } = cloudinaryRes.data;
+          setPhoto(secure_url);
+          profilePhotoLink = secure_url;
+        }
+
         const res = await updateProfile({
           _id: userInfo._id,
           name,
           email,
           password,
-          phoneNumber,
+          phone,
           role,
+          photo: profilePhotoLink,
         }).unwrap();
         dispatch(setCredentials({ ...res }));
-        toast.success("Profile updated successfully");
+        toast.success("Profile updated");
         router.replace("/");
       } catch (err) {
-        toast.error(err?.data?.message) || err.error;
+        toast.error(
+          err?.data?.message || err.error || "Failed to update profile"
+        );
       }
     }
   };
@@ -69,9 +98,26 @@ function Profile() {
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 mb-16 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Profile
-          </h2>
+          <Image
+            className="mt-10 h-16 w-16 mx-auto rounded-full"
+            src={photo == "default" || photo == null ? avatar : photo}
+            alt="user image"
+            width={300}
+            height={300}
+          />
+          <div className="mt-2 w-fit mx-auto">
+            <input
+              type="file"
+              onChange={handleImageChange}
+              className="w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-md file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-indigo-400 file:text-white
+                    hover:file:bg-indigo-500
+                  "
+            />
+          </div>
         </div>
 
         <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -120,18 +166,18 @@ function Profile() {
 
             <div>
               <label
-                htmlFor="phonenumber"
+                htmlFor="phone"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Phone number
               </label>
               <div className="mt-2">
                 <input
-                  id="phonenumber"
-                  name="phonenumber"
+                  id="phone"
+                  name="phone"
                   type="text"
-                  value={phoneNumber}
-                  onChange={(e) => setPhonenumber(e.target.value)}
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                   placeholder="Enter your phone number"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"

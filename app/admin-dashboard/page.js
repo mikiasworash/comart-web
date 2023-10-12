@@ -42,10 +42,10 @@ function AdminDashboard() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100">
+    <div className="flex flex-col bg-gray-100 z-0">
       <div className="flex-1 flex">
         <div
-          className="p-2 bg-white w-60 flex flex-col hidden md:flex"
+          className="p-2 bg-white w-60 flex flex-col hidden md:flex min-h-screen"
           id="sideNav"
         >
           <div className="max-w-2xl px-4 pt-12 sm:px-6 lg:max-w-7xl lg:px-8">

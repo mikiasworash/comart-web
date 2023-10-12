@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { toast } from "react-toastify";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 function EditCategoryModal({ showEditModal, category, closeEditModal }) {
   const [CategoryName, setCategoryName] = useState(category.name);
@@ -10,27 +11,17 @@ function EditCategoryModal({ showEditModal, category, closeEditModal }) {
   const submitEditHandler = async (e) => {
     e.preventDefault();
 
-    fetch(`/api/categories/${category._id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    try {
+      await axios.put(`/api/categories/${category._id}`, {
         name: CategoryName,
         description: categoryDescription,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          toast.success("Category updated successfully");
-          closeEditModal();
-        }
-      })
-      .catch((error) => {
-        toast.error("Updating Category failed");
-        console.error("Error:", error);
       });
+      toast.success("Category updated");
+      closeEditModal();
+    } catch (error) {
+      toast.error("Updating Category failed");
+      console.error("Error:", error);
+    }
   };
 
   if (!showEditModal) return null;

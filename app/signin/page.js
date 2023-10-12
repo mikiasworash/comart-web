@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { useLoginMutation } from "../../redux/slices/usersApiSlice";
 import { setCredentials } from "../../redux/slices/authSlice";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import Spinner from "../components/Spinner";
 
 function page() {
@@ -30,9 +30,10 @@ function page() {
     try {
       const res = await login({ email, password }).unwrap();
       dispatch(setCredentials({ ...res }));
+      toast.success("Successfully logged in");
       router.replace("/");
     } catch (err) {
-      toast.error(err?.data?.message) || err.error;
+      toast.error(err?.data?.message || err.error);
     }
   };
 

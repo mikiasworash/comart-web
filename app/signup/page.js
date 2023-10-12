@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { useRegisterMutation } from "../../redux/slices/usersApiSlice";
 import { setCredentials } from "../../redux/slices/authSlice";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import Spinner from "../components/Spinner";
 
 function Register() {
@@ -13,7 +13,7 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
-  const [phoneNumber, setPhonenumber] = useState("");
+  const [phone, setPhone] = useState("");
   const [role, setRole] = useState("buyer");
 
   const AcceptTermsRef = useRef();
@@ -45,10 +45,13 @@ function Register() {
           name,
           email,
           password,
-          phoneNumber,
+          phone,
           role,
         }).unwrap();
-        dispatch(setCredentials({ ...res }));
+        if (res.role !== "vendor") {
+          dispatch(setCredentials({ ...res }));
+        }
+        toast.success("Account has been registered");
         router.replace("/");
       } catch (err) {
         toast.error(err?.data?.message) || err.error;
@@ -111,20 +114,20 @@ function Register() {
 
             <div>
               <label
-                htmlFor="phonenumber"
+                htmlFor="phone"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Phone number
               </label>
               <div className="mt-2">
                 <input
-                  id="phonenumber"
-                  name="phonenumber"
+                  id="phone"
+                  name="phone"
                   type="text"
-                  value={phoneNumber}
-                  onChange={(e) => setPhonenumber(e.target.value)}
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                   placeholder="Enter your phone number"
-                  autoComplete="phonenumber"
+                  autoComplete="phone"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />

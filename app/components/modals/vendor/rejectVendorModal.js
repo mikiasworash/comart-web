@@ -1,31 +1,25 @@
 import React from "react";
-import { toast } from "react-toastify";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 function RejectVendorModal({
   showRejectVendorModal,
   vendor,
   closeRejectVendorModal,
 }) {
-  function handleReject() {
-    fetch(`/api/users/vendors/${vendor._id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ active: "rejected" }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          toast.success("Vendor rejected");
-          closeRejectVendorModal();
-        }
-      })
-      .catch((error) => {
-        toast.error("Vendor rejection failed");
-        console.error("Error:", error);
+  const handleReject = async () => {
+    try {
+      const res = await axios.put(`/api/users/vendors/${vendor._id}`, {
+        active: "rejected",
       });
-  }
+
+      toast.success("Vendor rejected");
+      closeRejectVendorModal();
+    } catch (error) {
+      toast.error("Vendor rejection failed");
+      console.error("Error:", error);
+    }
+  };
 
   if (!showRejectVendorModal) return null;
 

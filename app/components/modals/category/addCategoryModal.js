@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { toast } from "react-toastify";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 function addCategoryModal({ showAddModal, closeAddModal }) {
   const [CategoryName, setCategoryName] = useState("");
@@ -7,27 +8,19 @@ function addCategoryModal({ showAddModal, closeAddModal }) {
 
   const submitAddCategory = async (e) => {
     e.preventDefault();
-    fetch("/api/categories", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+
+    try {
+      const res = await axios.post("/api/categories", {
         name: CategoryName,
         description: categoryDescription,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          toast.success("Category added successfully");
-          closeAddModal();
-        }
-      })
-      .catch((error) => {
-        toast.error("Adding Category failed");
-        console.error("Error:", error);
       });
+
+      toast.success("Category added");
+      closeAddModal();
+    } catch (error) {
+      toast.error("Adding Category failed");
+      console.error("Error:", error);
+    }
   };
 
   if (!showAddModal) return null;

@@ -1,24 +1,18 @@
 import React from "react";
-import { toast } from "react-toastify";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 function DeleteCategoryModal({ showDeleteModal, category, closeDeleteModal }) {
-  function handleDeleteCategory() {
-    fetch(`/api/categories/${category._id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        toast.success("Category deleted successfully");
-        closeDeleteModal();
-      })
-      .catch((error) => {
-        toast.error("Deleting Category failed");
-        console.error("Error:", error);
-      });
-  }
+  const handleDeleteCategory = async () => {
+    try {
+      await axios.delete(`/api/categories/${category._id}`);
+      toast.success("Category deleted");
+      closeDeleteModal();
+    } catch (error) {
+      toast.error("Deleting Category failed");
+      console.error("Error:", error);
+    }
+  };
 
   if (!showDeleteModal) return null;
 

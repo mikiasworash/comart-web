@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLogoutMutation } from "../../redux/slices/usersApiSlice";
 import { logout } from "../../redux/slices/authSlice";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { toast as hotToast } from "react-hot-toast";
 
 const navigation = [
   { name: "Products", href: "/products", current: false },
@@ -40,9 +40,10 @@ export default function Navbar() {
     try {
       await logoutApiCall().unwrap();
       dispatch(logout());
+      hotToast.success("User logged out");
       router.replace("/");
     } catch (error) {
-      toast.error(error);
+      hotToast.error(error);
     }
   };
 
@@ -153,7 +154,9 @@ export default function Navbar() {
                             ? avatar
                             : userInfo.photo
                         }
-                        alt=""
+                        alt="user image"
+                        width={300}
+                        height={300}
                       />
                     </Menu.Button>
                   </div>

@@ -41,6 +41,9 @@ function VendorList() {
             <thead className="text-xs text-gray-900 uppercase bg-gray-50">
               <tr>
                 <th scope="col" className="px-6 py-3">
+                  Vendor photo
+                </th>
+                <th scope="col" className="px-6 py-3">
                   Vendor name
                 </th>
 
@@ -61,9 +64,22 @@ function VendorList() {
             {vendors.map((vendor) => (
               <tbody key={vendor._id}>
                 <tr className="bg-white border-b">
+                  <td className="px-6 py-4">
+                    <img
+                      className="h-12 w-12 rounded-full"
+                      src={
+                        vendor.photo == "default"
+                          ? "https://placehold.co/100x100"
+                          : vendor.photo
+                      }
+                      alt="user image"
+                      width={300}
+                      height={300}
+                    />
+                  </td>
                   <td className="px-6 py-4">{vendor.name}</td>
                   <td className="px-6 py-4">{vendor.email}</td>
-                  <td className="px-6 py-4">{vendor.phoneNumber}</td>
+                  <td className="px-6 py-4">{vendor.phone}</td>
                   <td className="px-6 py-4">{vendor.active}</td>
                   <td className="px-6 py-4">
                     {vendor.active == "active" ? (
