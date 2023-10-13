@@ -16,8 +16,14 @@ function ProductDetail() {
 
   if (!product) {
     return (
-      <div className="mt-16 h-screen">
+      <div className="mt-32 h-screen">
         <Spinner />
+        <h1 className="text-center mt-8 text-3xl">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+            Loading
+          </span>{" "}
+          product info...
+        </h1>
       </div>
     );
   }

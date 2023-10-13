@@ -78,13 +78,24 @@ function editProductModal({ showEditModal, product, closeEditModal }) {
             {/*body*/}
             <div className="relative p-6 flex-auto">
               <form className="space-y-6" onSubmit={submitHandler}>
-                <div>
-                  <label
+                <div className="flex gap-4 justify-center w-fit mx-auto">
+                  <img
+                    className="h-16 w-16 rounded-full"
+                    src={
+                      product.photo == "default"
+                        ? "https://placehold.co/100x100"
+                        : product.photo
+                    }
+                    alt="user image"
+                    width={300}
+                    height={300}
+                  />
+                  {/* <label
                     htmlFor="photo"
                     className="block text-sm font-medium leading-6 text-gray-900"
                   >
                     Product photo
-                  </label>
+                  </label> */}
                   <div className="mt-2">
                     <input
                       type="file"

@@ -46,7 +46,7 @@ function Profile() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
+    if (password && password !== confirmPassword) {
       toast.error("Passwords do not match");
     } else {
       try {
@@ -63,6 +63,7 @@ function Profile() {
 
           const { secure_url } = cloudinaryRes.data;
           setPhoto(secure_url);
+          setSelectedImage(null);
           profilePhotoLink = secure_url;
         }
 
@@ -77,7 +78,6 @@ function Profile() {
         }).unwrap();
         dispatch(setCredentials({ ...res }));
         toast.success("Profile updated");
-        router.replace("/");
       } catch (err) {
         toast.error(
           err?.data?.message || err.error || "Failed to update profile"
@@ -222,7 +222,6 @@ function Profile() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -245,7 +244,6 @@ function Profile() {
                   value={confirmPassword}
                   onChange={(e) => setconfirmPassword(e.target.value)}
                   placeholder="Confirm your password"
-                  required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>

@@ -15,7 +15,7 @@ export const ProductProvider = ({ children }) => {
   const searchAllProducts = async () => {
     try {
       const res = await axios.get("/api/products");
-      setProducts(res.data.data);
+      setProducts(res.data.products);
       setLoading(false);
     } catch (error) {
       console.error("Error:", error);
@@ -26,7 +26,7 @@ export const ProductProvider = ({ children }) => {
   const searchProducts = async (userId) => {
     try {
       const res = await axios.get(`/api/products/vendor/${userId}`);
-      setProducts(res.data.data);
+      setProducts(res.data.products);
       setLoading(false);
     } catch (error) {
       console.error("Error:", error);
@@ -37,7 +37,7 @@ export const ProductProvider = ({ children }) => {
   const searchFeaturedProducts = async () => {
     try {
       const res = await axios.get("/api/products/featured");
-      setFeaturedProducts(res.data.data);
+      setFeaturedProducts(res.data.products);
       setFeaturedProductsLoading(false);
     } catch (error) {
       console.error("Error:", error);
@@ -48,7 +48,7 @@ export const ProductProvider = ({ children }) => {
   const getProduct = async (productId) => {
     try {
       const res = await axios.get(`/api/products/product/${productId}`);
-      setProduct(res.data.data);
+      setProduct(res.data.product);
       setLoading(false);
     } catch (error) {
       console.error("Error:", error);

@@ -84,7 +84,7 @@ function VendorList() {
                   <td className="px-6 py-4">
                     {vendor.active == "active" ? (
                       <button
-                        className="hover:text-indigo-500"
+                        className="rounded-md bg-red-400 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-300"
                         onClick={() => {
                           setVendor(vendor);
                           setShowRejectVendorModal(true);
@@ -95,7 +95,7 @@ function VendorList() {
                     ) : vendor.active == "pending" ? (
                       <>
                         <button
-                          className="mr-4 hover:text-indigo-500"
+                          className="mr-4 rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400"
                           onClick={() => {
                             setVendor(vendor);
                             setShowApproveVendorModal(true);
@@ -104,7 +104,7 @@ function VendorList() {
                           Approve
                         </button>
                         <button
-                          className="hover:text-indigo-500"
+                          className="rounded-md bg-red-400 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-300"
                           onClick={() => {
                             setVendor(vendor);
                             setShowRejectVendorModal(true);
@@ -115,7 +115,7 @@ function VendorList() {
                       </>
                     ) : (
                       <button
-                        className="mr-4 hover:text-indigo-500"
+                        className="mr-4 rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400"
                         onClick={() => {
                           setVendor(vendor);
                           setShowApproveVendorModal(true);

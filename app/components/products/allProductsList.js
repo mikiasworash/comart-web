@@ -16,20 +16,35 @@ function AllProductsList() {
     return (
       <div className="h-screen mt-32">
         <Spinner />
-        <h1 className="text-center mt-8">Loading All Products...</h1>
+        <h1 className="text-center mt-8 text-3xl">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+            Loading all
+          </span>{" "}
+          products...
+        </h1>
       </div>
     );
   }
 
   if (!products)
     return (
-      <h1 className="text-2xl w-56 mx-auto my-64">No products to show yet!</h1>
+      <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-64">
+        <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+          No Products
+        </span>{" "}
+        to show yet!
+      </h1>
     );
 
   return (
     <div className="flex flex-col p-4 mt-8 max-w-6xl mx-auto">
       <div className="">
-        <h2 className="text-2xl tracking-tight text-gray-900">All Products</h2>
+        <h1 className="mb-4 text-3xl font-extrabold text-gray-800 md:text-5xl lg:text-5xl w-fit mx-auto">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+            Find What
+          </span>{" "}
+          You are looking for
+        </h1>
       </div>
       <div className="bg-white">
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">

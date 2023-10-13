@@ -12,7 +12,7 @@ export const CategoryProvider = ({ children }) => {
   const searchCategories = async () => {
     try {
       const res = await axios.get(`/api/categories`);
-      setCategories(res.data.data);
+      setCategories(res.data.categories);
       setLoading(false);
     } catch (error) {
       console.error("Error:", error);

@@ -9,7 +9,7 @@ function ApproveVendorModal({
 }) {
   const handleAprrove = async () => {
     try {
-      const res = await axios.put(`/api/users/vendors/${vendor._id}`, {
+      await axios.put(`/api/users/vendors/${vendor._id}`, {
         active: "active",
       });
 

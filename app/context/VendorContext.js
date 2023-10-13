@@ -12,10 +12,9 @@ export const VendorProvider = ({ children }) => {
   const searchVendors = async () => {
     try {
       const res = await axios.get(`/api/users/vendors`);
-      if (res.data.success) {
-        setVendors(res.data.data);
-        setLoading(false);
-      }
+
+      setVendors(res.data.vendors);
+      setLoading(false);
     } catch (error) {
       console.error("Error:", error);
     }
