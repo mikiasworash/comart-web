@@ -42,7 +42,7 @@ function CategoryList() {
         </h2>
         <button
           onClick={() => setAddShowModal(true)}
-          className="w-40 rounded-md flex items-center justify-center bg-indigo-600 px-3 py-1.5 text-md font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          className="w-40 mr-8 rounded-md flex items-center justify-center bg-indigo-600 px-3 py-1.5 text-md font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
           Add Category
         </button>
@@ -59,17 +59,17 @@ function CategoryList() {
 
       <div className="mt-6  gap-x-6 gap-y-10">
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-          <table className="w-full text-sm text-left text-gray-500 ">
+          <table className="w-full text-sm text-center text-gray-500 ">
             <thead className="text-xs text-gray-900 uppercase bg-gray-50">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   Category name
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  <div className="flex items-center">Description</div>
+                  Description
                 </th>
 
-                <th scope="col" className="px-6 py-3 text-right">
+                <th scope="col" className="px-6 py-3">
                   Action
                 </th>
               </tr>
@@ -85,7 +85,7 @@ function CategoryList() {
                   </th>
                   <td className="px-6 py-4">{category.description}</td>
                   <td className="px-6 py-4">
-                    <div className="flex gap-4 justify-end">
+                    <div className="flex gap-4 justify-center">
                       <button
                         onClick={() => {
                           setCategory(category);

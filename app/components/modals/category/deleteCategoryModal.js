@@ -9,7 +9,7 @@ function DeleteCategoryModal({ showDeleteModal, category, closeDeleteModal }) {
       toast.success("Category deleted");
       closeDeleteModal();
     } catch (error) {
-      toast.error("Deleting Category failed");
+      toast.error(error.response.data.message || "Deleting Category failed");
       console.error("Error:", error);
     }
   };

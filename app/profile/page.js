@@ -97,26 +97,52 @@ function Profile() {
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 mb-16 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className="flex gap-1 justify-center w-fit mx-auto">
           <Image
-            className="mt-10 h-16 w-16 mx-auto rounded-full"
+            className="mt-10 h-20 w-20 mx-auto rounded-full hover:scale-150"
             src={photo == "default" || photo == null ? avatar : photo}
             alt="user image"
             width={300}
             height={300}
           />
-          <div className="mt-2 w-fit mx-auto">
+          <div className="mt-2 mx-auto">
             <input
               type="file"
+              id="imageInput"
               onChange={handleImageChange}
+              className="hidden"
+            />
+            <label
+              htmlFor="imageInput"
               className="w-full text-sm text-gray-500
                     file:mr-4 file:py-2 file:px-4
                     file:rounded-md file:border-0
                     file:text-sm file:font-semibold
                     file:bg-indigo-400 file:text-white
-                    hover:file:bg-indigo-500
-                  "
-            />
+                    hover:file:bg-indigo-500 cursor-pointer"
+            >
+              <div>
+                <div class="flex mt-20 rounded-xl hover:rounded-3xl transition-all duration-300 text-green">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </label>
+            {selectedImage && (
+              <p className="text-gray-500 mt-2">{selectedImage.name}</p>
+            )}
           </div>
         </div>
 

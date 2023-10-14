@@ -68,7 +68,7 @@ function ProductList() {
         {userInfo.role == "vendor" && (
           <button
             onClick={() => setShowAddModal(true)}
-            className="w-40 rounded-md flex items-center justify-center bg-indigo-600 px-3 py-1.5 text-md font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="w-40 mr-8 rounded-md flex items-center justify-center bg-indigo-600 px-3 py-1.5 text-md font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Add Product
           </button>
@@ -86,29 +86,26 @@ function ProductList() {
 
       <div className="mt-6 gap-x-6 gap-y-10">
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-          <table className="w-full text-sm text-left text-gray-500 ">
+          <table className="w-full text-sm text-center text-gray-500 ">
             <thead className="text-xs text-gray-900 uppercase bg-gray-50">
               <tr>
                 <th scope="col" className="px-6 py-3">
-                  Product photo
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Product name
+                  Product
                 </th>
 
                 <th scope="col" className="px-6 py-3">
                   Product category
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  <div className="flex items-center">Price</div>
+                  Price
                 </th>
-                <th scope="col" className="px-6 py-3 text-right">
+                <th scope="col" className="px-6 py-3">
                   Quantity
                 </th>
-                <th scope="col" className="px-6 py-3 text-right">
+                <th scope="col" className="px-6 py-3">
                   Status
                 </th>
-                <th scope="col" className="px-6 py-3 text-right">
+                <th scope="col" className="px-6 py-3">
                   Action
                 </th>
               </tr>
@@ -121,7 +118,7 @@ function ProductList() {
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowra"
                   >
                     <img
-                      className="h-12 w-12 rounded-full"
+                      className="h-12 w-12 mb-2 rounded-full hover:scale-[3] mx-auto"
                       src={
                         product.photo == "default"
                           ? "https://placehold.co/100x100"
@@ -131,21 +128,20 @@ function ProductList() {
                       width={300}
                       height={300}
                     />
-                  </th>
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowra"
-                  >
                     {product.name}
                   </th>
                   <td className="px-6 py-4">{product.category.name}</td>
                   <td className="px-6 py-4">{product.price}</td>
-                  <td className="px-6 py-4 text-right">{product.quantity}</td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="px-6 py-4">{product.quantity}</td>
+                  <td
+                    className={`px-6 py-4 font-bold ${
+                      product.featured ? "text-green-600" : "text-red-500"
+                    }`}
+                  >
                     {product.featured ? "Featured" : "Not Featured"}
                   </td>
                   <td className="px-6 py-4">
-                    <div className="flex gap-4 justify-end">
+                    <div className="flex gap-4 justify-center">
                       {userInfo.role === "vendor" ? (
                         <>
                           <button

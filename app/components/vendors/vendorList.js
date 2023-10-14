@@ -37,14 +37,11 @@ function VendorList() {
 
       <div className="mt-6  gap-x-6 gap-y-10">
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-          <table className="w-full text-sm text-left text-gray-500 ">
+          <table className="w-full text-sm text-center text-gray-500 ">
             <thead className="text-xs text-gray-900 uppercase bg-gray-50">
               <tr>
                 <th scope="col" className="px-6 py-3">
-                  Vendor photo
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Vendor name
+                  Vendor
                 </th>
 
                 <th scope="col" className="px-6 py-3">
@@ -64,9 +61,9 @@ function VendorList() {
             {vendors.map((vendor) => (
               <tbody key={vendor._id}>
                 <tr className="bg-white border-b">
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-gray-900">
                     <img
-                      className="h-12 w-12 rounded-full"
+                      className="h-12 w-12 mb-2 rounded-full hover:scale-[3] mx-auto"
                       src={
                         vendor.photo == "default"
                           ? "https://placehold.co/100x100"
@@ -76,33 +73,24 @@ function VendorList() {
                       width={300}
                       height={300}
                     />
+                    {vendor.name}
                   </td>
-                  <td className="px-6 py-4">{vendor.name}</td>
                   <td className="px-6 py-4">{vendor.email}</td>
                   <td className="px-6 py-4">{vendor.phone}</td>
-                  <td className="px-6 py-4">{vendor.active}</td>
+                  <td
+                    className={`px-6 py-4 font-bold ${
+                      vendor.active == "active"
+                        ? "text-green-500"
+                        : vendor.active == "pending"
+                        ? "text-blue-500"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {vendor.active}
+                  </td>
                   <td className="px-6 py-4">
-                    {vendor.active == "active" ? (
-                      <button
-                        className="rounded-md bg-red-400 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-300"
-                        onClick={() => {
-                          setVendor(vendor);
-                          setShowRejectVendorModal(true);
-                        }}
-                      >
-                        Reject
-                      </button>
-                    ) : vendor.active == "pending" ? (
-                      <>
-                        <button
-                          className="mr-4 rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400"
-                          onClick={() => {
-                            setVendor(vendor);
-                            setShowApproveVendorModal(true);
-                          }}
-                        >
-                          Approve
-                        </button>
+                    <div className="flex gap-2 justify-center">
+                      {vendor.active == "active" ? (
                         <button
                           className="rounded-md bg-red-400 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-300"
                           onClick={() => {
@@ -112,18 +100,39 @@ function VendorList() {
                         >
                           Reject
                         </button>
-                      </>
-                    ) : (
-                      <button
-                        className="mr-4 rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400"
-                        onClick={() => {
-                          setVendor(vendor);
-                          setShowApproveVendorModal(true);
-                        }}
-                      >
-                        Approve
-                      </button>
-                    )}
+                      ) : vendor.active == "pending" ? (
+                        <>
+                          <button
+                            className="rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400"
+                            onClick={() => {
+                              setVendor(vendor);
+                              setShowApproveVendorModal(true);
+                            }}
+                          >
+                            Approve
+                          </button>
+                          <button
+                            className="rounded-md bg-red-400 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-300"
+                            onClick={() => {
+                              setVendor(vendor);
+                              setShowRejectVendorModal(true);
+                            }}
+                          >
+                            Reject
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          className="rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400"
+                          onClick={() => {
+                            setVendor(vendor);
+                            setShowApproveVendorModal(true);
+                          }}
+                        >
+                          Approve
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               </tbody>
