@@ -75,7 +75,7 @@ export default function Cart() {
               <div className="flow-root">
                 <ul role="list" className="-my-6 divide-y divide-gray-200">
                   {cart.map((cartItem) => (
-                    <CartItem cartItem={cartItem} />
+                    <CartItem key={cartItem._id} cartItem={cartItem} />
                   ))}
                 </ul>
               </div>

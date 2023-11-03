@@ -1,13 +1,18 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Link from "next/link";
+import ProductContext from "../../context/ProductContext";
 
 function CartItem({ cartItem }) {
   const [amount, setAmount] = useState(cartItem.amount);
+  const { setProduct } = useContext(ProductContext);
 
   return (
     <li key={cartItem.product._id} className="flex py-6 lg:w-[32rem]">
       <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-        <Link href={`/products/${cartItem.product._id}`}>
+        <Link
+          href={`/products/${cartItem.product._id}`}
+          onClick={() => setProduct(cartItem.product)}
+        >
           <img
             src={cartItem.product.photo}
             alt={cartItem.product.name}
