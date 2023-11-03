@@ -33,7 +33,7 @@ function addProductModal({ showAddModal, closeAddModal }) {
     }
 
     try {
-      let productPhoto = product.photo;
+      let productPhoto = "default";
       if (selectedImage) {
         const formData = new FormData();
         formData.append("file", selectedImage);

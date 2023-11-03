@@ -1,13 +1,17 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import Spinner from "../components/Spinner";
 import Link from "next/link";
+import CartItem from "../components/cart/cartItem";
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const router = useRouter();
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -18,10 +22,9 @@ export default function Cart() {
 
     const fetchCart = async () => {
       try {
-        setIsLoading(false);
         const res = await axios.get(`/api/cart/${userInfo._id}`);
         setCart(res.data.cart);
-        console.log(res.data.cart);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching cart:", error);
         setIsLoading(false);
@@ -31,7 +34,7 @@ export default function Cart() {
     fetchCart();
   }, []);
 
-  if (isLoading)
+  if (isLoading || !userInfo)
     return (
       <div className="h-screen mt-32">
         <Spinner />
@@ -40,6 +43,18 @@ export default function Cart() {
             Loading
           </span>{" "}
           cart...
+        </h1>
+      </div>
+    );
+
+  if (!cart || cart.length === 0)
+    return (
+      <div className="h-screen mt-32">
+        <h1 className="text-center mt-8 text-3xl">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+            Your cart is
+          </span>{" "}
+          empty...
         </h1>
       </div>
     );
@@ -60,55 +75,7 @@ export default function Cart() {
               <div className="flow-root">
                 <ul role="list" className="-my-6 divide-y divide-gray-200">
                   {cart.map((cartItem) => (
-                    <li
-                      key={cartItem.product._id}
-                      className="flex py-6 lg:w-[32rem]"
-                    >
-                      <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                        <img
-                          src={cartItem.product.photo}
-                          alt={cartItem.product.name}
-                          className="h-full w-full object-cover object-center"
-                        />
-                      </div>
-
-                      <div className="ml-4 flex flex-1 flex-col">
-                        <div>
-                          <div className="flex justify-between text-base font-medium text-gray-900">
-                            <h3>
-                              <a href={cartItem.product._id}>
-                                {cartItem.product.name}
-                              </a>
-                            </h3>
-                            <p className="ml-4">{cartItem.product.price}</p>
-                          </div>
-                          <p className="mt-1 text-sm text-gray-500">
-                            {cartItem.product.category.name}
-                          </p>
-                        </div>
-                        <div className="flex flex-1 items-end justify-between text-sm">
-                          <div className="flex gap-2 items-center">
-                            <p className="text-gray-500">Qty </p>
-                            <input
-                              type="number"
-                              class="flex w-14 items-center rounded-lg border-none font-semibold text-center text-gray-700 placeholder-gray-700 bg-gray-100 outline-none focus:outline-none text-md hover:text-black"
-                              placeholder="1"
-                              value={cartItem.amount}
-                              min="1"
-                            />
-                          </div>
-
-                          <div className="flex">
-                            <button
-                              type="button"
-                              className="font-medium text-indigo-600 hover:text-indigo-500"
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
+                    <CartItem cartItem={cartItem} />
                   ))}
                 </ul>
               </div>

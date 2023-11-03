@@ -124,7 +124,7 @@ function ProductList() {
                           ? "https://placehold.co/100x100"
                           : product.photo
                       }
-                      alt="user image"
+                      alt="product image"
                       width={300}
                       height={300}
                     />
