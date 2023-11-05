@@ -2,36 +2,34 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Spinner from "../components/Spinner";
 import Link from "next/link";
 import CartItem from "../components/cart/cartItem";
+import { calculateTotals, getCartItems } from "../../redux/slices/cartSlice";
 
 export default function Cart() {
-  const [cart, setCart] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
   const router = useRouter();
 
   const { userInfo } = useSelector((state) => state.auth);
+  const { cartItems, isLoading, total, amount } = useSelector(
+    (state) => state.cart
+  );
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!userInfo) {
+    dispatch(calculateTotals());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cartItems]);
+
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(getCartItems(userInfo._id));
+    } else {
       router.replace("/signin");
     }
-
-    const fetchCart = async () => {
-      try {
-        const res = await axios.get(`/api/cart/${userInfo._id}`);
-        setCart(res.data.cart);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching cart:", error);
-        setIsLoading(false);
-      }
-    };
-
-    fetchCart();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (isLoading || !userInfo)
@@ -47,7 +45,7 @@ export default function Cart() {
       </div>
     );
 
-  if (!cart || cart.length === 0)
+  if (amount < 1)
     return (
       <div className="h-screen mt-32">
         <h1 className="text-center mt-8 text-3xl">
@@ -60,7 +58,7 @@ export default function Cart() {
     );
 
   return (
-    <div className="w-fit mx-auto">
+    <div className="w-fit mx-auto h-screen">
       <div className="inset-y-0 right-0 flex max-w-full pl-10">
         <div className="flex h-full flex-col justify-center items-center bg-white">
           <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
@@ -74,7 +72,7 @@ export default function Cart() {
             <div className="mt-8">
               <div className="flow-root">
                 <ul role="list" className="-my-6 divide-y divide-gray-200">
-                  {cart.map((cartItem) => (
+                  {cartItems.map((cartItem) => (
                     <CartItem key={cartItem._id} cartItem={cartItem} />
                   ))}
                 </ul>
@@ -82,10 +80,18 @@ export default function Cart() {
             </div>
           </div>
 
-          <div className="border-t border-gray-200 px-4 py-6 sm:px-6 lg:w-[32rem]">
-            <div className="flex justify-between text-base font-medium text-gray-900">
+          <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
+            <div className="flex justify-between text-base font-medium text-gray-900 md:w-[32rem]">
               <p className="mr-2">Total</p>
-              <p>$3260.50</p>
+              <p>
+                ETB{" "}
+                <span className="font-bold">
+                  {total
+                    .toFixed(2)
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                </span>
+              </p>
             </div>
             <div className="mt-6">
               <Link

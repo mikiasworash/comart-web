@@ -17,6 +17,10 @@ function ProductDetail() {
     getProduct(productId);
   }, []);
 
+  function handleAddToCart() {
+    console.log(product);
+  }
+
   if (!product) {
     return (
       <div className="mt-32 h-screen">
@@ -169,16 +173,19 @@ function ProductDetail() {
                 ETB {product.price}
               </span>
             </div>
-            <div className="flex mt-6 gap-6 items-left">
-              <input
-                type="number"
-                className="flex w-20 items-center rounded-lg border-none font-semibold text-center text-gray-700 placeholder-gray-700 bg-gray-100 outline-none focus:outline-none text-md hover:text-black"
-                placeholder="1"
-                min="1"
-              />
-              {userInfo ? (
-                userInfo.role == "buyer" ? (
-                  <button className="flex text-white bg-indigo-500 border-0 py-2 px-3 focus:outline-none hover:bg-indigo-600 rounded-lg">
+            {userInfo ? (
+              userInfo.role == "buyer" ? (
+                <div className="flex mt-6 gap-6 items-left">
+                  <input
+                    type="number"
+                    className="flex w-20 items-center rounded-lg border-none font-semibold text-center text-gray-700 placeholder-gray-700 bg-gray-100 outline-none focus:outline-none text-md hover:text-black"
+                    placeholder="1"
+                    min="1"
+                  />
+                  <button
+                    className="flex text-white bg-indigo-500 border-0 py-2 px-3 focus:outline-none hover:bg-indigo-600 rounded-lg"
+                    onClick={handleAddToCart}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="mr-2 h-6 w-6"
@@ -195,10 +202,18 @@ function ProductDetail() {
                     </svg>
                     Add to Cart
                   </button>
-                ) : (
-                  ""
-                )
+                </div>
               ) : (
+                ""
+              )
+            ) : (
+              <div className="flex mt-6 gap-6 items-left">
+                <input
+                  type="number"
+                  className="flex w-20 items-center rounded-lg border-none font-semibold text-center text-gray-700 placeholder-gray-700 bg-gray-100 outline-none focus:outline-none text-md hover:text-black"
+                  placeholder="1"
+                  min="1"
+                />
                 <button className="flex text-white bg-indigo-500 border-0 py-2 px-3 focus:outline-none hover:bg-indigo-600 rounded-lg">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -209,15 +224,15 @@ function ProductDetail() {
                     strokeWidth="2"
                   >
                     <path
-                      strokeLinejoin="round"
-                      strokeLinejoin="round"
+                      strokeLinecap="round"
+                      strokeLinecap="round"
                       d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                     />
                   </svg>
                   Add to Cart
                 </button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

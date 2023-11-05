@@ -30,6 +30,7 @@ function classNames(...classes) {
 
 export default function Navbar() {
   const { userInfo } = useSelector((state) => state.auth);
+  const { amount } = useSelector((state) => state.cart);
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -118,7 +119,7 @@ export default function Navbar() {
                           aria-hidden="true"
                         />
                         <span className="ml-2 text-sm font-medium text-gray-400 group-hover:text-gray-500">
-                          0
+                          {amount}
                         </span>
                         <span className="sr-only">items in cart, view bag</span>
                       </Link>
