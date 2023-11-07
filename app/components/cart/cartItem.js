@@ -30,13 +30,17 @@ function CartItem({ cartItem }) {
 
   return (
     <li key={cartItem.product._id} className="flex py-6 md:w-[32rem]">
-      <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+      <div className="h-24 w-24 flex-shrink-0 rounded-md border border-gray-200">
         <Link
           href={`/products/${cartItem.product._id}`}
           onClick={() => setProduct(cartItem.product)}
         >
           <img
-            src={cartItem.product.photo}
+            src={
+              cartItem.product.photo == "default"
+                ? "https://placehold.co/100x100"
+                : cartItem.product.photo
+            }
             alt={cartItem.product.name}
             className="h-full w-full object-cover object-center"
           />{" "}

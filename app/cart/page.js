@@ -1,12 +1,10 @@
 "use client";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import Spinner from "../components/Spinner";
 import Link from "next/link";
 import CartItem from "../components/cart/cartItem";
-import { calculateTotals, getCartItems } from "../../redux/slices/cartSlice";
 
 export default function Cart() {
   const router = useRouter();
@@ -16,23 +14,13 @@ export default function Cart() {
     (state) => state.cart
   );
 
-  const dispatch = useDispatch();
-
   useEffect(() => {
-    dispatch(calculateTotals());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cartItems]);
-
-  useEffect(() => {
-    if (userInfo) {
-      dispatch(getCartItems(userInfo._id));
-    } else {
+    if (!userInfo) {
       router.replace("/signin");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (isLoading || !userInfo)
+  if (isLoading)
     return (
       <div className="h-screen mt-32">
         <Spinner />
@@ -58,10 +46,10 @@ export default function Cart() {
     );
 
   return (
-    <div className="w-fit mx-auto h-screen">
+    <div className="w-fit mx-auto min-h-screen">
       <div className="inset-y-0 right-0 flex max-w-full pl-10">
         <div className="flex h-full flex-col justify-center items-center bg-white">
-          <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+          <div className="flex-1 px-4 py-6 sm:px-6">
             <h1 className="mb-4 text-xl font-extrabold text-gray-800 md:text-2xl w-fit mx-auto">
               <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
                 Shopping
@@ -70,7 +58,7 @@ export default function Cart() {
             </h1>
 
             <div className="mt-8">
-              <div className="flow-root">
+              <div className="">
                 <ul role="list" className="-my-6 divide-y divide-gray-200">
                   {cartItems.map((cartItem) => (
                     <CartItem key={cartItem._id} cartItem={cartItem} />
@@ -80,7 +68,7 @@ export default function Cart() {
             </div>
           </div>
 
-          <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
+          <div className="border-t border-gray-200 px-4 py-6 sm:px-6 z-0">
             <div className="flex justify-between text-base font-medium text-gray-900 md:w-[32rem]">
               <p className="mr-2">Total</p>
               <p>

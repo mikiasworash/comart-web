@@ -1,5 +1,5 @@
 "use client";
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import Image from "next/image";
 import avatar from "../assets/img/user.png";
 import logo from "../assets/img/logo.png";
@@ -15,6 +15,11 @@ import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { useLogoutMutation } from "../../redux/slices/usersApiSlice";
 import { logout } from "../../redux/slices/authSlice";
+import {
+  calculateTotals,
+  getCartItems,
+  clearCart,
+} from "../../redux/slices/cartSlice";
 import { useRouter } from "next/navigation";
 import { toast as hotToast } from "react-hot-toast";
 
@@ -30,17 +35,32 @@ function classNames(...classes) {
 
 export default function Navbar() {
   const { userInfo } = useSelector((state) => state.auth);
-  const { amount } = useSelector((state) => state.cart);
+  const { cartItems, amount } = useSelector((state) => state.cart);
 
   const router = useRouter();
   const dispatch = useDispatch();
 
   const [logoutApiCall] = useLogoutMutation();
 
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(calculateTotals());
+    }
+  }, [cartItems]);
+
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(getCartItems(userInfo._id));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const logoutHandler = async () => {
     try {
       await logoutApiCall().unwrap();
       dispatch(logout());
+      dispatch(clearCart());
+      dispatch(calculateTotals());
       hotToast.success("User logged out");
       router.replace("/");
     } catch (error) {

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { useLoginMutation } from "../../redux/slices/usersApiSlice";
 import { setCredentials } from "../../redux/slices/authSlice";
+import { getCartItems } from "../../redux/slices/cartSlice";
 import { toast } from "react-hot-toast";
 import Spinner from "../components/Spinner";
 
@@ -20,7 +21,8 @@ function page() {
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (userInfo) {
+    if (userInfo && userInfo.role === "buyer") {
+      dispatch(getCartItems(userInfo._id));
       router.replace("/");
     }
   }, [router, userInfo]);
@@ -39,7 +41,7 @@ function page() {
 
   return (
     <>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 lg:px-8 mb-72">
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 lg:px-8 mb-96">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign in

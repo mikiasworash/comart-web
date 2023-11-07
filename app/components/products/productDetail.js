@@ -1,14 +1,19 @@
 "use client";
 import { useState, useEffect, useContext } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "next/navigation";
+import axios from "axios";
 import ProductContext from "../../context/ProductContext";
 import Spinner from "../Spinner";
+import { toast as hotToast } from "react-hot-toast";
+import { getCartItems } from "../../../redux/slices/cartSlice";
 
 function ProductDetail() {
   const { product, getProduct } = useContext(ProductContext);
+  const [quantity, setQuantity] = useState(1);
 
   const { userInfo } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const params = useParams();
   const productId = params.productId;
@@ -17,9 +22,23 @@ function ProductDetail() {
     getProduct(productId);
   }, []);
 
-  function handleAddToCart() {
-    console.log(product);
-  }
+  const handleAddToCart = async () => {
+    if (!userInfo || userInfo.role !== "buyer") {
+      hotToast.error("please sign in as a customer first");
+    } else {
+      try {
+        const res = await axios.post(`/api/cart/${product._id}`, {
+          amount: quantity,
+        });
+
+        dispatch(getCartItems(userInfo._id));
+
+        hotToast.success("product added to cart");
+      } catch (error) {
+        hotToast.error(error.response.data.message || "Adding Cart failed");
+      }
+    }
+  };
 
   if (!product) {
     return (
@@ -36,7 +55,7 @@ function ProductDetail() {
   }
 
   return (
-    <section className="text-gray-700 body-font overflow-hidden bg-white mb-48">
+    <section className="text-gray-700 body-font overflow-hidden bg-white mb-48 min-h-screen">
       <div className="container px-5 py-24 mx-auto">
         <div className="lg:w-4/5 mx-auto flex flex-wrap lg:gap-16">
           <img
@@ -181,6 +200,7 @@ function ProductDetail() {
                     className="flex w-20 items-center rounded-lg border-none font-semibold text-center text-gray-700 placeholder-gray-700 bg-gray-100 outline-none focus:outline-none text-md hover:text-black"
                     placeholder="1"
                     min="1"
+                    onChange={(e) => setQuantity(e.target.value)}
                   />
                   <button
                     className="flex text-white bg-indigo-500 border-0 py-2 px-3 focus:outline-none hover:bg-indigo-600 rounded-lg"
@@ -214,7 +234,10 @@ function ProductDetail() {
                   placeholder="1"
                   min="1"
                 />
-                <button className="flex text-white bg-indigo-500 border-0 py-2 px-3 focus:outline-none hover:bg-indigo-600 rounded-lg">
+                <button
+                  className="flex text-white bg-indigo-500 border-0 py-2 px-3 focus:outline-none hover:bg-indigo-600 rounded-lg"
+                  onClick={handleAddToCart}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="mr-2 h-6 w-6"

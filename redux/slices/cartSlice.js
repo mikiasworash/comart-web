@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast as hotToast } from "react-hot-toast";
 
 const initialState = {
   cartItems: [],
@@ -26,6 +27,9 @@ export const cartSlice = createSlice({
   reducers: {
     clearCart: (state) => {
       state.cartItems = [];
+    },
+    addToCart: (state, action) => {
+      state.cartItems = [...state.cartItems, action.payload];
     },
     removeItem: (state, action) => {
       const itemId = action.payload;
@@ -66,7 +70,13 @@ export const cartSlice = createSlice({
   },
 });
 
-export const { clearCart, removeItem, increase, decrease, calculateTotals } =
-  cartSlice.actions;
+export const {
+  clearCart,
+  removeItem,
+  increase,
+  decrease,
+  calculateTotals,
+  addToCart,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;
