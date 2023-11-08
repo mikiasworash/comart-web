@@ -29,8 +29,8 @@ function CartItem({ cartItem }) {
   };
 
   return (
-    <li key={cartItem.product._id} className="flex py-6 md:w-[32rem]">
-      <div className="h-24 w-24 flex-shrink-0 rounded-md border border-gray-200">
+    <li key={cartItem.product._id} className="flex py-6 w-80 md:w-[32rem]">
+      <div className="h-24 flex-shrink-0 rounded-md border border-gray-200">
         <Link
           href={`/products/${cartItem.product._id}`}
           onClick={() => setProduct(cartItem.product)}
@@ -78,7 +78,7 @@ function CartItem({ cartItem }) {
             <button
               onClick={() => dispatch(removeItem(cartItem._id))}
               type="button"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
+              className="font-medium text-red-800 hover:text-red-700"
             >
               Remove
             </button>

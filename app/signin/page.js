@@ -21,6 +21,12 @@ function page() {
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
+    if (userInfo) {
+      router.replace("/");
+    }
+  }, []);
+
+  useEffect(() => {
     if (userInfo && userInfo.role === "buyer") {
       dispatch(getCartItems(userInfo._id));
       router.replace("/");
@@ -82,7 +88,7 @@ function page() {
                 <div className="text-sm">
                   <a
                     href="#"
-                    className="font-semibold text-indigo-600 hover:text-indigo-500"
+                    className="font-semibold text-gray-800 hover:text-gray-600"
                   >
                     Forgot password?
                   </a>
@@ -107,7 +113,7 @@ function page() {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center rounded-md bg-gray-800 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Sign in
               </button>
@@ -118,7 +124,7 @@ function page() {
             Don't have an account?{" "}
             <Link
               href="/signup"
-              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+              className="font-semibold leading-6 text-gray-800 hover:text-gray-600"
             >
               Register
             </Link>

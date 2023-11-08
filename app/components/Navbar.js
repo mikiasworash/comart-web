@@ -43,13 +43,13 @@ export default function Navbar() {
   const [logoutApiCall] = useLogoutMutation();
 
   useEffect(() => {
-    if (userInfo) {
+    if (userInfo && userInfo.role === "buyer") {
       dispatch(calculateTotals());
     }
   }, [cartItems]);
 
   useEffect(() => {
-    if (userInfo) {
+    if (userInfo && userInfo.role === "buyer") {
       dispatch(getCartItems(userInfo._id));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

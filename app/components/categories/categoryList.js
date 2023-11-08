@@ -42,7 +42,7 @@ function CategoryList() {
         </h2>
         <button
           onClick={() => setAddShowModal(true)}
-          className="w-40 mr-8 rounded-md flex items-center justify-center bg-indigo-600 px-3 py-1.5 text-md font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          className="w-40 mr-8 rounded-md flex items-center justify-center bg-gray-800 px-3 py-1.5 text-md font-semibold leading-6 text-white shadow-sm hover:bg-gray-700"
         >
           Add Category
         </button>
@@ -94,7 +94,7 @@ function CategoryList() {
                       >
                         <div className="flex items-center justify-center">
                           <div>
-                            <button className="flex p-2.5 bg-yellow-500 rounded-xl hover:rounded-3xl hover:bg-yellow-600 transition-all duration-300 text-white">
+                            <button className="flex p-2.5 bg-gray-600 rounded-xl hover:rounded-3xl hover:bg-gray-600 transition-all duration-300 text-white">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="h-4 w-4"

@@ -77,22 +77,23 @@ function VendorList() {
                   </td>
                   <td className="px-6 py-4">{vendor.email}</td>
                   <td className="px-6 py-4">{vendor.phone}</td>
-                  <td
-                    className={`px-6 py-4 font-bold ${
-                      vendor.active == "active"
-                        ? "text-green-500"
-                        : vendor.active == "pending"
-                        ? "text-blue-500"
-                        : "text-red-500"
-                    }`}
-                  >
+                  <td className={`px-6 py-4 font-bold`}>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-semibold text-gray-600">
+                      {vendor.active == "active" ? (
+                        <span className="h-2.5 w-2.5 rounded-full bg-green-600"></span>
+                      ) : vendor.active == "pending" ? (
+                        <span className="h-2.5 w-2.5 rounded-full bg-blue-600"></span>
+                      ) : (
+                        <span className="h-2.5 w-2.5 rounded-full bg-red-600"></span>
+                      )}
+                    </span>
                     {vendor.active}
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex gap-2 justify-center">
                       {vendor.active == "active" ? (
                         <button
-                          className="rounded-md bg-red-400 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-300"
+                          className="rounded-md bg-red-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-400"
                           onClick={() => {
                             setVendor(vendor);
                             setShowRejectVendorModal(true);
@@ -112,7 +113,7 @@ function VendorList() {
                             Approve
                           </button>
                           <button
-                            className="rounded-md bg-red-400 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-300"
+                            className="rounded-md bg-red-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-400"
                             onClick={() => {
                               setVendor(vendor);
                               setShowRejectVendorModal(true);

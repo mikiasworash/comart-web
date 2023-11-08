@@ -3,6 +3,7 @@ import axios from "axios";
 import dynamic from "next/dynamic";
 import { useState, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 import ProductContext from "../../context/ProductContext";
 import { AiFillDelete, AiTwotoneEdit } from "react-icons/ai";
 import { toast } from "react-hot-toast";
@@ -30,11 +31,11 @@ function ProductList() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [productToChange, setProduct] = useState("");
+  const [productToChange, setProductToChange] = useState("");
 
   const { userInfo } = useSelector((state) => state.auth);
 
-  const { products, searchProducts, searchAllProducts } =
+  const { products, searchProducts, searchAllProducts, setProduct } =
     useContext(ProductContext);
 
   useEffect(() => {
@@ -68,7 +69,7 @@ function ProductList() {
         {userInfo.role == "vendor" && (
           <button
             onClick={() => setShowAddModal(true)}
-            className="w-40 mr-8 rounded-md flex items-center justify-center bg-indigo-600 px-3 py-1.5 text-md font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="w-40 mr-8 rounded-md flex items-center justify-center bg-gray-800 px-3 py-1.5 text-md font-semibold leading-6 text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             Add Product
           </button>
@@ -128,16 +129,24 @@ function ProductList() {
                       width={300}
                       height={300}
                     />
-                    {product.name}
+                    <Link
+                      href={`/products/${product._id}`}
+                      onClick={() => setProduct(product)}
+                    >
+                      {product.name}
+                    </Link>
                   </th>
                   <td className="px-6 py-4">{product.category.name}</td>
                   <td className="px-6 py-4">{product.price}</td>
                   <td className="px-6 py-4">{product.quantity}</td>
-                  <td
-                    className={`px-6 py-4 font-bold ${
-                      product.featured ? "text-green-600" : "text-red-500"
-                    }`}
-                  >
+                  <td className={`px-6 py-4 font-bold`}>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-semibold text-green-600">
+                      {product.featured ? (
+                        <span className="h-2.5 w-2.5 rounded-full bg-green-600"></span>
+                      ) : (
+                        <span className="h-2.5 w-2.5 rounded-full bg-red-600"></span>
+                      )}
+                    </span>
                     {product.featured ? "Featured" : "Not Featured"}
                   </td>
                   <td className="px-6 py-4">
@@ -146,13 +155,13 @@ function ProductList() {
                         <>
                           <button
                             onClick={() => {
-                              setProduct(product);
+                              setProductToChange(product);
                               setShowEditModal(true);
                             }}
                           >
                             <div className="flex items-center justify-center">
                               <div>
-                                <button className="flex p-2.5 bg-yellow-500 rounded-xl hover:rounded-3xl hover:bg-yellow-600 transition-all duration-300 text-white">
+                                <button className="flex p-2.5 bg-gray-600 rounded-xl hover:rounded-3xl hover:bg-gray-600 transition-all duration-300 text-white">
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="h-4 w-4"
@@ -173,7 +182,7 @@ function ProductList() {
                           </button>
                           <button
                             onClick={() => {
-                              setProduct(product);
+                              setProductToChange(product);
                               setShowDeleteModal(true);
                             }}
                           >
@@ -189,12 +198,12 @@ function ProductList() {
                       ) : (
                         <button
                           onClick={() => {
-                            setProduct(product);
+                            setProductToChange(product);
                             handleFeature(product);
                           }}
                           className={`${
                             product.featured
-                              ? "rounded-md bg-red-400 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-300"
+                              ? "rounded-md bg-red-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-400"
                               : "rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400"
                           }`}
                         >

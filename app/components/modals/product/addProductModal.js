@@ -95,8 +95,8 @@ function addProductModal({ showAddModal, closeAddModal }) {
                     file:mr-4 file:py-2 file:px-4
                     file:rounded-md file:border-0
                     file:text-sm file:font-semibold
-                    file:bg-indigo-400 file:text-white
-                    hover:file:bg-indigo-500
+                    file:bg-gray-600 file:text-white
+                    hover:file:bg-gray-500
                   "
                     />
                   </div>
@@ -199,7 +199,7 @@ function addProductModal({ showAddModal, closeAddModal }) {
                     <div className="mt-2">
                       <select
                         onChange={(e) => setCategory(e.target.value)}
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                       >
                         <option disabled selected>
                           Choose Category
@@ -226,7 +226,7 @@ function addProductModal({ showAddModal, closeAddModal }) {
                   </button>
                   <button
                     type="submit"
-                    className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    className="flex w-full justify-center rounded-md bg-gray-800 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-700"
                   >
                     Add
                   </button>

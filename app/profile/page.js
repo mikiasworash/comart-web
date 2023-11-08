@@ -88,7 +88,7 @@ function Profile() {
 
   if (!userInfo) {
     return (
-      <div className="mt-16">
+      <div className="mt-32 h-screen">
         <Spinner />
       </div>
     );
@@ -280,9 +280,9 @@ function Profile() {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center rounded-md bg-gray-800 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-700"
               >
-                Update Profile
+                Save Changes
               </button>
             </div>
           </form>

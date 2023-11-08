@@ -44,10 +44,10 @@ function VendorDashboard() {
   }
 
   return (
-    <div className="flex flex-col bg-gray-100">
+    <div className="flex flex-col bg-white">
       <div className="flex-1 flex">
         <div
-          className="p-2 bg-white w-60 flex flex-col hidden md:flex min-h-screen"
+          className="p-2 bg-gray-50 w-60 flex flex-col hidden md:flex min-h-screen"
           id="sideNav"
         >
           <div className="max-w-2xl px-4 pt-12 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -64,16 +64,16 @@ function VendorDashboard() {
           <nav>
             <button
               onClick={() => setTabIndex(1)}
-              className={`block text-gray-500 w-56 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-indigo-400 hover:to-indigo-300 hover:text-white ${
-                tabIndex === 1 ? "bg-indigo-500 text-white" : ""
+              className={`block text-gray-500 w-56 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-gray-600 hover:to-gray-500 hover:text-white ${
+                tabIndex === 1 ? "bg-gray-800 text-white" : ""
               }`}
             >
               <i className="fas fa-home mr-2"></i>Product Management
             </button>
             <button
               onClick={() => setTabIndex(2)}
-              className={`block text-gray-500 w-56 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-indigo-400 hover:to-indigo-300 hover:text-white ${
-                tabIndex === 2 ? "bg-indigo-500 text-white" : ""
+              className={`block text-gray-500 w-56 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-gray-600 hover:to-gray-500 hover:text-white ${
+                tabIndex === 2 ? "bg-gray-800 text-white" : ""
               }`}
             >
               <i className="fas fa-file-alt mr-2"></i>Order Management

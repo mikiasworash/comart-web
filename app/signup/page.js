@@ -194,7 +194,7 @@ function Register() {
                       name="list-radio"
                       onChange={(e) => setRole(e.target.value)}
                       checked
-                      class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                      class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-30"
                     />
                     <label
                       for="list-radio-license"
@@ -212,7 +212,7 @@ function Register() {
                       value="vendor"
                       onChange={(e) => setRole(e.target.value)}
                       name="list-radio"
-                      class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                      class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300"
                     />
                     <label
                       for="list-radio-id"
@@ -233,7 +233,7 @@ function Register() {
                     aria-describedby="acceptTerms"
                     type="checkbox"
                     ref={AcceptTermsRef}
-                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 text-indigo-600"
+                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 text-gray-800"
                     required=""
                   />
                 </div>
@@ -257,7 +257,7 @@ function Register() {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center rounded-md bg-gray-800 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
               >
                 Sign up
               </button>
@@ -268,7 +268,7 @@ function Register() {
             Already have an account?{" "}
             <Link
               href="/signin"
-              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+              className="font-semibold leading-6 text-gray-800 hover:text-gray-700"
             >
               Sign In
             </Link>
