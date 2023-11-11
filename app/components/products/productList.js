@@ -63,8 +63,8 @@ function ProductList() {
   return (
     <div className="flex-1 p-4">
       <div className="flex justify-between">
-        <h2 className="mt-4 text-2xl tracking-tight text-gray-900">
-          Manage Products
+        <h2 className="mt-4 text-2xl ml-10 font-bold tracking-tight text-gray-900">
+          Products
         </h2>
         {userInfo.role == "vendor" && (
           <button
@@ -93,6 +93,11 @@ function ProductList() {
                 <th scope="col" className="px-6 py-3">
                   Product
                 </th>
+                {userInfo.role === "admin" && (
+                  <th scope="col" className="px-6 py-3">
+                    Vendor
+                  </th>
+                )}
 
                 <th scope="col" className="px-6 py-3">
                   Product category
@@ -136,6 +141,9 @@ function ProductList() {
                       {product.name}
                     </Link>
                   </th>
+                  {userInfo.role === "admin" && (
+                    <td className="px-6 py-4">{product.vendor.name}</td>
+                  )}
                   <td className="px-6 py-4">{product.category.name}</td>
                   <td className="px-6 py-4">{product.price}</td>
                   <td className="px-6 py-4">{product.quantity}</td>

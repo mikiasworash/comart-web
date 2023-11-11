@@ -61,7 +61,7 @@ export default function Navbar() {
       dispatch(logout());
       dispatch(clearCart());
       dispatch(calculateTotals());
-      hotToast.success("User logged out");
+      hotToast.success("Logged Out");
       router.replace("/");
     } catch (error) {
       hotToast.error(error);

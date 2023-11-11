@@ -35,7 +35,7 @@ export default function Cart() {
       </div>
     );
 
-  if (amount < 1)
+  if (!isLoading && amount < 1)
     return (
       <div className="h-screen mt-32">
         <h1 className="text-center mt-8 text-3xl">

@@ -30,8 +30,8 @@ function VendorList() {
   return (
     <div className="flex-1 p-4">
       <div className="flex justify-between">
-        <h2 className="mt-4 text-2xl tracking-tight text-gray-900">
-          Manage Vendors
+        <h2 className="mt-4 text-2xl ml-10 font-bold tracking-tight text-gray-900">
+          Vendors
         </h2>
       </div>
 
