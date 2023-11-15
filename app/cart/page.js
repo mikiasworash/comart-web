@@ -1,12 +1,15 @@
 "use client";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
+import axios from "axios";
 import Spinner from "../components/Spinner";
 import Link from "next/link";
 import CartItem from "../components/cart/cartItem";
+import { toast } from "react-hot-toast";
 
 export default function Cart() {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const { userInfo } = useSelector((state) => state.auth);
@@ -21,6 +24,37 @@ export default function Cart() {
       router.replace("/");
     }
   }, []);
+
+  const handleCheckout = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.post("/api/payment", {
+        amount: total,
+        currency: "ETB",
+        email: userInfo.email,
+        first_name: userInfo.name.split(" ")[0],
+        last_name: userInfo.name.split(" ")[1],
+        phone_number: userInfo.phone,
+        callback_url:
+          "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
+        return_url: "http://localhost:3000/payment-success",
+        "customization[title]": "Payment for comart",
+        "customization[description]":
+          "Comart customer is paying a merchant for a product using chapa",
+      });
+
+      if (res.data.status == "success") {
+        setLoading(false);
+        router.replace(res.data.data.checkout_url);
+      } else {
+        setLoading(false);
+        toast.error("Payment failed");
+      }
+    } catch (err) {
+      setLoading(false);
+      toast.error("Payment failed");
+    }
+  };
 
   if (isLoading)
     return (
@@ -71,7 +105,7 @@ export default function Cart() {
           </div>
 
           <div className="border-t border-gray-200 px-4 py-6 sm:px-6 z-0">
-            <div className="flex justify-between text-base font-medium text-gray-900 md:w-[32rem]">
+            <div className="flex justify-between text-base font-medium text-gray-900 md:w-[32rem] w-60">
               <p className="mr-2">Total</p>
               <p>
                 ETB{" "}
@@ -83,13 +117,18 @@ export default function Cart() {
                 </span>
               </p>
             </div>
+            {loading && (
+              <div className="mt-4">
+                <Spinner />
+              </div>
+            )}
             <div className="mt-6">
-              <Link
-                href="/checkout"
+              <div
+                onClick={handleCheckout}
                 className="flex items-center justify-center rounded-md border border-transparent bg-gray-800 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700"
               >
                 Checkout
-              </Link>
+              </div>
             </div>
           </div>
         </div>

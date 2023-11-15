@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { FaAngleDoubleRight } from "react-icons/fa";
 
 function PaymentSuccess() {
   return (
@@ -22,12 +23,13 @@ function PaymentSuccess() {
             Thank you for completing your online payment.
           </p>
           <p> Have a great day! </p>
-          <div className="py-10 text-center">
+          <div className="py-10 px-4 text-center">
             <Link
+              className="w-fit mx-auto rounded-md flex items-center justify-center bg-gray-800 px-3 py-4 text-lg font-semibold leading-6 text-white  hover:bg-gray-700"
               href={"/"}
-              className="px-12 bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 rounded-lg"
             >
               Continue Shopping
+              <FaAngleDoubleRight className="ml-2" />
             </Link>
           </div>
         </div>

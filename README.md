@@ -2,7 +2,7 @@
 
 > Frontend application for comart, an ecommerce platform
 
-## Getting Started
+## How to use Comart
 
 ### 1. Clone the repository
 
@@ -23,4 +23,31 @@ npm install
 npm run dev
 ```
 
-### 4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 4. Create "next.config.js" file at root, paste the following and set your environment variables
+
+```
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "http://localhost:5000/api/:path*", // Proxy to backend
+      },
+    ];
+  },
+
+  images: {
+    domains: ["res.cloudinary.com", "placehold.co"],
+  },
+
+  env: {
+    cloudinaryURL: "https://api.cloudinary.com/v1_1/["enter your cloudinary environment key"]/image/upload",
+  },
+};
+
+module.exports = nextConfig;
+
+```
+
+### 5. Open [http://localhost:3000](http://localhost:3000) with your bowser

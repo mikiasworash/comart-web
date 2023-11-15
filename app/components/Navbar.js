@@ -90,7 +90,7 @@ export default function Navbar() {
                 <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                   <div className="flex flex-shrink-0 items-center">
                     <Link href="/">
-                      <Image className="h-4 w-auto" src={logo} alt="" />
+                      <Image className="h-5 w-auto" src={logo} alt="" />
                     </Link>
                   </div>
                   <div className="hidden sm:ml-6 sm:block">

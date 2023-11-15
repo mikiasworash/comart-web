@@ -13,7 +13,7 @@ import { VendorProvider } from "./context/VendorContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Comart: An Ecommerce Platform",
+  title: "COMART",
   description: "Comart: An Ecommerce Platform",
 };
 
