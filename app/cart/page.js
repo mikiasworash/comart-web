@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Spinner from "../components/Spinner";
-import Link from "next/link";
 import CartItem from "../components/cart/cartItem";
 import { toast } from "react-hot-toast";
 
@@ -27,32 +26,62 @@ export default function Cart() {
 
   const handleCheckout = async () => {
     setLoading(true);
-    try {
-      const res = await axios.post("/api/payment", {
-        amount: total,
-        currency: "ETB",
-        email: userInfo.email,
-        first_name: userInfo.name.split(" ")[0],
-        last_name: userInfo.name.split(" ")[1],
-        phone_number: userInfo.phone,
-        callback_url:
-          "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
-        return_url: "http://localhost:3000/payment-success",
-        "customization[title]": "Payment for comart",
-        "customization[description]":
-          "Comart customer is paying a merchant for a product using chapa",
-      });
+    let inStock = true;
 
-      if (res.data.status == "success") {
+    for (const item of cartItems) {
+      try {
+        const res = await axios.get(
+          `/api/products/product/${item.product._id}`
+        );
+        if (res) {
+          if (item.amount > res.data.product.quantity) {
+            toast.error(
+              `Sorry, "${res.data.product.name}" is currently limited to ${res.data.product.quantity}  units in stock`,
+              {
+                duration: 5000,
+              }
+            );
+
+            inStock = false;
+            setLoading(false);
+          }
+        }
+      } catch (error) {
+        inStock = false;
         setLoading(false);
-        router.replace(res.data.data.checkout_url);
-      } else {
+        toast.error("Error, try again later");
+      }
+    }
+
+    if (inStock) {
+      try {
+        const res = await axios.post("/api/payment", {
+          amount: total,
+          currency: "ETB",
+          email: userInfo.email,
+          first_name: userInfo.name.split(" ")[0],
+          last_name: userInfo.name.split(" ")[1],
+          phone_number: userInfo.phone,
+          callback_url:
+            "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
+          return_url: "http://localhost:3000/payment-success",
+          "customization[title]": "Payment for comart",
+          "customization[description]":
+            "Comart customer is paying a merchant for a product using chapa",
+        });
+
+        if (res.data.status == "success") {
+          setLoading(false);
+          localStorage.setItem("tx-ref", res.data.tx);
+          router.replace(res.data.data.checkout_url);
+        } else {
+          setLoading(false);
+          toast.error("Payment failed");
+        }
+      } catch (err) {
         setLoading(false);
         toast.error("Payment failed");
       }
-    } catch (err) {
-      setLoading(false);
-      toast.error("Payment failed");
     }
   };
 
@@ -120,12 +149,18 @@ export default function Cart() {
             {loading && (
               <div className="mt-4">
                 <Spinner />
+                <h1 className="text-center mt-8 text-xl">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+                    Checking for products
+                  </span>{" "}
+                  in stock...
+                </h1>
               </div>
             )}
             <div className="mt-6">
               <div
                 onClick={handleCheckout}
-                className="flex items-center justify-center rounded-md border border-transparent bg-gray-800 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700"
+                className="flex items-center justify-center rounded-md border border-transparent bg-gray-800 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700 hover:cursor-pointer"
               >
                 Checkout
               </div>

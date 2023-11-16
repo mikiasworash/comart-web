@@ -1,8 +1,14 @@
-import React from "react";
+"use client";
+import { useEffect } from "react";
 import Link from "next/link";
 import { FaAngleDoubleRight } from "react-icons/fa";
 
 function PaymentSuccess() {
+
+  useEffect(() => {
+    console.log("Update order if payment successful");
+  }, []);
+
   return (
     <div className="bg-gray-100 h-screen md:px-32 px-4 py-40 -my-24">
       <div className="bg-white md:mx-auto p-16">

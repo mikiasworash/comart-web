@@ -17,10 +17,10 @@ function CartItem({ cartItem }) {
   const handleChange = (e) => {
     e.preventDefault();
     setAmount(e.target.value);
-    if (e.target.value > amount) {
+    if (parseInt(e.target.value, 10) > parseInt(amount, 10)) {
       dispatch(increase(cartItem._id));
     } else {
-      if (e.target.value > 0) {
+      if (parseInt(e.target.value, 10) > 0) {
         dispatch(decrease(cartItem._id));
       } else {
         dispatch(removeItem(cartItem._id));
@@ -66,7 +66,7 @@ function CartItem({ cartItem }) {
             <p className="text-gray-500">Qty </p>
             <input
               type="number"
-              className="w-14 text-center rounded-lg border-none font-semibold text-gray-700 placeholder-gray-700 bg-gray-100 outline-none focus:outline-none text-md hover:text-black"
+              className="w-20 text-center rounded-lg border-none font-semibold text-gray-700 placeholder-gray-700 bg-gray-100 outline-none focus:outline-none text-md hover:text-black"
               placeholder="1"
               value={amount}
               min="0"
