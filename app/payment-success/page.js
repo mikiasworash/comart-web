@@ -1,14 +1,7 @@
-"use client";
-import { useEffect } from "react";
 import Link from "next/link";
 import { FaAngleDoubleRight } from "react-icons/fa";
 
 function PaymentSuccess() {
-
-  useEffect(() => {
-    console.log("Update order if payment successful");
-  }, []);
-
   return (
     <div className="bg-gray-100 h-screen md:px-32 px-4 py-40 -my-24">
       <div className="bg-white md:mx-auto p-16">
@@ -31,7 +24,7 @@ function PaymentSuccess() {
           <p> Have a great day! </p>
           <div className="py-10 px-4 text-center">
             <Link
-              className="w-fit mx-auto rounded-md flex items-center justify-center bg-gray-800 px-3 py-4 text-lg font-semibold leading-6 text-white  hover:bg-gray-700"
+              className="w-fit mx-auto rounded-md flex items-center justify-center bg-gray-800 px-3 py-3 text-lg font-semibold leading-6 text-white  hover:bg-gray-700"
               href={"/"}
             >
               Continue Shopping

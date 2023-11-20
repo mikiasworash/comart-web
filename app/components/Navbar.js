@@ -86,9 +86,14 @@ export default function Navbar() {
                       <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
                     )}
                   </Disclosure.Button>
+                  <div className="flex flex-shrink-0 items-center">
+                    <Link href="/">
+                      <Image className="h-5 w-auto" src={logo} alt="" />
+                    </Link>
+                  </div>
                 </div>
                 <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                  <div className="flex flex-shrink-0 items-center">
+                  <div className="hidden sm:flex flex-shrink-0 items-center">
                     <Link href="/">
                       <Image className="h-5 w-auto" src={logo} alt="" />
                     </Link>
@@ -115,17 +120,19 @@ export default function Navbar() {
                 </div>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                   {/* Search */}
-                  <div className="flex">
-                    <a
-                      href="#"
-                      className="p-2 text-gray-400 hover:text-gray-500"
-                    >
-                      <span className="sr-only">Search</span>
-                      <MagnifyingGlassIcon
-                        className="h-6 w-6"
-                        aria-hidden="true"
+                  <div className="flex items-center justify-center">
+                    <form action="" className="relative mx-auto flex">
+                      <input
+                        className="text-md text-gray-800 focus:bg-white peer cursor-pointer relative z-10 h-8 md:h-9 w-10 rounded-lg border border-transparent bg-transparent pr-6 outline-none focus:w-full focus:cursor-text focus:border-white"
+                        placeholder="Search comart..."
                       />
-                    </a>
+                      <button className="absolute top-0 right-0 bottom-0 my-auto h-8 w-10 px-3 rounded-lg peer-focus:relative text-gray-400 hover:text-gray-500">
+                        <MagnifyingGlassIcon
+                          className="h-6 w-6"
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </form>
                   </div>
 
                   {!userInfo || userInfo.role == "buyer" ? (

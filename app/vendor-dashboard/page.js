@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Spinner from "../components/Spinner";
 import ProductContext from "../context/ProductContext";
 import ProductList from "../components/products/productList";
+import OrderList from "../components/orders/orderList";
 
 function VendorDashboard() {
   const [name, setName] = useState("");
@@ -80,7 +81,7 @@ function VendorDashboard() {
         </nav>
       </div>
 
-      {tabIndex === 1 ? <ProductList /> : <h1>Order Management</h1>}
+      {tabIndex === 1 ? <ProductList /> : <OrderList />}
     </div>
   );
 }

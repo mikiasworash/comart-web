@@ -5,8 +5,9 @@ import { useState, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 import Link from "next/link";
 import ProductContext from "../../context/ProductContext";
-import { AiFillDelete, AiTwotoneEdit } from "react-icons/ai";
+import { AiFillDelete } from "react-icons/ai";
 import { toast } from "react-hot-toast";
+import Spinner from "../Spinner";
 
 const AddProductModal = dynamic(
   () => import("../modals/product/addProductModal"),
@@ -35,8 +36,13 @@ function ProductList() {
 
   const { userInfo } = useSelector((state) => state.auth);
 
-  const { products, searchProducts, searchAllProducts, setProduct } =
-    useContext(ProductContext);
+  const {
+    products,
+    searchProducts,
+    searchAllProducts,
+    setProduct,
+    isProductLoading,
+  } = useContext(ProductContext);
 
   useEffect(() => {
     userInfo.role == "vendor"
@@ -59,6 +65,14 @@ function ProductList() {
       console.error("Error:", error);
     }
   };
+
+  if (isProductLoading) {
+    return (
+      <div className="h-screen mt-32 mx-auto">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 p-4">
@@ -116,7 +130,7 @@ function ProductList() {
                 </th>
               </tr>
             </thead>
-            {products.map((product) => (
+            {products?.map((product) => (
               <tbody key={product._id}>
                 <tr className="bg-white border-b">
                   <th

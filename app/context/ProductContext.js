@@ -18,6 +18,7 @@ export const ProductProvider = ({ children }) => {
       setProducts(res.data.products);
       setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error:", error);
     }
   };
@@ -29,6 +30,7 @@ export const ProductProvider = ({ children }) => {
       setProducts(res.data.products);
       setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error:", error);
     }
   };
@@ -40,6 +42,7 @@ export const ProductProvider = ({ children }) => {
       setFeaturedProducts(res.data.products);
       setFeaturedProductsLoading(false);
     } catch (error) {
+      setFeaturedProductsLoading(false);
       console.error("Error:", error);
     }
   };
@@ -51,6 +54,7 @@ export const ProductProvider = ({ children }) => {
       setProduct(res.data.product);
       setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error:", error);
     }
   };

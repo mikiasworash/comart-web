@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { toast as hotToast } from "react-hot-toast";
 
 const initialState = {
   cartItems: [],
@@ -46,14 +45,16 @@ export const cartSlice = createSlice({
       cartItem.amount = cartItem.amount - 1;
     },
     calculateTotals: (state) => {
-      let amount = 0;
-      let total = 0;
-      state.cartItems.forEach((item) => {
-        amount += item.amount;
-        total += item.amount * item.product.price;
-      });
-      state.amount = amount;
-      state.total = total;
+      if (state.cartItems) {
+        let amount = 0;
+        let total = 0;
+        state.cartItems.forEach((item) => {
+          amount += item.amount;
+          total += item.amount * item.product.price;
+        });
+        state.amount = amount;
+        state.total = total;
+      }
     },
   },
   extraReducers: {

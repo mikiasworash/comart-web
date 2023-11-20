@@ -15,6 +15,7 @@ export const CategoryProvider = ({ children }) => {
       setCategories(res.data.categories);
       setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error:", error);
     }
   };

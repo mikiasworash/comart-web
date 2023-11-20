@@ -16,6 +16,7 @@ export const VendorProvider = ({ children }) => {
       setVendors(res.data.vendors);
       setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error:", error);
     }
   };

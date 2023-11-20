@@ -3,6 +3,8 @@ import dynamic from "next/dynamic";
 import { useState, useEffect, useContext } from "react";
 import CategoryContext from "../../context/CategoryContext";
 import { AiFillDelete, AiTwotoneEdit } from "react-icons/ai";
+import Spinner from "../Spinner";
+
 const AddCategoryModal = dynamic(
   () => import("../modals/category/addCategoryModal"),
   {
@@ -28,11 +30,20 @@ function CategoryList() {
   const [showDeleteModal, setDeleteShowModal] = useState(false);
   const [categoryToChange, setCategory] = useState("");
 
-  const { categories, searchCategories } = useContext(CategoryContext);
+  const { categories, searchCategories, isCategoryLoading } =
+    useContext(CategoryContext);
 
   useEffect(() => {
     searchCategories();
   }, [showAddModal, showEditModal, showDeleteModal]);
+
+  if (isCategoryLoading) {
+    return (
+      <div className="h-screen mt-32 mx-auto">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 p-4">
@@ -74,7 +85,7 @@ function CategoryList() {
                 </th>
               </tr>
             </thead>
-            {categories.map((category) => (
+            {categories?.map((category) => (
               <tbody key={category._id}>
                 <tr className="bg-white border-b">
                   <th

@@ -8,6 +8,7 @@ import CategoryList from "../components/categories/categoryList";
 import ProductContext from "../context/ProductContext";
 import ProductList from "../components/products/productList";
 import VendorList from "../components/vendors/vendorList";
+import OrderList from "../components/orders/orderList";
 
 function AdminDashboard() {
   const [tabIndex, setTabIndex] = useState("1");
@@ -107,7 +108,7 @@ function AdminDashboard() {
       ) : tabIndex === 3 ? (
         <VendorList />
       ) : (
-        <h1 className="text-center text-4xl m-32">Order Management</h1>
+        <OrderList />
       )}
     </div>
   );

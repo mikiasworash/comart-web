@@ -2,6 +2,7 @@
 import dynamic from "next/dynamic";
 import { useState, useEffect, useContext } from "react";
 import VendorContext from "../../context/VendorContext";
+import Spinner from "../Spinner";
 
 const ApproveVendorModal = dynamic(
   () => import("../modals/vendor/approveVendorModal"),
@@ -21,11 +22,19 @@ function VendorList() {
   const [showRejectVendorModal, setShowRejectVendorModal] = useState(false);
   const [vendorToChange, setVendor] = useState("");
 
-  const { vendors, searchVendors } = useContext(VendorContext);
+  const { vendors, searchVendors, isVendorLoading } = useContext(VendorContext);
 
   useEffect(() => {
     searchVendors();
   }, [showApproveVendorModal, showRejectVendorModal]);
+
+  if (isVendorLoading) {
+    return (
+      <div className="h-screen mt-32 mx-auto">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 p-4">
@@ -58,7 +67,7 @@ function VendorList() {
                 </th>
               </tr>
             </thead>
-            {vendors.map((vendor) => (
+            {vendors?.map((vendor) => (
               <tbody key={vendor._id}>
                 <tr className="bg-white border-b">
                   <td className="px-6 py-4 text-gray-900">

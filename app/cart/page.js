@@ -1,15 +1,17 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import Spinner from "../components/Spinner";
 import CartItem from "../components/cart/cartItem";
 import { toast } from "react-hot-toast";
+import { clearCart } from "../../redux/slices/cartSlice";
 
 export default function Cart() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const { userInfo } = useSelector((state) => state.auth);
   const { cartItems, isLoading, total, amount } = useSelector(
@@ -44,6 +46,7 @@ export default function Cart() {
 
             inStock = false;
             setLoading(false);
+            return;
           }
         }
       } catch (error) {
@@ -71,9 +74,14 @@ export default function Cart() {
         });
 
         if (res.data.status == "success") {
-          setLoading(false);
-          localStorage.setItem("tx-ref", res.data.tx);
-          router.replace(res.data.data.checkout_url);
+          const orderRes = await axios.post("api/orders", {
+            tx_ref: res.data.tx_ref,
+          });
+          if (orderRes) {
+            dispatch(clearCart);
+            setLoading(false);
+            router.replace(res.data.data.checkout_url);
+          }
         } else {
           setLoading(false);
           toast.error("Payment failed");
@@ -112,7 +120,7 @@ export default function Cart() {
 
   return (
     <div className="w-fit mx-auto min-h-screen">
-      <div className="inset-y-0 right-0 flex max-w-full pl-10">
+      <div className="inset-y-0 right-0 flex max-w-full">
         <div className="flex h-full flex-col justify-center items-center bg-white">
           <div className="flex-1 px-4 py-6 sm:px-6">
             <h1 className="mb-4 text-xl font-extrabold text-gray-800 md:text-2xl w-fit mx-auto">
