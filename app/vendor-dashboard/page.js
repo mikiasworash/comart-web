@@ -6,6 +6,8 @@ import Spinner from "../components/Spinner";
 import ProductContext from "../context/ProductContext";
 import ProductList from "../components/products/productList";
 import OrderList from "../components/orders/orderList";
+import { MdProductionQuantityLimits } from "react-icons/md";
+import { CiBoxList } from "react-icons/ci";
 
 function VendorDashboard() {
   const [name, setName] = useState("");
@@ -68,7 +70,9 @@ function VendorDashboard() {
               tabIndex === 1 ? "bg-gray-800 text-white" : ""
             }`}
           >
-            <i className="fas fa-home mr-2"></i>Product Management
+            <div className="flex gap-x-2 justify-center items-center">
+              <MdProductionQuantityLimits /> Products
+            </div>
           </button>
           <button
             onClick={() => setTabIndex(2)}
@@ -76,7 +80,9 @@ function VendorDashboard() {
               tabIndex === 2 ? "bg-gray-800 text-white" : ""
             }`}
           >
-            <i className="fas fa-file-alt mr-2"></i>Order Management
+            <div className="flex gap-x-2 justify-center items-center">
+              <CiBoxList /> Orders
+            </div>
           </button>
         </nav>
       </div>

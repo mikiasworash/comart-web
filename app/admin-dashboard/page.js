@@ -9,6 +9,9 @@ import ProductContext from "../context/ProductContext";
 import ProductList from "../components/products/productList";
 import VendorList from "../components/vendors/vendorList";
 import OrderList from "../components/orders/orderList";
+import { MdCategory, MdProductionQuantityLimits } from "react-icons/md";
+import { FaUserAstronaut } from "react-icons/fa";
+import { CiBoxList } from "react-icons/ci";
 
 function AdminDashboard() {
   const [tabIndex, setTabIndex] = useState("1");
@@ -72,7 +75,9 @@ function AdminDashboard() {
               tabIndex === 1 ? "bg-gray-800 text-white" : ""
             }`}
           >
-            <i className="fas fa-home mr-2"></i>Category Management
+            <div className="flex gap-x-2 justify-center items-center">
+              <MdCategory /> Categories
+            </div>
           </button>
           <button
             onClick={() => setTabIndex(2)}
@@ -80,7 +85,9 @@ function AdminDashboard() {
               tabIndex === 2 ? "bg-gray-800 text-white" : ""
             }`}
           >
-            <i className="fas fa-file-alt mr-2"></i>Product Management
+            <div className="flex gap-x-2 justify-center items-center">
+              <MdProductionQuantityLimits /> Products
+            </div>
           </button>
           <button
             onClick={() => setTabIndex(3)}
@@ -88,7 +95,9 @@ function AdminDashboard() {
               tabIndex === 3 ? "bg-gray-800 text-white" : ""
             }`}
           >
-            <i className="fas fa-file-alt mr-2"></i>Vendor Management
+            <div className="flex gap-x-2 justify-center items-center">
+              <FaUserAstronaut /> Vendors
+            </div>
           </button>
           <button
             onClick={() => setTabIndex(4)}
@@ -96,7 +105,9 @@ function AdminDashboard() {
               tabIndex === 4 ? "bg-gray-800 text-white" : ""
             }`}
           >
-            <i className="fas fa-file-alt mr-2"></i>Order Management
+            <div className="flex gap-x-2 justify-center items-center">
+              <CiBoxList /> Orders
+            </div>
           </button>
         </nav>
       </div>

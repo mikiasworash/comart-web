@@ -76,11 +76,12 @@ export default function Cart() {
         if (res.data.status == "success") {
           const orderRes = await axios.post("api/orders", {
             tx_ref: res.data.tx_ref,
+            cartItems: cartItems,
           });
           if (orderRes) {
-            dispatch(clearCart);
-            setLoading(false);
             router.replace(res.data.data.checkout_url);
+            dispatch(clearCart());
+            setLoading(false);
           }
         } else {
           setLoading(false);

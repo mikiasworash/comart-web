@@ -1,9 +1,7 @@
 "use client";
-import dynamic from "next/dynamic";
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 import OrderContext from "../../context/OrderContext";
-import { AiFillDelete } from "react-icons/ai";
 import Spinner from "../Spinner";
 
 function OrderList() {
@@ -25,23 +23,34 @@ function OrderList() {
 
   return (
     <div className="flex-1 p-4">
+      <h2 className="mt-4 text-2xl ml-10 font-bold tracking-tight text-gray-900">
+        Orders
+      </h2>
       <div className="mt-6  gap-x-6 gap-y-10">
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-center text-gray-500 ">
             <thead className="text-xs text-gray-900 uppercase bg-gray-50">
               <tr>
                 <th scope="col" className="px-6 py-3">
-                  Buyer
-                </th>
-                <th scope="col" className="px-6 py-3">
                   Product
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Vendor
+                  Quantity
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Action
+                  Unit Price
                 </th>
+                <th scope="col" className="px-6 py-3">
+                  Total Price
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Buyer
+                </th>
+                {userInfo.role == "admin" && (
+                  <th scope="col" className="px-6 py-3">
+                    Vendor
+                  </th>
+                )}
                 <th scope="col" className="px-6 py-3">
                   Payment Status
                 </th>
@@ -51,43 +60,70 @@ function OrderList() {
               orderItem.products.map((order) => (
                 <tbody key={orderItem._id}>
                   <tr className="bg-white border-b">
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowra"
-                    >
-                      {orderItem.buyer.name}
-                    </th>
-                    <td className="px-6 py-4">{order.product.name}</td>
-                    <td className="px-6 py-4">{order.product.vendor.name}</td>
-                    <td className="px-6 py-4">{orderItem.paymentStatus}</td>
+                    <td className="px-6 py-4 text-gray-900">
+                      <img
+                        className="h-12 w-12 mb-2 rounded-full hover:scale-[3] mx-auto"
+                        src={
+                          order.product.photo == "default"
+                            ? "https://placehold.co/100x100"
+                            : order.product.photo
+                        }
+                        alt="user image"
+                        width={300}
+                        height={300}
+                      />
+                      {order.product.name}
+                    </td>
+                    <td className="px-6 py-4">{order.quantity}</td>{" "}
+                    <td className="px-6 py-4">{order.price}</td>
                     <td className="px-6 py-4">
-                      <div className="flex gap-4 justify-center">
-                        <button>
-                          <div className="flex items-center justify-center">
-                            <div>
-                              <button className="flex p-2.5 bg-red-500 rounded-xl hover:rounded-3xl hover:bg-red-600 transition-all duration-300 text-white">
-                                <AiFillDelete className="h-4 w-4" />
-                              </button>
-                            </div>
-                          </div>
-                        </button>
-                      </div>
+                      {order.price * order.quantity}
+                    </td>
+                    <td className="px-6 py-4 text-gray-900">
+                      <img
+                        className="h-12 w-12 mb-2 rounded-full hover:scale-[3] mx-auto"
+                        src={
+                          orderItem.buyer.photo == "default"
+                            ? "https://placehold.co/100x100"
+                            : orderItem.buyer.photo
+                        }
+                        alt="user image"
+                        width={300}
+                        height={300}
+                      />
+                      {orderItem.buyer.name}
+                    </td>
+                    {userInfo.role == "admin" && (
+                      <td className="px-6 py-4 text-gray-900">
+                        <img
+                          className="h-12 w-12 mb-2 rounded-full hover:scale-[3] mx-auto"
+                          src={
+                            order.product.vendor.photo == "default"
+                              ? "https://placehold.co/100x100"
+                              : order.product.vendor.photo
+                          }
+                          alt="user image"
+                          width={300}
+                          height={300}
+                        />
+                        {order.product.vendor.name}
+                      </td>
+                    )}
+                    <td className={`px-6 py-4 font-bold`}>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-semibold text-green-600">
+                        {orderItem.paymentStatus == "paid" ? (
+                          <span className="h-2.5 w-2.5 rounded-full bg-green-600"></span>
+                        ) : (
+                          <span className="h-2.5 w-2.5 rounded-full bg-red-600"></span>
+                        )}
+                      </span>
+                      {orderItem.paymentStatus}
                     </td>
                   </tr>
                 </tbody>
               ))
             )}
           </table>
-          {/* <div>
-
-      {showDeleteModal && (
-        <DeleteCategoryModal
-          showDeleteModal={showDeleteModal}
-          category={categoryToChange}
-          closeDeleteModal={() => setDeleteShowModal(false)}
-        />
-      )}
-    </div> */}
         </div>
       </div>
     </div>
