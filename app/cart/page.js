@@ -98,12 +98,6 @@ export default function Cart() {
     return (
       <div className="h-screen mt-32">
         <Spinner />
-        <h1 className="text-center mt-8 text-3xl">
-          <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
-            Loading
-          </span>{" "}
-          cart...
-        </h1>
       </div>
     );
 

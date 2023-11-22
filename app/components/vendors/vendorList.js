@@ -72,7 +72,7 @@ function VendorList() {
                 <tr className="bg-white border-b">
                   <td className="px-6 py-4 text-gray-900">
                     <img
-                      className="h-12 w-12 mb-2 rounded-full hover:scale-[3] mx-auto"
+                      className="h-12 w-12 mb-2 rounded-lg mx-auto"
                       src={
                         vendor.photo == "default"
                           ? "https://placehold.co/100x100"
@@ -102,44 +102,52 @@ function VendorList() {
                     <div className="flex gap-2 justify-center">
                       {vendor.active == "active" ? (
                         <button
-                          className="rounded-md bg-red-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-400"
                           onClick={() => {
                             setVendor(vendor);
                             setShowRejectVendorModal(true);
                           }}
+                          class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-pink-200"
                         >
-                          Reject
+                          <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-opacity-0">
+                            Reject
+                          </span>
                         </button>
                       ) : vendor.active == "pending" ? (
                         <>
                           <button
-                            className="rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400"
                             onClick={() => {
                               setVendor(vendor);
                               setShowApproveVendorModal(true);
                             }}
+                            class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white focus:ring-4 focus:outline-none focus:ring-green-200"
                           >
-                            Approve
+                            <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-opacity-0">
+                              Approve
+                            </span>
                           </button>
                           <button
-                            className="rounded-md bg-red-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-400"
                             onClick={() => {
                               setVendor(vendor);
                               setShowRejectVendorModal(true);
                             }}
+                            class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-pink-200"
                           >
-                            Reject
+                            <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-opacity-0">
+                              Reject
+                            </span>
                           </button>
                         </>
                       ) : (
                         <button
-                          className="rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400"
                           onClick={() => {
                             setVendor(vendor);
                             setShowApproveVendorModal(true);
                           }}
+                          class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white focus:ring-4 focus:outline-none focus:ring-green-200"
                         >
-                          Approve
+                          <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-opacity-0">
+                            Approve
+                          </span>
                         </button>
                       )}
                     </div>

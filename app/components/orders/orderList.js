@@ -62,7 +62,7 @@ function OrderList() {
                   <tr className="bg-white border-b">
                     <td className="px-6 py-4 text-gray-900">
                       <img
-                        className="h-12 w-12 mb-2 rounded-full hover:scale-[3] mx-auto"
+                        className="h-12 w-12 mb-2 rounded-lg mx-auto"
                         src={
                           order.product.photo == "default"
                             ? "https://placehold.co/100x100"
@@ -81,7 +81,7 @@ function OrderList() {
                     </td>
                     <td className="px-6 py-4 text-gray-900">
                       <img
-                        className="h-12 w-12 mb-2 rounded-full hover:scale-[3] mx-auto"
+                        className="h-12 w-12 mb-2 rounded-lg mx-auto"
                         src={
                           orderItem.buyer.photo == "default"
                             ? "https://placehold.co/100x100"
@@ -96,7 +96,7 @@ function OrderList() {
                     {userInfo.role == "admin" && (
                       <td className="px-6 py-4 text-gray-900">
                         <img
-                          className="h-12 w-12 mb-2 rounded-full hover:scale-[3] mx-auto"
+                          className="h-12 w-12 mb-2 rounded-lg mx-auto"
                           src={
                             order.product.vendor.photo == "default"
                               ? "https://placehold.co/100x100"

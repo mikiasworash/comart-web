@@ -138,7 +138,7 @@ function ProductList() {
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowra"
                   >
                     <img
-                      className="h-12 w-12 mb-2 rounded-full hover:scale-[3] mx-auto"
+                      className="h-12 w-12 mb-2 rounded-lg mx-auto"
                       src={
                         product.photo == "default"
                           ? "https://placehold.co/100x100"
@@ -225,13 +225,15 @@ function ProductList() {
                           }}
                           className={`${
                             product.featured
-                              ? "rounded-md bg-red-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-400"
-                              : "rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400"
+                              ? "relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-pink-200"
+                              : "relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white focus:ring-4 focus:outline-none focus:ring-green-200"
                           }`}
                         >
-                          {product.featured
-                            ? "Remove Feature"
-                            : "Feature Product"}
+                          <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-opacity-0">
+                            {product.featured
+                              ? "Remove Feature"
+                              : "Feature Product"}
+                          </span>
                         </button>
                       )}
                     </div>
