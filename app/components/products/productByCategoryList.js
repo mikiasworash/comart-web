@@ -1,22 +1,30 @@
 "use client";
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import Link from "next/link";
 import ProductContext from "../../context/ProductContext";
+import { useParams } from "next/navigation";
 import Spinner from "../Spinner";
 
-function FeaturedProductsList() {
+function ProductsByCategoryList() {
+  const params = useParams();
+  const category = params.category;
+
   const {
-    featuredProducts,
-    searchFeaturedProducts,
-    isFeaturedProductsLoading,
+    categoryProducts,
+    getProductsByCategory,
+    isCategoryProductsLoading,
+    setIsCategoryProductsLoading,
     setProduct,
+    setCategoryProducts,
   } = useContext(ProductContext);
 
   useEffect(() => {
-    searchFeaturedProducts();
-  }, []);
+    setCategoryProducts([]);
+    setIsCategoryProductsLoading(true);
+    getProductsByCategory(category);
+  }, [category]);
 
-  if (isFeaturedProductsLoading) {
+  if (!categoryProducts || isCategoryProductsLoading) {
     return (
       <div className="h-screen mt-32 lg:mt-48">
         <Spinner />
@@ -24,13 +32,13 @@ function FeaturedProductsList() {
     );
   }
 
-  if (!featuredProducts)
+  if (!isCategoryProductsLoading && categoryProducts.length == 0)
     return (
-      <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-64">
+      <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-32">
         <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
-          No Products
+          No Products found
         </span>{" "}
-        to show yet!
+        under "{category}"
       </h1>
     );
 
@@ -39,14 +47,14 @@ function FeaturedProductsList() {
       <div className="">
         <h1 className="mb-4 text-3xl font-extrabold text-gray-800 md:text-4xl w-fit mx-auto">
           <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
-            Our Featured
+            Category:
           </span>{" "}
-          Collections
+          {category}
         </h1>
       </div>
       <div className="bg-white">
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          {featuredProducts.map((product) => (
+          {categoryProducts.map((product) => (
             <Link
               href={`/products/${product._id}`}
               key={product._id}
@@ -85,4 +93,4 @@ function FeaturedProductsList() {
   );
 }
 
-export default FeaturedProductsList;
+export default ProductsByCategoryList;

@@ -10,6 +10,21 @@ export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [product, setProduct] = useState(null);
   const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [categoryProducts, setCategoryProducts] = useState([]);
+  const [isCategoryProductsLoading, setIsCategoryProductsLoading] =
+    useState(true);
+
+  // Get products by category
+  const getProductsByCategory = async (category) => {
+    try {
+      const res = await axios.get(`/api/products/categories/${category}`);
+      setCategoryProducts(res.data.products);
+      setIsCategoryProductsLoading(false);
+    } catch (error) {
+      setIsCategoryProductsLoading(false);
+      console.error("Error:", error);
+    }
+  };
 
   // Get all products
   const searchAllProducts = async () => {
@@ -65,13 +80,18 @@ export const ProductProvider = ({ children }) => {
         isProductLoading,
         products,
         product,
+        categoryProducts,
         featuredProducts,
         isFeaturedProductsLoading,
+        isCategoryProductsLoading,
+        setIsCategoryProductsLoading,
         searchProducts,
         searchAllProducts,
         searchFeaturedProducts,
+        getProductsByCategory,
         getProduct,
         setProduct,
+        setCategoryProducts,
       }}
     >
       {children}

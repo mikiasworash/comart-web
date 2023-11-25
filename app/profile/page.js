@@ -99,7 +99,7 @@ function Profile() {
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 mb-16 lg:px-8">
         <div className="flex gap-1 justify-center w-fit mx-auto">
           <Image
-            className="mt-10 h-20 w-20 mx-auto rounded-full hover:scale-150"
+            className="mt-10 h-20 w-20 mx-auto rounded-full"
             src={photo == "default" || photo == null ? avatar : photo}
             alt="user image"
             width={300}

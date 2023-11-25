@@ -14,7 +14,7 @@ function AllProductsList() {
 
   if (isProductLoading) {
     return (
-      <div className="h-screen mt-32">
+      <div className="h-screen mt-32 lg:mt-48">
         <Spinner />
       </div>
     );

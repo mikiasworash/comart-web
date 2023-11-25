@@ -80,7 +80,7 @@ function editProductModal({ showEditModal, product, closeEditModal }) {
               <form className="space-y-6" onSubmit={submitHandler}>
                 <div className="flex gap-1 justify-center w-fit mx-auto">
                   <img
-                    className="h-20 w-20 rounded-full hover:scale-150"
+                    className="h-20 w-20 rounded-full"
                     src={
                       product.photo === "default"
                         ? "https://placehold.co/100x100"

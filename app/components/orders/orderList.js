@@ -13,6 +13,30 @@ function OrderList() {
     userInfo.role == "admin" ? getOrders() : getOrdersByVendor(userInfo._id);
   }, []);
 
+  const getFormattedDate = (inputDate) => {
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    const date = new Date(inputDate);
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+    const year = date.getFullYear();
+
+    return `${month} ${day}, ${year}`;
+  };
+
   if (isOrderLoading) {
     return (
       <div className="h-screen mt-32 mx-auto">
@@ -42,6 +66,10 @@ function OrderList() {
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Total Price
+                </th>
+
+                <th scope="col" className="px-6 py-3">
+                  Order Date
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Buyer
@@ -78,6 +106,9 @@ function OrderList() {
                     <td className="px-6 py-4">{order.price}</td>
                     <td className="px-6 py-4">
                       {order.price * order.quantity}
+                    </td>
+                    <td className="px-6 py-4">
+                      {getFormattedDate(orderItem.updatedAt)}
                     </td>
                     <td className="px-6 py-4 text-gray-900">
                       <img

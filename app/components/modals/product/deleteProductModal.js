@@ -29,8 +29,7 @@ function DeleteProductModal({ showDeleteModal, product, closeDeleteModal }) {
             {/*body*/}
             <div className="relative p-6 flex-auto">
               <p className="my-4 text-slate-500 text-lg leading-relaxed">
-                Are you sure you want to deleted this product? This action
-                cannot be undone.
+                Are you sure you want to delete this product?
               </p>
             </div>
             {/*footer*/}
