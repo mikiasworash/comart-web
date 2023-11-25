@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
 import avatar from "../assets/img/user.png";
 import logo from "../assets/img/logo.png";
@@ -34,6 +34,7 @@ function classNames(...classes) {
 }
 
 export default function Navbar() {
+  const [searchInput, setSearchInput] = useState("");
   const { userInfo } = useSelector((state) => state.auth);
   const { cartItems, amount } = useSelector((state) => state.cart);
 
@@ -65,6 +66,25 @@ export default function Navbar() {
       router.replace("/");
     } catch (error) {
       hotToast.error(error);
+    }
+  };
+
+  const handleSearch = async () => {
+    if (searchInput == "") {
+      hotToast.error("Please enter a search term");
+    } else {
+      router.replace(`/search?queryString=${searchInput}`);
+      setSearchInput("");
+    }
+  };
+
+  const onSearch = async () => {
+    handleSearch();
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      onSearch();
     }
   };
 
@@ -123,8 +143,11 @@ export default function Navbar() {
                   <div className="flex items-center justify-center">
                     <div className="relative mx-auto flex">
                       <input
-                        className="text-md text-gray-800 focus:bg-white peer cursor-pointer relative z-10 h-8 md:h-9 w-10 rounded-lg border border-transparent bg-transparent pr-6 outline-none focus:w-full focus:cursor-text"
-                        placeholder="Search comart..."
+                        className="text-md text-gray-800 focus:bg-white peer cursor-pointer relative z-10 h-8 md:h-9 w-10 rounded-lg border border-transparent bg-transparent pr-8 outline-none focus:w-full focus:cursor-text"
+                        placeholder="Search Comart..."
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
+                        onKeyDown={handleKeyDown}
                       />
                       <button className="absolute top-0 right-0 bottom-0 my-auto h-8 w-10 px-3 rounded-lg peer-focus:relative text-gray-400">
                         <MagnifyingGlassIcon

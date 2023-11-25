@@ -20,6 +20,8 @@ function Profile() {
   const [photo, setPhoto] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
 
+  const [loading, setIsLoading] = useState(true);
+
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -36,6 +38,7 @@ function Profile() {
       setPhone(userInfo.phone);
       setRole(userInfo.role);
       setPhoto(userInfo.photo);
+      setIsLoading(false);
     }
   }, [router, userInfo]);
 
@@ -86,7 +89,7 @@ function Profile() {
     }
   };
 
-  if (!userInfo) {
+  if (loading) {
     return (
       <div className="mt-32 h-screen">
         <Spinner />

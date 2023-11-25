@@ -1,44 +1,50 @@
 "use client";
 import { useEffect, useContext } from "react";
 import Link from "next/link";
-import ProductContext from "../../context/ProductContext";
-import { useParams } from "next/navigation";
-import Spinner from "../Spinner";
+import ProductContext from "../context/ProductContext";
+import { useSearchParams } from "next/navigation";
+import Spinner from "../components/Spinner";
 
-function ProductsByCategoryList() {
-  const params = useParams();
-  const category = params.category;
+function Search() {
+  const searchParams = useSearchParams();
+  const query = searchParams.get("queryString");
 
   const {
-    categoryProducts,
-    getProductsByCategory,
-    isCategoryProductsLoading,
-    setIsCategoryProductsLoading,
+    searchedProducts,
+    getProductsByName,
+    isSearchedProductsLoading,
+    setIsSearchedProductsLoading,
     setProduct,
-    setCategoryProducts,
+    setSearchedProducts,
   } = useContext(ProductContext);
 
   useEffect(() => {
-    setCategoryProducts([]);
-    setIsCategoryProductsLoading(true);
-    getProductsByCategory(category);
-  }, [category]);
+    setSearchedProducts([]);
+    setIsSearchedProductsLoading(true);
+    getProductsByName(query);
+  }, [query]);
 
-  if (!categoryProducts || isCategoryProductsLoading) {
+  if (isSearchedProductsLoading) {
     return (
-      <div className="h-screen mt-32 lg:mt-48">
+      <div className="h-screen mt-32">
         <Spinner />
+        <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-8">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+            Searching for
+          </span>{" "}
+          "{query}"
+        </h1>
       </div>
     );
   }
 
-  if (!categoryProducts || categoryProducts.length == 0)
+  if (!searchedProducts || searchedProducts.length == 0)
     return (
       <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-32">
         <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
           No Products found
         </span>{" "}
-        under "{category}"
+        for "{query}"
       </h1>
     );
 
@@ -47,14 +53,14 @@ function ProductsByCategoryList() {
       <div className="">
         <h1 className="mb-4 text-3xl font-extrabold text-gray-800 md:text-4xl w-fit mx-auto">
           <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
-            Category:
+            Results for:
           </span>{" "}
-          {category}
+          {query}
         </h1>
       </div>
       <div className="bg-white">
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          {categoryProducts.map((product) => (
+          {searchedProducts.map((product) => (
             <Link
               href={`/products/${product._id}`}
               key={product._id}
@@ -93,4 +99,4 @@ function ProductsByCategoryList() {
   );
 }
 
-export default ProductsByCategoryList;
+export default Search;

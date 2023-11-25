@@ -31,9 +31,11 @@ function ProductDetail() {
           amount: quantity,
         });
 
-        dispatch(getCartItems(userInfo._id));
+        if (res) {
+          dispatch(getCartItems(userInfo._id));
 
-        hotToast.success("product added to cart");
+          hotToast.success("product added to cart");
+        }
       } catch (error) {
         hotToast.error(error.response.data.message || "Adding Cart failed");
       }
@@ -50,10 +52,10 @@ function ProductDetail() {
 
   return (
     <section className="text-gray-700 body-font overflow-hidden bg-white mb-48 min-h-screen">
-      <div className="container px-5 py-24 mx-auto">
+      <div className="container px-5 py-4 lg:py-24 mx-auto">
         <div className="lg:w-4/5 mx-auto flex flex-wrap lg:gap-16">
           <img
-            className="lg:w-1/3 w-full object-cover object-center rounded border border-gray-200"
+            className="lg:w-1/3 w-full object-cover object-center rounded border border-gray-200 transition ease-in-out delay-150 hover:-translate-y-1 lg:hover:scale-110 duration-300"
             src={
               product.photo === "default"
                 ? "https://placehold.co/450x450"

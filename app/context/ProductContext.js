@@ -13,6 +13,9 @@ export const ProductProvider = ({ children }) => {
   const [categoryProducts, setCategoryProducts] = useState([]);
   const [isCategoryProductsLoading, setIsCategoryProductsLoading] =
     useState(true);
+  const [searchedProducts, setSearchedProducts] = useState([]);
+  const [isSearchedProductsLoading, setIsSearchedProductsLoading] =
+    useState(true);
 
   // Get products by category
   const getProductsByCategory = async (category) => {
@@ -22,6 +25,18 @@ export const ProductProvider = ({ children }) => {
       setIsCategoryProductsLoading(false);
     } catch (error) {
       setIsCategoryProductsLoading(false);
+      console.error("Error:", error);
+    }
+  };
+
+  // Get products by name
+  const getProductsByName = async (query) => {
+    try {
+      const res = await axios.get(`/api/products/search/${query}`);
+      setSearchedProducts(res.data.products);
+      setIsSearchedProductsLoading(false);
+    } catch (error) {
+      setIsSearchedProductsLoading(false);
       console.error("Error:", error);
     }
   };
@@ -82,16 +97,21 @@ export const ProductProvider = ({ children }) => {
         product,
         categoryProducts,
         featuredProducts,
+        searchedProducts,
         isFeaturedProductsLoading,
         isCategoryProductsLoading,
+        isSearchedProductsLoading,
         setIsCategoryProductsLoading,
+        setIsSearchedProductsLoading,
         searchProducts,
         searchAllProducts,
         searchFeaturedProducts,
         getProductsByCategory,
+        getProductsByName,
         getProduct,
         setProduct,
         setCategoryProducts,
+        setSearchedProducts,
       }}
     >
       {children}
