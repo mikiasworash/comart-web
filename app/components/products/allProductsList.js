@@ -20,7 +20,7 @@ function AllProductsList() {
     );
   }
 
-  if (!products || products.length === 0)
+  if (!isProductLoading && (!products || products.length === 0))
     return (
       <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-48">
         <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">

@@ -51,11 +51,11 @@ function ProductDetail() {
   }
 
   return (
-    <section className="text-gray-700 body-font overflow-hidden bg-white mb-48 min-h-screen">
+    <section className="text-gray-700 body-font overflow-hidden bg-white mb-48 min-h-screen max-w-7xl mx-auto">
       <div className="container px-5 py-4 lg:py-24 mx-auto">
         <div className="lg:w-4/5 mx-auto flex flex-wrap lg:gap-16">
           <img
-            className="lg:w-1/3 w-full object-cover object-center rounded border border-gray-200 transition ease-in-out delay-150 hover:-translate-y-1 lg:hover:scale-110 duration-300"
+            className="lg:w-2/5 w-full object-cover object-center rounded border border-gray-200 transition ease-in-out delay-150 hover:-translate-y-1 lg:hover:scale-110 duration-300"
             src={
               product.photo === "default"
                 ? "https://placehold.co/450x450"
@@ -170,14 +170,20 @@ function ProductDetail() {
             </div>
             <p className="leading-relaxed">{product.description}</p>
             <div className="flex flex-col mt-6 pb-5 border-b-2 border-gray-200 mb-5">
-              <div className="flex">
-                <span className="text-lg mr-3">CATEGORY :</span>
+            <div className="flex">
+                <span className="text-lg mr-3">Available :</span>
+                <button className={`${product.quantity > 0 ? "text-lg font-bold hover:cursor-default" : "text-lg font-bold text-red-400 hover:cursor-default"}`}>
+                 {product.quantity > 0 ?  `${product.quantity} Units` : "Out of stock"}
+                </button>
+              </div>
+              <div className="flex mt-4">
+                <span className="text-lg mr-3">Category :</span>
                 <button className="text-lg font-bold">
                   {product.category.name}
                 </button>
               </div>
               <div className="flex mt-4">
-                <span className="text-lg mr-3">SELLER :</span>
+                <span className="text-lg mr-3">Vendor :</span>
                 <button className="text-lg font-bold">
                   {product.vendor.name}
                 </button>
@@ -189,7 +195,7 @@ function ProductDetail() {
               </span>
             </div>
             {userInfo ? (
-              userInfo.role == "buyer" ? (
+              userInfo.role == "buyer" && product.quantity > 0 ? (
                 <div className="flex mt-6 gap-6 items-left">
                   <input
                     type="number"

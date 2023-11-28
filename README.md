@@ -17,13 +17,7 @@ cd comart-web
 npm install
 ```
 
-### 3. Run the development server
-
-```
-npm run dev
-```
-
-### 4. Create "next.config.js" file at root, paste the following and set your environment variables
+### 3. Create "next.config.js" file at root, copy and paste the following and set your environment variables
 
 ```
 /** @type {import('next').NextConfig} */
@@ -48,6 +42,12 @@ const nextConfig = {
 
 module.exports = nextConfig;
 
+```
+
+### 4. Run the development server
+
+```
+npm run dev
 ```
 
 ### 5. Open [http://localhost:3000](http://localhost:3000) with your bowser
