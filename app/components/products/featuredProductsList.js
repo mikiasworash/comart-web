@@ -35,7 +35,7 @@ function FeaturedProductsList() {
     );
 
   return (
-    <div className="flex flex-col p-4 mt-8 max-w-6xl mx-auto min-h-screen">
+    <div className="flex flex-col py-4 mt-8 max-w-6xl mx-auto min-h-screen">
       <div className="">
         <h1 className="mb-4 text-3xl font-extrabold text-gray-800 md:text-4xl w-fit mx-auto">
           <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
