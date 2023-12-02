@@ -16,6 +16,8 @@ export const ProductProvider = ({ children }) => {
   const [searchedProducts, setSearchedProducts] = useState([]);
   const [isSearchedProductsLoading, setIsSearchedProductsLoading] =
     useState(true);
+  const [autoComplete, setAutoComplete] = useState([]);
+  const [autoCompleteLoading, setAutoCompleteLoading] = useState(true);
 
   // Get products by category
   const getProductsByCategory = async (category) => {
@@ -37,6 +39,18 @@ export const ProductProvider = ({ children }) => {
       setIsSearchedProductsLoading(false);
     } catch (error) {
       setIsSearchedProductsLoading(false);
+      console.error("Error:", error);
+    }
+  };
+
+  // Get products for autocomplete
+  const searchAutoComplete = async (query) => {
+    try {
+      const res = await axios.get(`/api/products/search/autocomplete/${query}`);
+      setAutoComplete(res.data.products);
+      setAutoCompleteLoading(false);
+    } catch (error) {
+      setAutoCompleteLoading(false);
       console.error("Error:", error);
     }
   };
@@ -98,12 +112,16 @@ export const ProductProvider = ({ children }) => {
         categoryProducts,
         featuredProducts,
         searchedProducts,
+        autoComplete,
         isFeaturedProductsLoading,
         isCategoryProductsLoading,
         isSearchedProductsLoading,
+        autoCompleteLoading,
         setIsCategoryProductsLoading,
         setIsSearchedProductsLoading,
+        setAutoCompleteLoading,
         searchProducts,
+        searchAutoComplete,
         searchAllProducts,
         searchFeaturedProducts,
         getProductsByCategory,
@@ -112,6 +130,7 @@ export const ProductProvider = ({ children }) => {
         setProduct,
         setCategoryProducts,
         setSearchedProducts,
+        setAutoComplete,
       }}
     >
       {children}

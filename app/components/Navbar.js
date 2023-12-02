@@ -1,5 +1,6 @@
 "use client";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, useContext } from "react";
+import ProductContext from "../context/ProductContext";
 import Image from "next/image";
 import avatar from "../assets/img/user.png";
 import logo from "../assets/img/logo.png";
@@ -22,6 +23,7 @@ import {
 } from "../../redux/slices/cartSlice";
 import { useRouter } from "next/navigation";
 import { toast as hotToast } from "react-hot-toast";
+import Spinner from "./Spinner";
 
 const navigation = [
   { name: "All Products", href: "/products", current: false },
@@ -37,6 +39,8 @@ export default function Navbar() {
   const [searchInput, setSearchInput] = useState("");
   const { userInfo } = useSelector((state) => state.auth);
   const { cartItems, amount } = useSelector((state) => state.cart);
+
+  const [showAutoComplete, setShowAutoComplete] = useState(false);
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -67,6 +71,42 @@ export default function Navbar() {
     } catch (error) {
       hotToast.error(error);
     }
+  };
+
+  const {
+    autoCompleteLoading,
+    setAutoCompleteLoading,
+    autoComplete,
+    setAutoComplete,
+    searchAutoComplete,
+  } = useContext(ProductContext);
+
+  useEffect(() => {
+    if (searchInput !== "") {
+      setShowAutoComplete(true);
+      setAutoCompleteLoading(true);
+      searchAutoComplete(searchInput);
+    } else {
+      setShowAutoComplete(false);
+      setAutoComplete([]);
+    }
+  }, [searchInput]);
+
+  const handleSelect = (id) => {
+    router.replace(`/products/${id}`);
+    setSearchInput("");
+  };
+
+  const handleInputFocus = () => {
+    if (searchInput !== "") {
+      setShowAutoComplete(true);
+    }
+  };
+
+  const handleInputBlur = () => {
+    setTimeout(() => {
+      setShowAutoComplete(false);
+    }, 200);
   };
 
   const handleSearch = async () => {
@@ -148,6 +188,8 @@ export default function Navbar() {
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
                         onKeyDown={handleKeyDown}
+                        onFocus={handleInputFocus}
+                        onBlur={handleInputBlur}
                       />
                       <button className="absolute top-0 right-0 bottom-0 my-auto h-8 w-10 px-3 rounded-lg peer-focus:relative text-gray-400">
                         <MagnifyingGlassIcon
@@ -155,6 +197,32 @@ export default function Navbar() {
                           aria-hidden="true"
                         />
                       </button>
+                    </div>
+
+                    <div className="w-fit">
+                      {showAutoComplete && autoCompleteLoading && (
+                        <ul className="absolute inset-x-0 top-full bg-gray-100 border border-gray-800 rounded-md z-20">
+                          <li className="px-4 py-2 hover:bg-gray-300 cursor-pointer">
+                            <Spinner />
+                          </li>{" "}
+                        </ul>
+                      )}
+
+                      {showAutoComplete && autoComplete.length > 0 && (
+                        <ul className="absolute inset-x-0 top-full bg-gray-100 border border-gray-800 rounded-md z-20">
+                          {autoComplete.map((item) => {
+                            return (
+                              <li
+                                key={item._id}
+                                className="px-4 py-2 hover:bg-gray-300 cursor-pointer"
+                                onClick={() => handleSelect(item._id)}
+                              >
+                                {item.name}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
                     </div>
                   </div>
 
