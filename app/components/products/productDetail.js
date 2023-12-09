@@ -86,7 +86,6 @@ function ProductDetail() {
                   fill="currentColor"
                   stroke="currentColor"
                   strokeLinecap="round"
-                  strokeLinecap="round"
                   strokeWidth="2"
                   className="w-4 h-4 text-gray-500"
                   viewBox="0 0 24 24"
@@ -97,7 +96,6 @@ function ProductDetail() {
                   fill="currentColor"
                   stroke="currentColor"
                   strokeLinecap="round"
-                  strokeLinecap="round"
                   strokeWidth="2"
                   className="w-4 h-4 text-gray-500"
                   viewBox="0 0 24 24"
@@ -107,7 +105,6 @@ function ProductDetail() {
                 <svg
                   fill="currentColor"
                   stroke="currentColor"
-                  strokeLinecap="round"
                   strokeLinecap="round"
                   strokeWidth="2"
                   className="w-4 h-4 text-gray-500"
@@ -118,7 +115,6 @@ function ProductDetail() {
                 <svg
                   fill="none"
                   stroke="currentColor"
-                  strokeLinecap="round"
                   strokeLinecap="round"
                   strokeWidth="2"
                   className="w-4 h-4 text-gray-500"
@@ -133,7 +129,6 @@ function ProductDetail() {
                   <svg
                     fill="currentColor"
                     strokeLinecap="round"
-                    strokeLinecap="round"
                     strokeWidth="2"
                     className="w-5 h-5"
                     viewBox="0 0 24 24"
@@ -145,7 +140,6 @@ function ProductDetail() {
                   <svg
                     fill="currentColor"
                     strokeLinecap="round"
-                    strokeLinecap="round"
                     strokeWidth="2"
                     className="w-5 h-5"
                     viewBox="0 0 24 24"
@@ -156,7 +150,6 @@ function ProductDetail() {
                 <a className="ml-2 text-gray-500">
                   <svg
                     fill="currentColor"
-                    strokeLinecap="round"
                     strokeLinecap="round"
                     strokeWidth="2"
                     className="w-5 h-5"
