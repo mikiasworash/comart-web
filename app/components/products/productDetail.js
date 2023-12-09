@@ -76,7 +76,6 @@ function ProductDetail() {
                   fill="currentColor"
                   stroke="currentColor"
                   strokeLinecap="round"
-                  strokeLinecap="round"
                   strokeWidth="2"
                   className="w-4 h-4 text-gray-500"
                   viewBox="0 0 24 24"
@@ -170,10 +169,18 @@ function ProductDetail() {
             </div>
             <p className="leading-relaxed">{product.description}</p>
             <div className="flex flex-col mt-6 pb-5 border-b-2 border-gray-200 mb-5">
-            <div className="flex">
+              <div className="flex">
                 <span className="text-lg mr-3">Available :</span>
-                <button className={`${product.quantity > 0 ? "text-lg font-bold hover:cursor-default" : "text-lg font-bold text-red-400 hover:cursor-default"}`}>
-                 {product.quantity > 0 ?  `${product.quantity} Units` : "Out of stock"}
+                <button
+                  className={`${
+                    product.quantity > 0
+                      ? "text-lg font-bold hover:cursor-default"
+                      : "text-lg font-bold text-red-400 hover:cursor-default"
+                  }`}
+                >
+                  {product.quantity > 0
+                    ? `${product.quantity} Units`
+                    : "Out of stock"}
                 </button>
               </div>
               <div className="flex mt-4">
