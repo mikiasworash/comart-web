@@ -4,5 +4,8 @@
       "source": "/api/:path*",
       "destination": "https://troubled-bass-yoke.cyclic.app/api/:path*"
     }
-  ]
+  ],
+  "images": {
+    "domains": ["res.cloudinary.com", "placehold.co"]
+  }
 }
