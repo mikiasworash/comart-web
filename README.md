@@ -1,8 +1,12 @@
 # COMART Web
 
-> Frontend application for comart, an ecommerce platform
+> This is the frontend code for comart, an ecommerce platform
 
-## How to use Comart
+> For the backend code Click 👉 [Comart API](https://github.com/mikiasworash/comart-api)
+
+> For deployed version Click 👉 [View Live](https://comart.vercel.app/)
+
+## How to use Comart Web
 
 ### 1. Clone the repository
 
@@ -14,35 +18,11 @@ git clone https://github.com/mikiasworash/comart-web.git
 
 ```
 cd comart-web
+
 npm install
 ```
 
-### 3. Create "next.config.js" file at root, copy and paste the following and set your environment variables
-
-```
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  async rewrites() {
-    return [
-      {
-        source: "/api/:path*",
-        destination: "http://localhost:5000/api/:path*",
-      },
-    ];
-  },
-
-  images: {
-    domains: ["res.cloudinary.com", "placehold.co"],
-  },
-
-  env: {
-    cloudinaryURL: "https://api.cloudinary.com/v1_1/["enter your cloudinary environment key"]/image/upload",
-  },
-};
-
-module.exports = nextConfig;
-
-```
+### 3. Rename the `next.config-copy.js` file to `next.config.js` and update your environment variables
 
 ### 4. Run the development server
 

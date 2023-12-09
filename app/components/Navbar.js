@@ -200,13 +200,13 @@ export default function Navbar() {
                     </div>
 
                     <div className="w-fit">
-                      {showAutoComplete && autoCompleteLoading && (
-                        <ul className="absolute inset-x-0 top-full bg-gray-100 border border-gray-800 rounded-md z-20">
+                      {/* {showAutoComplete && autoCompleteLoading && (
+                        <ul className="absolute inset-x-0 top-full bg-gray-100 border border-gray-800 rounded-md z-50">
                           <li className="px-4 py-2 hover:bg-gray-300 cursor-pointer">
                             <Spinner />
                           </li>{" "}
                         </ul>
-                      )}
+                      )} */}
 
                       {showAutoComplete && autoComplete.length > 0 && (
                         <ul className="absolute inset-x-0 top-full bg-gray-100 border border-gray-800 rounded-md z-20">
