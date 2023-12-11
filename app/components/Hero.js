@@ -9,8 +9,8 @@ function Hero() {
       <Image
         src={heroImage}
         alt="Hero Image"
-        layout="fill"
-        objectFit="cover"
+        fill
+        style={{objectFit:"cover"}}
         className="absolute z-0"
       />
       <div className="bg-gray-900 bg-opacity-50 flex items-center h-full absolute w-full z-10">

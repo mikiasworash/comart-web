@@ -270,6 +270,7 @@ export default function Navbar() {
                         <span className="sr-only">Open user menu</span>
 
                         <Image
+                          unoptimized
                           className="h-8 w-8 rounded-full"
                           src={
                             userInfo?.photo == "default" ||
@@ -278,8 +279,8 @@ export default function Navbar() {
                               : userInfo.photo
                           }
                           alt="user image"
-                          width={300}
-                          height={300}
+                          width={128}
+                          height={128}
                         />
                       </Menu.Button>
                     </div>

@@ -102,11 +102,12 @@ function Profile() {
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 mb-16 lg:px-8">
         <div className="flex gap-1 justify-center w-fit mx-auto">
           <Image
+            unoptimized
             className="mt-10 h-20 w-20 mx-auto rounded-full"
             src={photo == "default" || photo == null ? avatar : photo}
             alt="user image"
-            width={300}
-            height={300}
+            width={128}
+            height={128}
           />
           <div className="mt-2 mx-auto">
             <input
