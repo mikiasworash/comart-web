@@ -20,9 +20,11 @@ export const ProductProvider = ({ children }) => {
   const [autoCompleteLoading, setAutoCompleteLoading] = useState(true);
 
   // Get products by category
-  const getProductsByCategory = async (category) => {
+  const getProductsByCategory = async (category, page) => {
     try {
-      const res = await axios.get(`/api/products/categories/${category}`);
+      const res = await axios.get(
+        `/api/products/categories/${category}?page=${page}`
+      );
       setCategoryProducts(res.data.products);
       setIsCategoryProductsLoading(false);
     } catch (error) {
@@ -56,9 +58,9 @@ export const ProductProvider = ({ children }) => {
   };
 
   // Get all products
-  const searchAllProducts = async () => {
+  const searchAllProducts = async (page) => {
     try {
-      const res = await axios.get("/api/products");
+      const res = await axios.get(`/api/products/?page=${page}`);
       setProducts(res.data.products);
       setLoading(false);
     } catch (error) {
@@ -68,9 +70,11 @@ export const ProductProvider = ({ children }) => {
   };
 
   // Get products owned by a vendor
-  const searchProducts = async (userId) => {
+  const searchProducts = async (userId, page) => {
     try {
-      const res = await axios.get(`/api/products/vendor/${userId}`);
+      const res = await axios.get(
+        `/api/products/vendor/${userId}?page=${page}`
+      );
       setProducts(res.data.products);
       setLoading(false);
     } catch (error) {
@@ -80,9 +84,9 @@ export const ProductProvider = ({ children }) => {
   };
 
   // Get featured products
-  const searchFeaturedProducts = async () => {
+  const searchFeaturedProducts = async (page) => {
     try {
-      const res = await axios.get("/api/products/featured");
+      const res = await axios.get(`/api/products/featured?page=${page}`);
       setFeaturedProducts(res.data.products);
       setFeaturedProductsLoading(false);
     } catch (error) {

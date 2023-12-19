@@ -2,6 +2,7 @@
 import dynamic from "next/dynamic";
 import { useState, useEffect, useContext } from "react";
 import CategoryContext from "../../context/CategoryContext";
+import Pagination from "../pagination";
 import Spinner from "../Spinner";
 
 const AddCategoryModal = dynamic(
@@ -29,14 +30,23 @@ function CategoryList() {
   const [showDeleteModal, setDeleteShowModal] = useState(false);
   const [categoryToChange, setCategory] = useState("");
 
-  const { categories, searchCategories, isCategoryLoading } =
-    useContext(CategoryContext);
+  const {
+    categoriesPaginated,
+    searchCategoriesPaginated,
+    isCategoryPaginatedLoading,
+  } = useContext(CategoryContext);
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
   useEffect(() => {
-    searchCategories();
-  }, [showAddModal, showEditModal, showDeleteModal]);
+    searchCategoriesPaginated(currentPage);
+  }, [showAddModal, showEditModal, showDeleteModal, currentPage]);
 
-  if (isCategoryLoading) {
+  if (isCategoryPaginatedLoading) {
     return (
       <div className="h-screen mt-32 mx-auto">
         <Spinner />
@@ -84,7 +94,7 @@ function CategoryList() {
                 </th>
               </tr>
             </thead>
-            {categories?.map((category) => (
+            {categoriesPaginated?.map((category) => (
               <tbody key={category._id}>
                 <tr className="bg-white border-b">
                   <th
@@ -143,6 +153,8 @@ function CategoryList() {
           </div>
         </div>
       </div>
+
+      <Pagination page={currentPage} onPageChange={handlePageChange} />
     </div>
   );
 }

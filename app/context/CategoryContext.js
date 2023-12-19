@@ -8,6 +8,9 @@ export const CategoryProvider = ({ children }) => {
   const [isCategoryLoading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
 
+  const [isCategoryPaginatedLoading, setLoadingPaginated] = useState(true);
+  const [categoriesPaginated, setCategoriesPaginated] = useState([]);
+
   // Get all categories
   const searchCategories = async () => {
     try {
@@ -20,12 +23,28 @@ export const CategoryProvider = ({ children }) => {
     }
   };
 
+  // Get all categories paginated
+  const searchCategoriesPaginated = async (page) => {
+    try {
+      const res = await axios.get(`/api/categories/paginated?page=${page}`);
+      setCategoriesPaginated(res.data.categories);
+      setLoadingPaginated(false);
+    } catch (error) {
+      setLoadingPaginated(false);
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <CategoryContext.Provider
       value={{
         isCategoryLoading,
         categories,
         searchCategories,
+
+        isCategoryPaginatedLoading,
+        categoriesPaginated,
+        searchCategoriesPaginated,
       }}
     >
       {children}

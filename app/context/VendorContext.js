@@ -9,9 +9,9 @@ export const VendorProvider = ({ children }) => {
   const [vendors, setVendors] = useState([]);
 
   // Search for all vendors
-  const searchVendors = async () => {
+  const searchVendors = async (page) => {
     try {
-      const res = await axios.get(`/api/users/vendors`);
+      const res = await axios.get(`/api/users/vendors?page=${page}`);
 
       setVendors(res.data.vendors);
       setLoading(false);

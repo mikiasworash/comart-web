@@ -79,6 +79,7 @@ function Profile() {
           role,
           photo: profilePhotoLink,
         }).unwrap();
+
         dispatch(setCredentials({ ...res }));
         toast.success("Profile updated");
       } catch (err) {
@@ -101,10 +102,15 @@ function Profile() {
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 mb-16 lg:px-8">
         <div className="flex gap-1 justify-center w-fit mx-auto">
-          <Image
-            unoptimized
+          <img
             className="mt-10 h-20 w-20 mx-auto rounded-full"
-            src={photo == "default" || photo == null ? avatar : photo}
+            src={
+              !photo
+                ? "https://avatar.iran.liara.run/public/35"
+                : photo == "default"
+                ? `https://ui-avatars.com/api/?name=${name}`
+                : photo
+            }
             alt="user image"
             width={128}
             height={128}

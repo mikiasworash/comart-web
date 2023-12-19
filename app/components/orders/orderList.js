@@ -1,7 +1,8 @@
 "use client";
-import { useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 import OrderContext from "../../context/OrderContext";
+import Pagination from "../pagination";
 import Spinner from "../Spinner";
 
 function OrderList() {
@@ -9,9 +10,17 @@ function OrderList() {
     useContext(OrderContext);
   const { userInfo } = useSelector((state) => state.auth);
 
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
   useEffect(() => {
-    userInfo.role == "admin" ? getOrders() : getOrdersByVendor(userInfo._id);
-  }, []);
+    userInfo.role == "admin"
+      ? getOrders(currentPage)
+      : getOrdersByVendor(userInfo._id, currentPage);
+  }, [currentPage]);
 
   const getFormattedDate = (inputDate) => {
     const months = [
@@ -157,6 +166,8 @@ function OrderList() {
           </table>
         </div>
       </div>
+
+      <Pagination page={currentPage} onPageChange={handlePageChange} />
     </div>
   );
 }

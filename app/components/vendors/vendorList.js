@@ -2,6 +2,7 @@
 import dynamic from "next/dynamic";
 import { useState, useEffect, useContext } from "react";
 import VendorContext from "../../context/VendorContext";
+import Pagination from "../pagination";
 import Spinner from "../Spinner";
 
 const ApproveVendorModal = dynamic(
@@ -24,9 +25,15 @@ function VendorList() {
 
   const { vendors, searchVendors, isVendorLoading } = useContext(VendorContext);
 
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
   useEffect(() => {
-    searchVendors();
-  }, [showApproveVendorModal, showRejectVendorModal]);
+    searchVendors(currentPage);
+  }, [showApproveVendorModal, showRejectVendorModal, currentPage]);
 
   if (isVendorLoading) {
     return (
@@ -174,6 +181,8 @@ function VendorList() {
           </div>
         </div>
       </div>
+
+      <Pagination page={currentPage} onPageChange={handlePageChange} />
     </div>
   );
 }

@@ -269,13 +269,13 @@ export default function Navbar() {
                         <span className="absolute -inset-1.5" />
                         <span className="sr-only">Open user menu</span>
 
-                        <Image
-                          unoptimized
+                        <img
                           className="h-8 w-8 rounded-full"
                           src={
-                            userInfo?.photo == "default" ||
-                            userInfo?.photo == null
-                              ? avatar
+                            !userInfo
+                              ? "https://res.cloudinary.com/dlyd6gs9k/image/upload/v1702665044/comart_user_images/loabjl0bfsqgspsxkudc.png"
+                              : userInfo?.photo == "default"
+                              ? `https://ui-avatars.com/api/?name=${userInfo.name}`
                               : userInfo.photo
                           }
                           alt="user image"

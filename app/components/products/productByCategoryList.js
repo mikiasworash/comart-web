@@ -1,7 +1,8 @@
 "use client";
-import { useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import ProductContext from "../../context/ProductContext";
+import Pagination from "../pagination";
 import { useParams } from "next/navigation";
 import Spinner from "../Spinner";
 
@@ -18,11 +19,17 @@ function ProductsByCategoryList() {
     setCategoryProducts,
   } = useContext(ProductContext);
 
+  const [currentPage, setCurrentPage] = useState(1);
+
   useEffect(() => {
     setCategoryProducts([]);
     setIsCategoryProductsLoading(true);
-    getProductsByCategory(category);
-  }, [category]);
+    getProductsByCategory(category, currentPage);
+  }, [category, currentPage]);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
   if (!categoryProducts || isCategoryProductsLoading) {
     return (
@@ -32,11 +39,28 @@ function ProductsByCategoryList() {
     );
   }
 
+  if ((!categoryProducts || categoryProducts.length == 0) && currentPage > 1)
+    return (
+      <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-32">
+        <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+          No other products found
+        </span>{" "}
+        under "{category}"
+        <button
+          onClick={() => setCurrentPage(1)}
+          className={`flex w-fit mx-auto mt-4 items-center justify-center px-4 h-10 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+          } bg-white border border-gray-300 rounded-lg`}
+        >
+          Go Back
+        </button>
+      </h1>
+    );
+
   if (!categoryProducts || categoryProducts.length == 0)
     return (
       <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-32">
         <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
-          No Products found
+          No products found
         </span>{" "}
         under "{category}"
       </h1>
@@ -89,6 +113,8 @@ function ProductsByCategoryList() {
           ))}
         </div>
       </div>
+
+      <Pagination page={currentPage} onPageChange={handlePageChange} />
     </div>
   );
 }

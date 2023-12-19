@@ -9,9 +9,9 @@ export const OrderProvider = ({ children }) => {
   const [orders, setOrders] = useState([]);
 
   // Get all orders
-  const getOrders = async () => {
+  const getOrders = async (page) => {
     try {
-      const res = await axios.get(`/api/orders`);
+      const res = await axios.get(`/api/orders?page=${page}`);
       setOrders(res.data.orders);
       setLoading(false);
     } catch (error) {
@@ -21,9 +21,9 @@ export const OrderProvider = ({ children }) => {
   };
 
   // Get all orders
-  const getOrdersByVendor = async (vendorId) => {
+  const getOrdersByVendor = async (vendorId, page) => {
     try {
-      const res = await axios.get(`/api/orders/${vendorId}`);
+      const res = await axios.get(`/api/orders/${vendorId}?page=${page}`);
       setOrders(res.data.orders);
       setLoading(false);
     } catch (error) {

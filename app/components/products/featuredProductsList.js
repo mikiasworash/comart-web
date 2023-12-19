@@ -2,6 +2,7 @@
 import { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import ProductContext from "../../context/ProductContext";
+import Pagination from "../pagination";
 import Spinner from "../Spinner";
 
 function FeaturedProductsList() {
@@ -12,9 +13,15 @@ function FeaturedProductsList() {
     setProduct,
   } = useContext(ProductContext);
 
+  const [currentPage, setCurrentPage] = useState(1);
+
   useEffect(() => {
-    searchFeaturedProducts();
-  }, []);
+    searchFeaturedProducts(currentPage);
+  }, [currentPage]);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
   if (isFeaturedProductsLoading) {
     return (
@@ -24,13 +31,30 @@ function FeaturedProductsList() {
     );
   }
 
+  if ((!featuredProducts || featuredProducts.length === 0) && currentPage > 1)
+    return (
+      <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-48">
+        <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+          No other Featured Products
+        </span>{" "}
+        found!
+        <button
+          onClick={() => setCurrentPage(1)}
+          className={`flex w-fit mx-auto mt-4 items-center justify-center px-4 h-10 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+          } bg-white border border-gray-300 rounded-lg`}
+        >
+          Go Back
+        </button>
+      </h1>
+    );
+
   if (!featuredProducts || featuredProducts.length === 0)
     return (
       <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-48">
         <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
           No Featured Products
         </span>{" "}
-        to show yet!
+        found!
       </h1>
     );
 
@@ -81,6 +105,8 @@ function FeaturedProductsList() {
           ))}
         </div>
       </div>
+
+      <Pagination page={currentPage} onPageChange={handlePageChange} />
     </div>
   );
 }
