@@ -58,9 +58,9 @@ export const ProductProvider = ({ children }) => {
   };
 
   // Get all products
-  const searchAllProducts = async (page) => {
+  const searchAllProducts = async (page, limit) => {
     try {
-      const res = await axios.get(`/api/products/?page=${page}`);
+      const res = await axios.get(`/api/products/?page=${page}&limit=${limit}`);
       setProducts(res.data.products);
       setLoading(false);
     } catch (error) {
@@ -132,6 +132,7 @@ export const ProductProvider = ({ children }) => {
         getProductsByName,
         getProduct,
         setProduct,
+        setProducts,
         setCategoryProducts,
         setSearchedProducts,
         setAutoComplete,

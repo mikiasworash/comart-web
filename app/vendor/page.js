@@ -13,9 +13,6 @@ function VendorDashboard() {
   const [name, setName] = useState("");
   const [tabIndex, setTabIndex] = useState("1");
 
-  const { isProductLoading, searchProducts, products } =
-    useContext(ProductContext);
-
   const router = useRouter();
 
   const { userInfo } = useSelector((state) => state.auth);
@@ -28,11 +25,18 @@ function VendorDashboard() {
     } else {
       setName(userInfo.name);
       setTabIndex(1);
-      searchProducts(userInfo._id);
     }
-  }, [router, userInfo, isProductLoading]);
+  }, [router, userInfo]);
 
-  if (isProductLoading || !userInfo) {
+  if (!userInfo) {
+    return (
+      <div className="h-screen mt-32">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (userInfo.role !== "vendor") {
     return (
       <div className="h-screen mt-32">
         <Spinner />

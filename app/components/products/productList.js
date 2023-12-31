@@ -42,6 +42,7 @@ function ProductList() {
     searchProducts,
     searchAllProducts,
     setProduct,
+    setProducts,
     isProductLoading,
   } = useContext(ProductContext);
 
@@ -52,9 +53,10 @@ function ProductList() {
   };
 
   useEffect(() => {
+    setProducts([]);
     userInfo.role == "vendor"
       ? searchProducts(userInfo._id, currentPage)
-      : searchAllProducts(currentPage);
+      : searchAllProducts(currentPage, 5);
   }, [showAddModal, showEditModal, showDeleteModal, currentPage]);
 
   const handleFeature = async (product) => {

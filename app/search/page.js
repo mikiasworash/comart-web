@@ -7,7 +7,7 @@ import Spinner from "../components/Spinner";
 
 function Search() {
   const searchParams = useSearchParams();
-  const query = searchParams.get("queryString");
+  const query = searchParams.get("query");
 
   const {
     searchedProducts,

@@ -24,7 +24,7 @@ function ProductDetail() {
 
   const handleAddToCart = async () => {
     if (!userInfo || userInfo.role !== "buyer") {
-      hotToast.error("please sign in as a customer first");
+      hotToast.error("please sign in as a customer");
     } else {
       try {
         const res = await axios.post(`/api/cart/${product._id}`, {
@@ -191,7 +191,11 @@ function ProductDetail() {
             </div>
             <div>
               <span className="title-font font-medium text-2xl text-gray-900">
-                ETB {product.price}
+                ETB{" "}
+                {product.price
+                  .toFixed(2)
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
               </span>
             </div>
             {userInfo ? (

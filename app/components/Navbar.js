@@ -113,7 +113,7 @@ export default function Navbar() {
     if (searchInput == "") {
       hotToast.error("Please enter a search term");
     } else {
-      router.replace(`/search?queryString=${searchInput}`);
+      router.replace(`/search?query=${searchInput}`);
       setSearchInput("");
     }
   };
@@ -245,7 +245,7 @@ export default function Navbar() {
                   ) : userInfo.role == "admin" ? (
                     <div className="mx-4 flow-root">
                       <Link
-                        href="/admin-dashboard"
+                        href="/admin"
                         className="group -m-2 flex items-center p-2"
                       >
                         <LuLayoutDashboard className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500" />
@@ -254,7 +254,7 @@ export default function Navbar() {
                   ) : (
                     <div className="mx-4 flow-root">
                       <Link
-                        href="/vendor-dashboard"
+                        href="/vendor"
                         className="group -m-2 flex items-center p-2"
                       >
                         <LuLayoutDashboard className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500" />
@@ -312,7 +312,7 @@ export default function Navbar() {
                             <Menu.Item>
                               {({ active }) => (
                                 <Link
-                                  href="/vendor-dashboard"
+                                  href="/vendor"
                                   className={classNames(
                                     active ? "bg-gray-100" : "",
                                     "block px-4 py-2 text-sm text-gray-700"
@@ -326,7 +326,7 @@ export default function Navbar() {
                             <Menu.Item>
                               {({ active }) => (
                                 <Link
-                                  href="/admin-dashboard"
+                                  href="/admin"
                                   className={classNames(
                                     active ? "bg-gray-100" : "",
                                     "block px-4 py-2 text-sm text-gray-700"

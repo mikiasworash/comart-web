@@ -17,10 +17,6 @@ function AdminDashboard() {
   const [tabIndex, setTabIndex] = useState("1");
   const [name, setName] = useState("");
 
-  const { isCategoryLoading, searchCategories } = useContext(CategoryContext);
-  const { isProductLoading, searchAllProducts, products } =
-    useContext(ProductContext);
-
   const router = useRouter();
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -32,12 +28,18 @@ function AdminDashboard() {
     } else {
       setName(userInfo.name);
       setTabIndex(1);
-      searchCategories();
-      searchAllProducts();
     }
-  }, [router, userInfo, isCategoryLoading]);
+  }, [router, userInfo]);
 
-  if (isCategoryLoading || isProductLoading || !userInfo) {
+  if (!userInfo) {
+    return (
+      <div className="h-screen mt-32">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (userInfo.role !== "admin") {
     return (
       <div className="h-screen mt-32">
         <Spinner />
