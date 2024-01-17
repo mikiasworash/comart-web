@@ -2,21 +2,31 @@ import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Fragment } from "react";
 import { toast } from "react-hot-toast";
-import CategoryContext from "../../../context/CategoryContext";
+import { useGetCategoriesMutation } from "../../../../redux/slices/categoriesSlice";
 
 function addProductModal({ showAddModal, closeAddModal }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState("");
 
   const [selectedImage, setSelectedImage] = useState(null);
 
-  const { categories, searchCategories } = useContext(CategoryContext);
+  const [getCategories, { isLoading }] = useGetCategoriesMutation();
 
   useEffect(() => {
-    searchCategories();
+    const getAllCategories = async () => {
+      try {
+        const res = await getCategories().unwrap();
+        setCategories(res.categories);
+      } catch (err) {
+        toast.error(err?.data?.message);
+      }
+    };
+
+    getAllCategories();
   }, []);
 
   const handleImageChange = (e) => {

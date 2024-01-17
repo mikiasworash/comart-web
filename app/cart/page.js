@@ -67,7 +67,7 @@ export default function Cart() {
           phone_number: userInfo.phone,
           callback_url:
             "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
-          return_url: "http://localhost:3000/payment-success",
+          return_url: "https://comart-web.vercel.app/payment-success",
           "customization[title]": "Payment for comart",
           "customization[description]":
             "Comart customer is paying a merchant for a product using chapa",

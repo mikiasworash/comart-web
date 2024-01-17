@@ -1,14 +1,20 @@
 "use client";
 import { useState, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
-import OrderContext from "../../context/OrderContext";
+import {
+  useGetOrdersMutation,
+  useGetOrdersByVendorMutation,
+} from "../../../redux/slices/ordersSlice";
 import Pagination from "../pagination";
 import Spinner from "../Spinner";
 
 function OrderList() {
-  const { orders, getOrders, getOrdersByVendor, isOrderLoading } =
-    useContext(OrderContext);
   const { userInfo } = useSelector((state) => state.auth);
+  const [orders, setOrders] = useState([]);
+
+  const [getOrders, { isOrdersLoading }] = useGetOrdersMutation();
+  const [getOrdersByVendor, { isOrdersVLoading }] =
+    useGetOrdersByVendorMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -17,9 +23,25 @@ function OrderList() {
   };
 
   useEffect(() => {
-    userInfo.role == "admin"
-      ? getOrders(currentPage)
-      : getOrdersByVendor(userInfo._id, currentPage);
+    const getAllOrders = async () => {
+      try {
+        const res = await getOrders(currentPage).unwrap();
+        setOrders(res.orders);
+      } catch (err) {
+        toast.error(err?.data?.message);
+      }
+    };
+
+    const getAllOrdersByVendor = async () => {
+      try {
+        const res = await getOrdersByVendor(userInfo._id, currentPage).unwrap();
+        setOrders(res.orders);
+      } catch (err) {
+        toast.error(err?.data?.message);
+      }
+    };
+
+    userInfo.role == "admin" ? getAllOrders() : getAllOrdersByVendor();
   }, [currentPage]);
 
   const getFormattedDate = (inputDate) => {
@@ -46,7 +68,7 @@ function OrderList() {
     return `${month} ${day}, ${year}`;
   };
 
-  if (isOrderLoading) {
+  if (isOrdersLoading || isOrdersVLoading) {
     return (
       <div className="h-screen mt-32 mx-auto">
         <Spinner />

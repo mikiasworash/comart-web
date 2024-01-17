@@ -1,9 +1,10 @@
 "use client";
 import dynamic from "next/dynamic";
 import { useState, useEffect, useContext } from "react";
-import VendorContext from "../../context/VendorContext";
+import { useGetVendorsMutation } from "../../../redux/slices/usersApiSlice";
 import Pagination from "../pagination";
 import Spinner from "../Spinner";
+import { toast } from "react-hot-toast";
 
 const ApproveVendorModal = dynamic(
   () => import("../modals/vendor/approveVendorModal"),
@@ -22,8 +23,9 @@ function VendorList() {
   const [showApproveVendorModal, setShowApproveVendorModal] = useState(false);
   const [showRejectVendorModal, setShowRejectVendorModal] = useState(false);
   const [vendorToChange, setVendor] = useState("");
+  const [vendors, setVendors] = useState([]);
 
-  const { vendors, searchVendors, isVendorLoading } = useContext(VendorContext);
+  const [getVendors, { isLoading }] = useGetVendorsMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -32,10 +34,19 @@ function VendorList() {
   };
 
   useEffect(() => {
-    searchVendors(currentPage);
+    const getAllVendors = async () => {
+      try {
+        const res = await getVendors(currentPage).unwrap();
+        setVendors(res.vendors);
+      } catch (err) {
+        toast.error(err?.data?.message);
+      }
+    };
+
+    getAllVendors();
   }, [showApproveVendorModal, showRejectVendorModal, currentPage]);
 
-  if (isVendorLoading) {
+  if (isLoading) {
     return (
       <div className="h-screen mt-32 mx-auto">
         <Spinner />

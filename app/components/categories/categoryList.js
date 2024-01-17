@@ -1,7 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import { useState, useEffect, useContext } from "react";
-import CategoryContext from "../../context/CategoryContext";
+import { useGetCategoriesPaginatedMutation } from "../../../redux/slices/categoriesSlice";
 import Pagination from "../pagination";
 import Spinner from "../Spinner";
 
@@ -30,11 +30,10 @@ function CategoryList() {
   const [showDeleteModal, setDeleteShowModal] = useState(false);
   const [categoryToChange, setCategory] = useState("");
 
-  const {
-    categoriesPaginated,
-    searchCategoriesPaginated,
-    isCategoryPaginatedLoading,
-  } = useContext(CategoryContext);
+  const [categoriesPaginated, setCategoriesPaginated] = useState([]);
+
+  const [getCategoriesPaginated, { isLoading }] =
+    useGetCategoriesPaginatedMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -43,10 +42,19 @@ function CategoryList() {
   };
 
   useEffect(() => {
-    searchCategoriesPaginated(currentPage);
+    const getAllCategoriesPaginated = async () => {
+      try {
+        const res = await getCategoriesPaginated(currentPage).unwrap();
+        setCategoriesPaginated(res.categories);
+      } catch (err) {
+        toast.error(err?.data?.message);
+      }
+    };
+
+    getAllCategoriesPaginated();
   }, [showAddModal, showEditModal, showDeleteModal, currentPage]);
 
-  if (isCategoryPaginatedLoading) {
+  if (isLoading) {
     return (
       <div className="h-screen mt-32 mx-auto">
         <Spinner />

@@ -30,6 +30,12 @@ export const usersApiSlices = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    getVendors: builder.mutation({
+      query: (page) => ({
+        url: `${USERS_URL}/vendors/?page=${page}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -38,4 +44,5 @@ export const {
   useLogoutMutation,
   useRegisterMutation,
   useUpdateUserMutation,
+  useGetVendorsMutation,
 } = usersApiSlices;
