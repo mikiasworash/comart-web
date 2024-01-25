@@ -79,9 +79,12 @@ export default function Cart() {
             cartItems: cartItems,
           });
           if (orderRes) {
-            router.replace(res.data.data.checkout_url);
-            dispatch(clearCart());
-            setLoading(false);
+            router.replace(res.data.data.checkout_url, undefined, {
+              onComplete: () => {
+                dispatch(clearCart());
+                setLoading(false);
+              },
+            });
           }
         } else {
           setLoading(false);

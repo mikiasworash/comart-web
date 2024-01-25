@@ -1,11 +1,9 @@
 "use client";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import Spinner from "../components/Spinner";
-import CategoryContext from "../context/CategoryContext";
 import CategoryList from "../components/categories/categoryList";
-import ProductContext from "../context/ProductContext";
 import ProductList from "../components/products/productList";
 import VendorList from "../components/vendors/vendorList";
 import OrderList from "../components/orders/orderList";

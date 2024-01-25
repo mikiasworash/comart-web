@@ -1,9 +1,8 @@
 "use client";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import Spinner from "../components/Spinner";
-import ProductContext from "../context/ProductContext";
 import ProductList from "../components/products/productList";
 import OrderList from "../components/orders/orderList";
 import { MdProductionQuantityLimits } from "react-icons/md";

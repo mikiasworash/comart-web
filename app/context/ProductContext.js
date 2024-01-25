@@ -58,7 +58,7 @@ export const ProductProvider = ({ children }) => {
   };
 
   // Get all products
-  const searchAllProducts = async (page, limit) => {
+  const searchAllProducts = async (page, limit = 8) => {
     try {
       const res = await axios.get(`/api/products/?page=${page}&limit=${limit}`);
       setProducts(res.data.products);

@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import Link from "next/link";
 import ProductContext from "../../context/ProductContext";
 import Pagination from "../pagination";
-import { AiFillDelete } from "react-icons/ai";
 import { toast } from "react-hot-toast";
 import Spinner from "../Spinner";
 
@@ -53,7 +52,7 @@ function ProductList() {
   };
 
   useEffect(() => {
-    setProducts([]);
+    // setProducts([]);
     userInfo.role == "vendor"
       ? searchProducts(userInfo._id, currentPage)
       : searchAllProducts(currentPage, 5);
@@ -68,7 +67,7 @@ function ProductList() {
       });
 
       toast.success("Feature status updated");
-      searchAllProducts(currentPage);
+      searchAllProducts(currentPage, 5);
     } catch (error) {
       toast.error("Feature status update failed");
       console.error("Error:", error);
