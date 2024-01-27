@@ -10,7 +10,7 @@ export const ordersApiSlices = apiSlice.injectEndpoints({
       }),
     }),
     getOrdersByVendor: builder.mutation({
-      query: (vendorId, page) => ({
+      query: ({ vendorId, page }) => ({
         url: `${ORDERS_URL}/${vendorId}?page=${page}`,
         method: "GET",
       }),

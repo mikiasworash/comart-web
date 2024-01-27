@@ -1,7 +1,12 @@
 "use client";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import ProductContext from "../../context/ProductContext";
+import { useSelector, useDispatch } from "react-redux";
+import { useGetProductsByCategoryMutation } from "../../../redux/slices/productsApiSlice";
+import {
+  setProductsByCategory,
+  setProduct,
+} from "../../../redux/slices/productSlice";
 import Pagination from "../pagination";
 import { useParams } from "next/navigation";
 import Spinner from "../Spinner";
@@ -10,28 +15,37 @@ function ProductsByCategoryList() {
   const params = useParams();
   const category = params.category;
 
-  const {
-    categoryProducts,
-    getProductsByCategory,
-    isCategoryProductsLoading,
-    setIsCategoryProductsLoading,
-    setProduct,
-    setCategoryProducts,
-  } = useContext(ProductContext);
+  const dispatch = useDispatch();
+
+  const { productsByCategory } = useSelector((state) => state.product);
+  const [isLoading, setIsLoading] = useState(true);
+  const [getProductsByCategory] = useGetProductsByCategoryMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    setCategoryProducts([]);
-    setIsCategoryProductsLoading(true);
-    getProductsByCategory(category, currentPage);
+    const getAllProductsByCategory = async () => {
+      try {
+        const res = await getProductsByCategory({
+          category: category,
+          page: currentPage,
+        }).unwrap();
+        dispatch(setProductsByCategory(res.products));
+        setIsLoading(false);
+      } catch (err) {
+        toast.error(err?.data?.message);
+        setIsLoading(false);
+      }
+    };
+
+    getAllProductsByCategory();
   }, [category, currentPage]);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
 
-  if (!categoryProducts || isCategoryProductsLoading) {
+  if (isLoading) {
     return (
       <div className="h-screen mt-32 lg:mt-48">
         <Spinner />
@@ -39,7 +53,7 @@ function ProductsByCategoryList() {
     );
   }
 
-  if ((!categoryProducts || categoryProducts.length == 0) && currentPage > 1)
+  if (productsByCategory.length == 0 && currentPage > 1)
     return (
       <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-32">
         <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
@@ -56,7 +70,7 @@ function ProductsByCategoryList() {
       </h1>
     );
 
-  if (!categoryProducts || categoryProducts.length == 0)
+  if (productsByCategory.length == 0)
     return (
       <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-32">
         <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
@@ -78,12 +92,12 @@ function ProductsByCategoryList() {
       </div>
       <div className="bg-white">
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          {categoryProducts.map((product) => (
+          {productsByCategory.map((product) => (
             <Link
               href={`/products/${product._id}`}
               key={product._id}
               className="group relative hover:cursor-pointer"
-              onClick={() => setProduct(product)}
+              onClick={() => dispatch(setProduct(product))}
             >
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                 <img

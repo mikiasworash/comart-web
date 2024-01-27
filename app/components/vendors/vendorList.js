@@ -1,6 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useGetVendorsMutation } from "../../../redux/slices/usersApiSlice";
 import Pagination from "../pagination";
 import Spinner from "../Spinner";

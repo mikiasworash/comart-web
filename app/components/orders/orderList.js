@@ -1,10 +1,10 @@
 "use client";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
   useGetOrdersMutation,
   useGetOrdersByVendorMutation,
-} from "../../../redux/slices/ordersSlice";
+} from "../../../redux/slices/ordersApiSlice";
 import Pagination from "../pagination";
 import Spinner from "../Spinner";
 
@@ -34,7 +34,10 @@ function OrderList() {
 
     const getAllOrdersByVendor = async () => {
       try {
-        const res = await getOrdersByVendor(userInfo._id, currentPage).unwrap();
+        const res = await getOrdersByVendor({
+          vendorId: userInfo._id,
+          page: currentPage,
+        }).unwrap();
         setOrders(res.orders);
       } catch (err) {
         toast.error(err?.data?.message);

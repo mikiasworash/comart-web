@@ -1,7 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useState, useEffect, useContext } from "react";
-import { useGetCategoriesPaginatedMutation } from "../../../redux/slices/categoriesSlice";
+import { useState, useEffect } from "react";
+import { useGetCategoriesPaginatedMutation } from "../../../redux/slices/categoriesApiSlice";
 import Pagination from "../pagination";
 import Spinner from "../Spinner";
 

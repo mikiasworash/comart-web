@@ -1,30 +1,43 @@
 "use client";
-import { useEffect, useContext } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import ProductContext from "../context/ProductContext";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setProduct,
+  setSearchedProducts,
+} from "../../redux/slices/productSlice";
+import { useGetProductsByNameMutation } from "../../redux/slices/productsApiSlice";
 import { useSearchParams } from "next/navigation";
 import Spinner from "../components/Spinner";
 
 function Search() {
+  const dispatch = useDispatch();
+
   const searchParams = useSearchParams();
   const query = searchParams.get("query");
 
-  const {
-    searchedProducts,
-    getProductsByName,
-    isSearchedProductsLoading,
-    setIsSearchedProductsLoading,
-    setProduct,
-    setSearchedProducts,
-  } = useContext(ProductContext);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const { searchedProducts } = useSelector((state) => state.product);
+
+  const [getProductsByName] = useGetProductsByNameMutation();
 
   useEffect(() => {
-    setSearchedProducts([]);
-    setIsSearchedProductsLoading(true);
-    getProductsByName(query);
+    const searchProducts = async () => {
+      try {
+        const res = await getProductsByName(query).unwrap();
+        dispatch(setSearchedProducts(res.products));
+        setIsLoading(false);
+      } catch (err) {
+        toast.error(err?.data?.message);
+        setIsLoading(false);
+      }
+    };
+
+    searchProducts();
   }, [query]);
 
-  if (isSearchedProductsLoading) {
+  if (isLoading) {
     return (
       <div className="h-screen mt-32">
         <Spinner />
@@ -38,7 +51,7 @@ function Search() {
     );
   }
 
-  if (!searchedProducts || searchedProducts.length == 0)
+  if (searchedProducts.length == 0)
     return (
       <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-32">
         <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
@@ -65,7 +78,7 @@ function Search() {
               href={`/products/${product._id}`}
               key={product._id}
               className="group relative hover:cursor-pointer"
-              onClick={() => setProduct(product)}
+              onClick={() => dispatch(setProduct(product))}
             >
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                 <img

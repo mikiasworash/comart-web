@@ -1,29 +1,44 @@
 "use client";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import ProductContext from "../../context/ProductContext";
+import { useGetFeaturedProductsMutation } from "../../../redux/slices/productsApiSlice";
+import {
+  setFeaturedProducts,
+  setProduct,
+} from "../../../redux/slices/productSlice";
+import { useSelector, useDispatch } from "react-redux";
 import Pagination from "../pagination";
 import Spinner from "../Spinner";
 
 function FeaturedProductsList() {
-  const {
-    featuredProducts,
-    searchFeaturedProducts,
-    isFeaturedProductsLoading,
-    setProduct,
-  } = useContext(ProductContext);
+  const dispatch = useDispatch();
+
+  const { featuredProducts } = useSelector((state) => state.product);
+  const [isLoading, setIsLoading] = useState(true);
+  const [getFeaturedProducts] = useGetFeaturedProductsMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    searchFeaturedProducts(currentPage);
-  }, [currentPage]);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
 
-  if (isFeaturedProductsLoading) {
+  useEffect(() => {
+    const getAllFeaturedProducts = async () => {
+      try {
+        const res = await getFeaturedProducts(currentPage).unwrap();
+        dispatch(setFeaturedProducts(res.products));
+        setIsLoading(false);
+      } catch (err) {
+        toast.error(err?.data?.message);
+        setIsLoading(false);
+      }
+    };
+
+    getAllFeaturedProducts();
+  }, [currentPage]);
+
+  if (isLoading) {
     return (
       <div className="h-screen mt-32 lg:mt-48">
         <Spinner />
@@ -31,7 +46,7 @@ function FeaturedProductsList() {
     );
   }
 
-  if ((!featuredProducts || featuredProducts.length === 0) && currentPage > 1)
+  if (featuredProducts.length === 0 && currentPage > 1)
     return (
       <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-48">
         <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
@@ -48,7 +63,7 @@ function FeaturedProductsList() {
       </h1>
     );
 
-  if (!featuredProducts || featuredProducts.length === 0)
+  if (featuredProducts.length === 0)
     return (
       <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-48">
         <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
@@ -75,7 +90,7 @@ function FeaturedProductsList() {
               href={`/products/${product._id}`}
               key={product._id}
               className="group relative hover:cursor-pointer"
-              onClick={() => setProduct(product)}
+              onClick={() => dispatch(setProduct(product))}
             >
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                 <img

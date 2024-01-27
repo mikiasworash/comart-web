@@ -1,8 +1,8 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Fragment } from "react";
 import { toast } from "react-hot-toast";
-import { useGetCategoriesMutation } from "../../../../redux/slices/categoriesSlice";
+import { useGetCategoriesMutation } from "../../../../redux/slices/categoriesApiSlice";
 
 function addProductModal({ showAddModal, closeAddModal }) {
   const [name, setName] = useState("");

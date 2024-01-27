@@ -1,25 +1,41 @@
 "use client";
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import ProductContext from "../../context/ProductContext";
+import { useSelector, useDispatch } from "react-redux";
+import { useGetProductsMutation } from "../../../redux/slices/productsApiSlice";
+import { setAllProducts, setProduct } from "../../../redux/slices/productSlice";
 import Pagination from "../pagination";
 import Spinner from "../Spinner";
 
 function AllProductsList() {
-  const { products, searchAllProducts, isProductLoading, setProduct } =
-    useContext(ProductContext);
+  const dispatch = useDispatch();
+
+  const { allProducts } = useSelector((state) => state.product);
+  const [isLoading, setIsLoading] = useState(true);
+  const [getProducts] = useGetProductsMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    searchAllProducts(currentPage);
-  }, [currentPage]);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
 
-  if (isProductLoading) {
+  useEffect(() => {
+    const getAllProducts = async () => {
+      try {
+        const res = await getProducts({ page: currentPage }).unwrap();
+        dispatch(setAllProducts(res.products));
+        setIsLoading(false);
+      } catch (err) {
+        toast.error(err?.data?.message);
+        setIsLoading(false);
+      }
+    };
+
+    getAllProducts();
+  }, [currentPage]);
+
+  if (isLoading) {
     return (
       <div className="h-screen mt-32 lg:mt-48">
         <Spinner />
@@ -27,11 +43,7 @@ function AllProductsList() {
     );
   }
 
-  if (
-    !isProductLoading &&
-    (!products || products.length === 0) &&
-    currentPage > 1
-  )
+  if (allProducts.length === 0 && currentPage > 1)
     return (
       <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-48">
         <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
@@ -48,7 +60,7 @@ function AllProductsList() {
       </h1>
     );
 
-  if (!isProductLoading && (!products || products.length === 0))
+  if (allProducts.length === 0)
     return (
       <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-48">
         <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
@@ -70,12 +82,12 @@ function AllProductsList() {
       </div>
       <div className="bg-white">
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          {products.map((product) => (
+          {allProducts.map((product) => (
             <Link
               href={`/products/${product._id}`}
               key={product._id}
               className="group relative hover:cursor-pointer"
-              onClick={() => setProduct(product)}
+              onClick={() => dispatch(setProduct(product))}
             >
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                 <img

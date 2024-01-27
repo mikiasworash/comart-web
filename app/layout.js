@@ -6,7 +6,6 @@ import ReduxProvider from "../redux/provider";
 import { ToastContainer } from "react-toastify";
 import { Toaster } from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
-import { ProductProvider } from "./context/ProductContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,13 +19,11 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <ReduxProvider>
-          <ProductProvider>
-            <Navbar />
-            <ToastContainer />
-            {children}
-            <Footer />
-            <Toaster />
-          </ProductProvider>
+          <Navbar />
+          <ToastContainer />
+          {children}
+          <Footer />
+          <Toaster />
         </ReduxProvider>
       </body>
     </html>

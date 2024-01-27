@@ -1,6 +1,5 @@
 "use client";
-import { Fragment, useEffect, useState, useContext } from "react";
-import ProductContext from "../context/ProductContext";
+import { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
 import avatar from "../assets/img/user.png";
 import logo from "../assets/img/logo.png";
@@ -15,6 +14,8 @@ import { LuLayoutDashboard } from "react-icons/lu";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { useLogoutMutation } from "../../redux/slices/usersApiSlice";
+import { useGetProductsForAutocompleteMutation } from "../../redux/slices/productsApiSlice";
+import { setProductsForAutoComplete } from "../../redux/slices/productSlice";
 import { logout } from "../../redux/slices/authSlice";
 import {
   calculateTotals,
@@ -40,6 +41,8 @@ export default function Navbar() {
   const { cartItems, amount } = useSelector((state) => state.cart);
 
   const [showAutoComplete, setShowAutoComplete] = useState(false);
+
+  const [getProductsForAutocomplete] = useGetProductsForAutocompleteMutation();
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -72,16 +75,22 @@ export default function Navbar() {
     }
   };
 
-  const { autoComplete, setAutoComplete, searchAutoComplete } =
-    useContext(ProductContext);
+  const { productsForAutoComplete } = useSelector((state) => state.product);
 
   useEffect(() => {
+    const getProductAutocomplete = async () => {
+      try {
+        const res = await getProductsForAutocomplete(searchInput).unwrap();
+        dispatch(setProductsForAutoComplete(res.products));
+      } catch (err) {
+        toast.error(err?.data?.message);
+      }
+    };
+
     if (searchInput !== "") {
-      setShowAutoComplete(true);
-      searchAutoComplete(searchInput);
+      getProductAutocomplete();
     } else {
-      setShowAutoComplete(false);
-      setAutoComplete([]);
+      dispatch(setProductsForAutoComplete([]));
     }
   }, [searchInput]);
 
@@ -189,21 +198,22 @@ export default function Navbar() {
                     </div>
 
                     <div className="w-fit">
-                      {showAutoComplete && autoComplete.length > 0 && (
-                        <ul className="absolute inset-x-0 top-full bg-gray-100 border border-gray-800 rounded-md z-20">
-                          {autoComplete.map((item) => {
-                            return (
-                              <li
-                                key={item._id}
-                                className="px-4 py-2 hover:bg-gray-300 cursor-pointer"
-                                onClick={() => handleSelect(item._id)}
-                              >
-                                {item.name}
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      )}
+                      {showAutoComplete &&
+                        productsForAutoComplete.length > 0 && (
+                          <ul className="absolute inset-x-0 top-full bg-gray-100 border border-gray-800 rounded-md z-20">
+                            {productsForAutoComplete.map((item) => {
+                              return (
+                                <li
+                                  key={item._id}
+                                  className="px-4 py-2 hover:bg-gray-300 cursor-pointer"
+                                  onClick={() => handleSelect(item._id)}
+                                >
+                                  {item.name}
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        )}
                     </div>
                   </div>
 

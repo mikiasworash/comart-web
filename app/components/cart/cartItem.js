@@ -1,18 +1,17 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import {
   removeItem,
   increase,
   decrease,
 } from "../../../redux/slices/cartSlice";
+import { setProduct } from "../../../redux/slices/productSlice";
 import { useDispatch } from "react-redux";
 import Link from "next/link";
-import ProductContext from "../../context/ProductContext";
 
 function CartItem({ cartItem }) {
   const dispatch = useDispatch();
 
   const [amount, setAmount] = useState(cartItem.amount);
-  const { setProduct } = useContext(ProductContext);
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -33,7 +32,7 @@ function CartItem({ cartItem }) {
       <div className="h-24 flex-shrink-0 rounded-md border border-gray-200">
         <Link
           href={`/products/${cartItem.product._id}`}
-          onClick={() => setProduct(cartItem.product)}
+          onClick={() => dispatch(setProduct(cartItem.product))}
         >
           <img
             src={

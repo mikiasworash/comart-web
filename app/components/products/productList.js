@@ -1,10 +1,14 @@
 "use client";
 import axios from "axios";
 import dynamic from "next/dynamic";
-import { useState, useEffect, useContext } from "react";
-import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
-import ProductContext from "../../context/ProductContext";
+import { setProducts, setProduct } from "../../../redux/slices/productSlice";
+import {
+  useGetProductsMutation,
+  useGetProductsByVendorMutation,
+} from "../../../redux/slices/productsApiSlice";
 import Pagination from "../pagination";
 import { toast } from "react-hot-toast";
 import Spinner from "../Spinner";
@@ -29,21 +33,21 @@ const DeleteProductModal = dynamic(
 );
 
 function ProductList() {
+  const dispatch = useDispatch();
+
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [productToChange, setProductToChange] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const { userInfo } = useSelector((state) => state.auth);
+  const { products } = useSelector((state) => state.product);
 
-  const {
-    products,
-    searchProducts,
-    searchAllProducts,
-    setProduct,
-    setProducts,
-    isProductLoading,
-  } = useContext(ProductContext);
+  const [getProducts, { isLoading: isGetProductsLoading }] =
+    useGetProductsMutation();
+  const [getProductsByVendor, { isLoading: isGetProductsByVendorLoading }] =
+    useGetProductsByVendorMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -51,11 +55,32 @@ function ProductList() {
     setCurrentPage(newPage);
   };
 
+  const getAllProducts = async () => {
+    try {
+      const res = await getProducts({ page: currentPage, limit: 5 }).unwrap();
+      dispatch(setProducts(res.products));
+      setIsLoading(false);
+    } catch (err) {
+      toast.error(err?.data?.message);
+    }
+  };
+
+  const getAllProductsByVendor = async () => {
+    try {
+      const res = await getProductsByVendor({
+        userId: userInfo._id,
+        page: currentPage,
+      }).unwrap();
+      dispatch(setProducts(res.products));
+      setIsLoading(false);
+    } catch (err) {
+      toast.error(err?.data?.message);
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    // setProducts([]);
-    userInfo.role == "vendor"
-      ? searchProducts(userInfo._id, currentPage)
-      : searchAllProducts(currentPage, 5);
+    userInfo.role == "admin" ? getAllProducts() : getAllProductsByVendor();
   }, [showAddModal, showEditModal, showDeleteModal, currentPage]);
 
   const handleFeature = async (product) => {
@@ -67,14 +92,14 @@ function ProductList() {
       });
 
       toast.success("Feature status updated");
-      searchAllProducts(currentPage, 5);
+      getAllProducts({ page: currentPage, limit: 5 });
     } catch (error) {
       toast.error("Feature status update failed");
       console.error("Error:", error);
     }
   };
 
-  if (isProductLoading) {
+  if (isLoading) {
     return (
       <div className="h-screen mt-32 mx-auto">
         <Spinner />
@@ -158,7 +183,7 @@ function ProductList() {
                     />
                     <Link
                       href={`/products/${product._id}`}
-                      onClick={() => setProduct(product)}
+                      onClick={() => dispatch(setProduct(product))}
                     >
                       {product.name}
                     </Link>

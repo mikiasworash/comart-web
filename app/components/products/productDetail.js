@@ -1,25 +1,36 @@
 "use client";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "next/navigation";
 import axios from "axios";
-import ProductContext from "../../context/ProductContext";
+import { setProduct } from "../../../redux/slices/productSlice";
+import { useGetProductMutation } from "../../../redux/slices/productsApiSlice";
 import Spinner from "../Spinner";
 import { toast as hotToast } from "react-hot-toast";
 import { getCartItems } from "../../../redux/slices/cartSlice";
 
 function ProductDetail() {
-  const { product, getProduct } = useContext(ProductContext);
+  const [getProduct] = useGetProductMutation();
   const [quantity, setQuantity] = useState(1);
 
   const { userInfo } = useSelector((state) => state.auth);
+  const { product } = useSelector((state) => state.product);
   const dispatch = useDispatch();
 
   const params = useParams();
   const productId = params.productId;
 
   useEffect(() => {
-    getProduct(productId);
+    const getProductDetail = async () => {
+      try {
+        const res = await getProduct(productId).unwrap();
+        dispatch(setProduct(res.product));
+      } catch (err) {
+        toast.error(err?.data?.message);
+      }
+    };
+
+    getProductDetail();
   }, []);
 
   const handleAddToCart = async () => {
