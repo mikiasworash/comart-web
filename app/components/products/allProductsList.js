@@ -6,6 +6,7 @@ import { useGetProductsMutation } from "../../../redux/slices/productsApiSlice";
 import { setAllProducts, setProduct } from "../../../redux/slices/productSlice";
 import Pagination from "../pagination";
 import Spinner from "../Spinner";
+import { toast } from "react-hot-toast";
 
 function AllProductsList() {
   const dispatch = useDispatch();

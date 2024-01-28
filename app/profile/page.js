@@ -1,14 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateUserMutation } from "../../redux/slices/usersApiSlice";
 import { setCredentials } from "../../redux/slices/authSlice";
 import { toast } from "react-hot-toast";
 import Spinner from "../components/Spinner";
-import avatar from "../assets/img/user.png";
 
 function Profile() {
   const [name, setName] = useState("");
@@ -106,7 +104,7 @@ function Profile() {
             className="mt-10 h-20 w-20 mx-auto rounded-full"
             src={
               !photo
-                ? "https://avatar.iran.liara.run/public/35"
+                ? "https://res.cloudinary.com/dlyd6gs9k/image/upload/v1702665044/comart_user_images/loabjl0bfsqgspsxkudc.png"
                 : photo == "default"
                 ? `https://ui-avatars.com/api/?name=${name}`
                 : photo

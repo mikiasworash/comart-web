@@ -1,34 +1,33 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useGetFeaturedProductsMutation } from "../../../redux/slices/productsApiSlice";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  setFeaturedProducts,
   setProduct,
+  setSearchedProducts,
 } from "../../../redux/slices/productSlice";
-import { useSelector, useDispatch } from "react-redux";
-import Pagination from "../pagination";
+import { useGetProductsByNameMutation } from "../../../redux/slices/productsApiSlice";
+import { useSearchParams } from "next/navigation";
 import Spinner from "../Spinner";
 import { toast } from "react-hot-toast";
 
-function FeaturedProductsList() {
+function SearchedProducts() {
   const dispatch = useDispatch();
 
-  const { featuredProducts } = useSelector((state) => state.product);
+  const searchParams = useSearchParams();
+  const query = searchParams.get("query");
+
   const [isLoading, setIsLoading] = useState(true);
-  const [getFeaturedProducts] = useGetFeaturedProductsMutation();
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const { searchedProducts } = useSelector((state) => state.product);
 
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-  };
+  const [getProductsByName] = useGetProductsByNameMutation();
 
   useEffect(() => {
-    const getAllFeaturedProducts = async () => {
+    const searchProducts = async () => {
       try {
-        const res = await getFeaturedProducts(currentPage).unwrap();
-        dispatch(setFeaturedProducts(res.products));
+        const res = await getProductsByName(query).unwrap();
+        dispatch(setSearchedProducts(res.products));
         setIsLoading(false);
       } catch (err) {
         toast.error(err?.data?.message);
@@ -36,57 +35,46 @@ function FeaturedProductsList() {
       }
     };
 
-    getAllFeaturedProducts();
-  }, [currentPage]);
+    searchProducts();
+  }, [query]);
 
   if (isLoading) {
     return (
-      <div className="h-screen mt-32 lg:mt-48">
+      <div className="h-screen mt-32">
         <Spinner />
+        <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-8">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+            Searching for
+          </span>{" "}
+          "{query}"
+        </h1>
       </div>
     );
   }
 
-  if (featuredProducts.length === 0 && currentPage > 1)
+  if (searchedProducts.length == 0)
     return (
-      <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-48">
+      <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-32">
         <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
-          No other Featured Products
+          No Products found
         </span>{" "}
-        found!
-        <button
-          onClick={() => setCurrentPage(1)}
-          className={`flex w-fit mx-auto mt-4 items-center justify-center px-4 h-10 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-          } bg-white border border-gray-300 rounded-lg`}
-        >
-          Go Back
-        </button>
-      </h1>
-    );
-
-  if (featuredProducts.length === 0)
-    return (
-      <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-48">
-        <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
-          No Featured Products
-        </span>{" "}
-        found!
+        for "{query}"
       </h1>
     );
 
   return (
-    <div className="flex flex-col py-4 mt-8 max-w-6xl mx-auto min-h-screen">
+    <div className="flex flex-col p-4 mt-8 max-w-6xl mx-auto min-h-screen">
       <div className="">
         <h1 className="mb-4 text-3xl font-extrabold text-gray-800 md:text-4xl w-fit mx-auto">
           <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
-            Our Featured
+            Results for:
           </span>{" "}
-          Collections
+          {query}
         </h1>
       </div>
       <div className="bg-white">
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          {featuredProducts.map((product) => (
+          {searchedProducts.map((product) => (
             <Link
               href={`/products/${product._id}`}
               key={product._id}
@@ -121,10 +109,8 @@ function FeaturedProductsList() {
           ))}
         </div>
       </div>
-
-      <Pagination page={currentPage} onPageChange={handlePageChange} />
     </div>
   );
 }
 
-export default FeaturedProductsList;
+export default SearchedProducts;

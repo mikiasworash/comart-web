@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useGetCategoriesPaginatedMutation } from "../../../redux/slices/categoriesApiSlice";
 import Pagination from "../pagination";
 import Spinner from "../Spinner";
+import { toast } from "react-hot-toast";
 
 const AddCategoryModal = dynamic(
   () => import("../modals/category/addCategoryModal"),

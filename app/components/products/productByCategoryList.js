@@ -10,6 +10,7 @@ import {
 import Pagination from "../pagination";
 import { useParams } from "next/navigation";
 import Spinner from "../Spinner";
+import { toast } from "react-hot-toast";
 
 function ProductsByCategoryList() {
   const params = useParams();

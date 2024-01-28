@@ -7,6 +7,7 @@ import {
 } from "../../../redux/slices/ordersApiSlice";
 import Pagination from "../pagination";
 import Spinner from "../Spinner";
+import { toast } from "react-hot-toast";
 
 function OrderList() {
   const { userInfo } = useSelector((state) => state.auth);

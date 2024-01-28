@@ -26,7 +26,7 @@ function ProductDetail() {
         const res = await getProduct(productId).unwrap();
         dispatch(setProduct(res.product));
       } catch (err) {
-        toast.error(err?.data?.message);
+        hotToast.error(err?.data?.message);
       }
     };
 

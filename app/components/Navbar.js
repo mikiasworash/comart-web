@@ -1,7 +1,6 @@
 "use client";
 import { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
-import avatar from "../assets/img/user.png";
 import logo from "../assets/img/logo.png";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
@@ -23,12 +22,12 @@ import {
   clearCart,
 } from "../../redux/slices/cartSlice";
 import { useRouter } from "next/navigation";
-import { toast as hotToast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 const navigation = [
-  { name: "All Products", href: "/products", current: false },
-  { name: "Materials", href: "/categories/materials", current: false },
-  { name: "Equipment", href: "/categories/equipment", current: false },
+  { id: 1, name: "All Products", href: "/products", current: false },
+  { id: 2, name: "Materials", href: "/categories/materials", current: false },
+  { id: 3, name: "Equipment", href: "/categories/equipment", current: false },
 ];
 
 function classNames(...classes) {
@@ -39,6 +38,12 @@ export default function Navbar() {
   const [searchInput, setSearchInput] = useState("");
   const { userInfo } = useSelector((state) => state.auth);
   const { cartItems, amount } = useSelector((state) => state.cart);
+  const { productsForAutoComplete } = useSelector((state) => state.product);
+
+  const [name, setName] = useState("");
+  const [photo, setPhoto] = useState("");
+  const [role, setRole] = useState("");
+  const [hasUserData, setHasUserData] = useState(false);
 
   const [showAutoComplete, setShowAutoComplete] = useState(false);
 
@@ -56,6 +61,15 @@ export default function Navbar() {
   }, [cartItems]);
 
   useEffect(() => {
+    if (userInfo) {
+      setName(userInfo.name);
+      setPhoto(userInfo.photo);
+      setRole(userInfo.role);
+      setHasUserData(true);
+    }
+  }, [userInfo]);
+
+  useEffect(() => {
     if (userInfo && userInfo.role === "buyer") {
       dispatch(getCartItems(userInfo._id));
     }
@@ -68,20 +82,23 @@ export default function Navbar() {
       dispatch(logout());
       dispatch(clearCart());
       dispatch(calculateTotals());
-      hotToast.success("Logged Out");
+      setName("");
+      setPhoto("");
+      setRole("");
+      setHasUserData(false);
+      toast.success("Logged Out");
       router.replace("/");
     } catch (error) {
-      hotToast.error(error);
+      toast.error(error);
     }
   };
-
-  const { productsForAutoComplete } = useSelector((state) => state.product);
 
   useEffect(() => {
     const getProductAutocomplete = async () => {
       try {
         const res = await getProductsForAutocomplete(searchInput).unwrap();
         dispatch(setProductsForAutoComplete(res.products));
+        setShowAutoComplete(true);
       } catch (err) {
         toast.error(err?.data?.message);
       }
@@ -90,6 +107,7 @@ export default function Navbar() {
     if (searchInput !== "") {
       getProductAutocomplete();
     } else {
+      setShowAutoComplete(false);
       dispatch(setProductsForAutoComplete([]));
     }
   }, [searchInput]);
@@ -113,10 +131,19 @@ export default function Navbar() {
 
   const handleSearch = async () => {
     if (searchInput == "") {
-      hotToast.error("Please enter a search term");
+      setShowAutoComplete(false);
+      toast.error("Please enter a search term");
     } else {
+      setShowAutoComplete(false);
       router.replace(`/search?query=${searchInput}`);
-      setSearchInput("");
+      // router.replace(`/search?query=${searchInput}`, undefined, {
+      //   onComplete: () => {
+      //     setSearchInput("");
+      //   },
+      // });
+      setTimeout(() => {
+        setSearchInput("");
+      }, 1000);
     }
   };
 
@@ -158,9 +185,9 @@ export default function Navbar() {
                   </div>
                   <div className="hidden sm:ml-6 sm:block">
                     <div className="flex space-x-4">
-                      {navigation.map((item) => (
+                      {navigation.map((item, index) => (
                         <Link
-                          key={item.name}
+                          key={item.id || index}
                           href={item.href}
                           className={classNames(
                             item.current
@@ -217,7 +244,7 @@ export default function Navbar() {
                     </div>
                   </div>
 
-                  {!userInfo || userInfo.role == "buyer" ? (
+                  {!hasUserData || role == "buyer" ? (
                     <div className="mx-4 flow-root">
                       <Link
                         href="/cart"
@@ -233,7 +260,7 @@ export default function Navbar() {
                         <span className="sr-only">items in cart, view bag</span>
                       </Link>
                     </div>
-                  ) : userInfo.role == "admin" ? (
+                  ) : role == "admin" ? (
                     <div className="mx-4 flow-root">
                       <Link
                         href="/admin"
@@ -259,15 +286,14 @@ export default function Navbar() {
                       <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                         <span className="absolute -inset-1.5" />
                         <span className="sr-only">Open user menu</span>
-
                         <img
                           className="h-8 w-8 rounded-full"
                           src={
-                            !userInfo
+                            !photo
                               ? "https://res.cloudinary.com/dlyd6gs9k/image/upload/v1702665044/comart_user_images/loabjl0bfsqgspsxkudc.png"
-                              : userInfo?.photo == "default"
-                              ? `https://ui-avatars.com/api/?name=${userInfo.name}`
-                              : userInfo.photo
+                              : photo == "default"
+                              ? `https://ui-avatars.com/api/?name=${name}`
+                              : photo
                           }
                           alt="user image"
                           width={128}
@@ -284,7 +310,7 @@ export default function Navbar() {
                       leaveFrom="transform opacity-100 scale-100"
                       leaveTo="transform opacity-0 scale-95"
                     >
-                      {userInfo ? (
+                      {hasUserData ? (
                         <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                           <Menu.Item>
                             {({ active }) => (
@@ -299,7 +325,7 @@ export default function Navbar() {
                               </Link>
                             )}
                           </Menu.Item>
-                          {userInfo.role === "vendor" ? (
+                          {role === "vendor" ? (
                             <Menu.Item>
                               {({ active }) => (
                                 <Link
@@ -313,7 +339,7 @@ export default function Navbar() {
                                 </Link>
                               )}
                             </Menu.Item>
-                          ) : userInfo.role === "admin" ? (
+                          ) : role === "admin" ? (
                             <Menu.Item>
                               {({ active }) => (
                                 <Link
@@ -382,10 +408,10 @@ export default function Navbar() {
 
             <Disclosure.Panel className="sm:hidden">
               <div className="space-y-1 px-2 pb-3 pt-2">
-                {navigation.map((item) => (
+                {navigation.map((item, index) => (
                   <Link href={item.href}>
                     <Disclosure.Button
-                      key={item.name}
+                      key={item.id || index}
                       as="a"
                       href={item.href}
                       className={classNames(
