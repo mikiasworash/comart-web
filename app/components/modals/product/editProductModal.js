@@ -1,10 +1,14 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { Fragment } from "react";
-import { toast } from "react-hot-toast";
+import { useState, useEffect, Fragment } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useGetProductsByVendorMutation } from "../../../../redux/slices/productsApiSlice";
+import { setProducts } from "../../../../redux/slices/productSlice";
 import { useGetCategoriesMutation } from "../../../../redux/slices/categoriesApiSlice";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
-function editProductModal({ showEditModal, product, closeEditModal }) {
+function editProductModal({ showEditModal, product, page, closeEditModal }) {
+  const dispatch = useDispatch();
+
   const [name, setName] = useState(product.name);
   const [description, setDescription] = useState(product.description);
   const [price, setPrice] = useState(product.price);
@@ -13,8 +17,9 @@ function editProductModal({ showEditModal, product, closeEditModal }) {
   const [category, setCategory] = useState(product.category._id);
 
   const [selectedImage, setSelectedImage] = useState(null);
-
-  const [getCategories, { isLoading }] = useGetCategoriesMutation();
+  const { userInfo } = useSelector((state) => state.auth);
+  const [getProductsByVendor] = useGetProductsByVendorMutation();
+  const [getCategories] = useGetCategoriesMutation();
 
   useEffect(() => {
     const getAllCategories = async () => {
@@ -56,7 +61,7 @@ function editProductModal({ showEditModal, product, closeEditModal }) {
           productPhoto = secure_url;
         }
 
-        await axios.put(`/api/products/${product._id}`, {
+        const res = await axios.put(`/api/products/${product._id}`, {
           name,
           description,
           category,
@@ -64,6 +69,14 @@ function editProductModal({ showEditModal, product, closeEditModal }) {
           quantity,
           photo: productPhoto,
         });
+        if (res) {
+          const newProducts = await getProductsByVendor({
+            userId: userInfo._id,
+            page: page,
+          }).unwrap();
+          dispatch(setProducts(newProducts.products));
+        }
+
         toast.success("Product updated");
         closeEditModal();
       } catch (error) {

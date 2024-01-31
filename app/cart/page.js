@@ -38,7 +38,7 @@ export default function Cart() {
         if (res) {
           if (item.amount > res.data.product.quantity) {
             toast.error(
-              `Sorry, "${res.data.product.name}" is currently limited to ${res.data.product.quantity}  units in stock`,
+              `Sorry, "${res.data.product.name}" is currently limited to ${res.data.product.quantity} units in stock`,
               {
                 duration: 5000,
               }
@@ -104,7 +104,7 @@ export default function Cart() {
       </div>
     );
 
-  if (!isLoading && amount < 1)
+  if (amount < 1)
     return (
       <div className="h-screen mt-32">
         <h1 className="text-center mt-8 text-3xl">

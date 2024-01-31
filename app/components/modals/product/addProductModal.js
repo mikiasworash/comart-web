@@ -1,10 +1,14 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { Fragment } from "react";
-import { toast } from "react-hot-toast";
+import { useState, useEffect, Fragment } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useGetProductsByVendorMutation } from "../../../../redux/slices/productsApiSlice";
+import { setProducts } from "../../../../redux/slices/productSlice";
 import { useGetCategoriesMutation } from "../../../../redux/slices/categoriesApiSlice";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
-function addProductModal({ showAddModal, closeAddModal }) {
+function addProductModal({ showAddModal, page, closeAddModal }) {
+  const dispatch = useDispatch();
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -13,7 +17,8 @@ function addProductModal({ showAddModal, closeAddModal }) {
   const [category, setCategory] = useState("");
 
   const [selectedImage, setSelectedImage] = useState(null);
-
+  const { userInfo } = useSelector((state) => state.auth);
+  const [getProductsByVendor] = useGetProductsByVendorMutation();
   const [getCategories] = useGetCategoriesMutation();
 
   useEffect(() => {
@@ -58,7 +63,7 @@ function addProductModal({ showAddModal, closeAddModal }) {
         productPhoto = secure_url;
       }
 
-      await axios.post("/api/products", {
+      const res = await axios.post("/api/products", {
         name,
         description,
         category,
@@ -66,6 +71,14 @@ function addProductModal({ showAddModal, closeAddModal }) {
         quantity,
         photo: productPhoto,
       });
+
+      if (res) {
+        const newProducts = await getProductsByVendor({
+          userId: userInfo._id,
+          page: page,
+        }).unwrap();
+        dispatch(setProducts(newProducts.products));
+      }
 
       toast.success("Product added");
       closeAddModal();

@@ -11,6 +11,7 @@ import {
 } from "../../../redux/slices/productsApiSlice";
 import Pagination from "../pagination";
 import { toast } from "react-hot-toast";
+import { IoMdAdd } from "react-icons/io";
 import Spinner from "../Spinner";
 
 const AddProductModal = dynamic(
@@ -112,9 +113,9 @@ function ProductList() {
         {userInfo?.role == "vendor" && (
           <button
             onClick={() => setShowAddModal(true)}
-            className="w-40 mr-8 rounded-md flex items-center justify-center bg-gray-800 px-3 py-1.5 text-md font-semibold leading-6 text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            className="w-32 mr-8 rounded-md flex items-center justify-center bg-gray-800 px-3 py-1.5 text-md font-semibold leading-6 text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
           >
-            Add Product
+            <IoMdAdd className="mr-2" /> Add New
           </button>
         )}
       </div>
@@ -123,6 +124,7 @@ function ProductList() {
         {showAddModal && (
           <AddProductModal
             showAddModal={showAddModal}
+            page={currentPage}
             closeAddModal={() => setShowAddModal(false)}
           />
         )}
@@ -257,6 +259,7 @@ function ProductList() {
               <EditProductModal
                 showEditModal={showEditModal}
                 product={productToChange}
+                page={currentPage}
                 closeEditModal={() => setShowEditModal(false)}
               />
             )}
@@ -265,6 +268,7 @@ function ProductList() {
               <DeleteProductModal
                 showDeleteModal={showDeleteModal}
                 product={productToChange}
+                page={currentPage}
                 closeDeleteModal={() => setShowDeleteModal(false)}
               />
             )}

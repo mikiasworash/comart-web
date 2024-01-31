@@ -6,6 +6,7 @@ import { useGetCategoriesPaginatedMutation } from "../../../redux/slices/categor
 import { setCategoriesPaginated } from "../../../redux/slices/categorySlice";
 import Pagination from "../pagination";
 import Spinner from "../Spinner";
+import { IoMdAdd } from "react-icons/io";
 import { toast } from "react-hot-toast";
 
 const AddCategoryModal = dynamic(
@@ -75,9 +76,9 @@ function CategoryList() {
         </h2>
         <button
           onClick={() => setAddShowModal(true)}
-          className="w-40 mr-8 rounded-md flex items-center justify-center bg-gray-800 px-3 py-1.5 text-md font-semibold leading-6 text-white shadow-sm hover:bg-gray-700"
+          className="w-32 mr-8 rounded-md flex items-center justify-center bg-gray-800 px-3 py-1.5 text-md font-semibold leading-6 text-white shadow-sm hover:bg-gray-700"
         >
-          Add Category
+          <IoMdAdd className="mr-2" /> Add New
         </button>
       </div>
 
