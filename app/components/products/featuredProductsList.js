@@ -31,7 +31,7 @@ function FeaturedProductsList() {
         dispatch(setFeaturedProducts(res.products));
         setIsLoading(false);
       } catch (err) {
-        toast.error(err?.data?.message);
+        toast.error(err?.data?.message || err.error);
         setIsLoading(false);
       }
     };

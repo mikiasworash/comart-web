@@ -7,14 +7,15 @@ import {
 } from "../../../redux/slices/ordersApiSlice";
 import Pagination from "../pagination";
 import Spinner from "../Spinner";
+import { getFormattedDate } from "../../../utils";
 import { toast } from "react-hot-toast";
 
 function OrderList() {
   const { userInfo } = useSelector((state) => state.auth);
   const [orders, setOrders] = useState([]);
 
-  const [getOrders, { isOrdersLoading }] = useGetOrdersMutation();
-  const [getOrdersByVendor, { isOrdersVLoading }] =
+  const [getOrders, { isLoading: isOrdersLoading }] = useGetOrdersMutation();
+  const [getOrdersByVendor, { isLoading: isOrdersVLoading }] =
     useGetOrdersByVendorMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,7 +30,7 @@ function OrderList() {
         const res = await getOrders(currentPage).unwrap();
         setOrders(res.orders);
       } catch (err) {
-        toast.error(err?.data?.message);
+        toast.error(err?.data?.message || err.error);
       }
     };
 
@@ -41,36 +42,12 @@ function OrderList() {
         }).unwrap();
         setOrders(res.orders);
       } catch (err) {
-        toast.error(err?.data?.message);
+        toast.error(err?.data?.message || err.error);
       }
     };
 
     userInfo.role == "admin" ? getAllOrders() : getAllOrdersByVendor();
   }, [currentPage]);
-
-  const getFormattedDate = (inputDate) => {
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-
-    const date = new Date(inputDate);
-    const month = months[date.getMonth()];
-    const day = date.getDate();
-    const year = date.getFullYear();
-
-    return `${month} ${day}, ${year}`;
-  };
 
   if (isOrdersLoading || isOrdersVLoading) {
     return (
@@ -109,7 +86,7 @@ function OrderList() {
                 <th scope="col" className="px-6 py-3">
                   Buyer
                 </th>
-                {userInfo.role == "admin" && (
+                {userInfo?.role == "admin" && (
                   <th scope="col" className="px-6 py-3">
                     Vendor
                   </th>
@@ -159,7 +136,7 @@ function OrderList() {
                       />
                       {orderItem.buyer.name}
                     </td>
-                    {userInfo.role == "admin" && (
+                    {userInfo?.role == "admin" && (
                       <td className="px-6 py-4 text-gray-900">
                         <img
                           className="h-12 w-12 mb-2 rounded-lg mx-auto"

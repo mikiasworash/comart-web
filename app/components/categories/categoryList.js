@@ -1,7 +1,9 @@
 "use client";
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useGetCategoriesPaginatedMutation } from "../../../redux/slices/categoriesApiSlice";
+import { setCategoriesPaginated } from "../../../redux/slices/categorySlice";
 import Pagination from "../pagination";
 import Spinner from "../Spinner";
 import { toast } from "react-hot-toast";
@@ -26,12 +28,14 @@ const DeleteCategoryModal = dynamic(
 );
 
 function CategoryList() {
+  const dispatch = useDispatch();
+
   const [showAddModal, setAddShowModal] = useState(false);
   const [showEditModal, setEditShowModal] = useState(false);
   const [showDeleteModal, setDeleteShowModal] = useState(false);
   const [categoryToChange, setCategory] = useState("");
 
-  const [categoriesPaginated, setCategoriesPaginated] = useState([]);
+  const { categoriesPaginated } = useSelector((state) => state.category);
 
   const [getCategoriesPaginated, { isLoading }] =
     useGetCategoriesPaginatedMutation();
@@ -46,14 +50,14 @@ function CategoryList() {
     const getAllCategoriesPaginated = async () => {
       try {
         const res = await getCategoriesPaginated(currentPage).unwrap();
-        setCategoriesPaginated(res.categories);
+        dispatch(setCategoriesPaginated(res.categories));
       } catch (err) {
-        toast.error(err?.data?.message);
+        toast.error(err?.data?.message || err.error);
       }
     };
 
     getAllCategoriesPaginated();
-  }, [showAddModal, showEditModal, showDeleteModal, currentPage]);
+  }, [currentPage]);
 
   if (isLoading) {
     return (
@@ -81,6 +85,7 @@ function CategoryList() {
         {showAddModal && (
           <AddCategoryModal
             showAddModal={showAddModal}
+            page={currentPage}
             closeAddModal={() => setAddShowModal(false)}
           />
         )}
@@ -148,6 +153,7 @@ function CategoryList() {
               <EditCategoryModal
                 showEditModal={showEditModal}
                 category={categoryToChange}
+                page={currentPage}
                 closeEditModal={() => setEditShowModal(false)}
               />
             )}
@@ -156,6 +162,7 @@ function CategoryList() {
               <DeleteCategoryModal
                 showDeleteModal={showDeleteModal}
                 category={categoryToChange}
+                page={currentPage}
                 closeDeleteModal={() => setDeleteShowModal(false)}
               />
             )}

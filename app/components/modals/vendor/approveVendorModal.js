@@ -1,17 +1,29 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { useGetVendorsMutation } from "../../../../redux/slices/usersApiSlice";
+import { setVendors } from "../../../../redux/slices/userSlice";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
 function ApproveVendorModal({
   showApproveVendorModal,
   vendor,
+  page,
   closeApproveVendorModal,
 }) {
+  const dispatch = useDispatch();
+  const [getVendors] = useGetVendorsMutation();
+
   const handleAprrove = async () => {
     try {
-      await axios.put(`/api/users/vendors/${vendor._id}`, {
+      const res = await axios.put(`/api/users/vendors/${vendor._id}`, {
         active: "active",
       });
+
+      if (res) {
+        const updatedVendors = await getVendors(page).unwrap();
+        dispatch(setVendors(updatedVendors.vendors));
+      }
 
       toast.success("Vendor approved");
       closeApproveVendorModal();

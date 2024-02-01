@@ -54,7 +54,7 @@ function Register() {
         toast.success("Account has been registered");
         router.replace("/");
       } catch (err) {
-        toast.error(err?.data?.message) || err.error;
+        toast.error(err?.data?.message || err.error);
       }
     }
   };

@@ -14,6 +14,7 @@ import { CiBoxList } from "react-icons/ci";
 function AdminDashboard() {
   const [tabIndex, setTabIndex] = useState("1");
   const [name, setName] = useState("");
+  const [role, setRole] = useState("");
 
   const router = useRouter();
   const { userInfo } = useSelector((state) => state.auth);
@@ -25,19 +26,12 @@ function AdminDashboard() {
       router.replace("/");
     } else {
       setName(userInfo.name);
+      setRole(userInfo.role);
       setTabIndex(1);
     }
   }, [router, userInfo]);
 
-  if (!userInfo) {
-    return (
-      <div className="h-screen mt-32">
-        <Spinner />
-      </div>
-    );
-  }
-
-  if (userInfo.role !== "admin") {
+  if (role !== "admin") {
     return (
       <div className="h-screen mt-32">
         <Spinner />

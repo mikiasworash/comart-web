@@ -1,7 +1,9 @@
 "use client";
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useGetVendorsMutation } from "../../../redux/slices/usersApiSlice";
+import { setVendors } from "../../../redux/slices/userSlice";
 import Pagination from "../pagination";
 import Spinner from "../Spinner";
 import { toast } from "react-hot-toast";
@@ -20,10 +22,13 @@ const RejectVendorModal = dynamic(
 );
 
 function VendorList() {
+  const dispatch = useDispatch();
+
   const [showApproveVendorModal, setShowApproveVendorModal] = useState(false);
   const [showRejectVendorModal, setShowRejectVendorModal] = useState(false);
   const [vendorToChange, setVendor] = useState("");
-  const [vendors, setVendors] = useState([]);
+
+  const { vendors } = useSelector((state) => state.user);
 
   const [getVendors, { isLoading }] = useGetVendorsMutation();
 
@@ -37,14 +42,14 @@ function VendorList() {
     const getAllVendors = async () => {
       try {
         const res = await getVendors(currentPage).unwrap();
-        setVendors(res.vendors);
+        dispatch(setVendors(res.vendors));
       } catch (err) {
-        toast.error(err?.data?.message);
+        toast.error(err?.data?.message || err.error);
       }
     };
 
     getAllVendors();
-  }, [showApproveVendorModal, showRejectVendorModal, currentPage]);
+  }, [currentPage]);
 
   if (isLoading) {
     return (
@@ -179,6 +184,7 @@ function VendorList() {
               <ApproveVendorModal
                 showApproveVendorModal={showApproveVendorModal}
                 vendor={vendorToChange}
+                page={currentPage}
                 closeApproveVendorModal={() => setShowApproveVendorModal(false)}
               />
             )}
@@ -186,6 +192,7 @@ function VendorList() {
               <RejectVendorModal
                 showRejectVendorModal={showRejectVendorModal}
                 vendor={vendorToChange}
+                page={currentPage}
                 closeRejectVendorModal={() => setShowRejectVendorModal(false)}
               />
             )}

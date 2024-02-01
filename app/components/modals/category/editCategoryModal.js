@@ -1,21 +1,31 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useGetCategoriesPaginatedMutation } from "../../../../redux/slices/categoriesApiSlice";
+import { setCategoriesPaginated } from "../../../../redux/slices/categorySlice";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
-function EditCategoryModal({ showEditModal, category, closeEditModal }) {
+function EditCategoryModal({ showEditModal, category, page, closeEditModal }) {
+  const dispatch = useDispatch();
   const [CategoryName, setCategoryName] = useState(category.name);
   const [categoryDescription, setCategoryDescription] = useState(
     category.description
   );
 
+  const [getCategoriesPaginated] = useGetCategoriesPaginatedMutation();
+
   const submitEditHandler = async (e) => {
     e.preventDefault();
 
     try {
-      await axios.put(`/api/categories/${category._id}`, {
+      const res = await axios.put(`/api/categories/${category._id}`, {
         name: CategoryName,
         description: categoryDescription,
       });
+      if (res) {
+        const newCategories = await getCategoriesPaginated(page).unwrap();
+        dispatch(setCategoriesPaginated(newCategories.categories));
+      }
       toast.success("Category updated");
       closeEditModal();
     } catch (error) {
@@ -33,7 +43,7 @@ function EditCategoryModal({ showEditModal, category, closeEditModal }) {
           {/*content*/}
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-96 mx-auto bg-white outline-none focus:outline-none">
             {/*header*/}
-            <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+            <div className="flex items-start justify-center p-5 border-b border-solid border-slate-200 rounded-t">
               <h3 className="text-3xl font-semibold">Edit Category</h3>
             </div>
             {/*body*/}
@@ -94,7 +104,7 @@ function EditCategoryModal({ showEditModal, category, closeEditModal }) {
                       type="submit"
                       className="flex w-full justify-center rounded-md bg-gray-800 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-700"
                     >
-                      Edit
+                      Save
                     </button>
                   </div>
                 </form>

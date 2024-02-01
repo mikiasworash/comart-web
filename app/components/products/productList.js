@@ -39,14 +39,13 @@ function ProductList() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [productToChange, setProductToChange] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
 
   const { userInfo } = useSelector((state) => state.auth);
   const { products } = useSelector((state) => state.product);
 
-  const [getProducts, { isLoading: isGetProductsLoading }] =
+  const [getProducts, { isLoading: isProductLoading }] =
     useGetProductsMutation();
-  const [getProductsByVendor, { isLoading: isGetProductsByVendorLoading }] =
+  const [getProductsByVendor, { isLoading: isProductsByVendorLoading }] =
     useGetProductsByVendorMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -59,9 +58,8 @@ function ProductList() {
     try {
       const res = await getProducts({ page: currentPage, limit: 5 }).unwrap();
       dispatch(setProducts(res.products));
-      setIsLoading(false);
     } catch (err) {
-      toast.error(err?.data?.message);
+      toast.error(err?.data?.message || err.error);
     }
   };
 
@@ -72,16 +70,14 @@ function ProductList() {
         page: currentPage,
       }).unwrap();
       dispatch(setProducts(res.products));
-      setIsLoading(false);
     } catch (err) {
-      toast.error(err?.data?.message);
-      setIsLoading(false);
+      toast.error(err?.data?.message || err.error);
     }
   };
 
   useEffect(() => {
     userInfo.role == "admin" ? getAllProducts() : getAllProductsByVendor();
-  }, [showAddModal, showEditModal, showDeleteModal, currentPage]);
+  }, [currentPage]);
 
   const handleFeature = async (product) => {
     try {
@@ -99,7 +95,7 @@ function ProductList() {
     }
   };
 
-  if (isLoading) {
+  if (isProductLoading || isProductsByVendorLoading) {
     return (
       <div className="h-screen mt-32 mx-auto">
         <Spinner />
@@ -113,7 +109,7 @@ function ProductList() {
         <h2 className="mt-4 text-2xl ml-10 font-bold tracking-tight text-gray-900">
           Products
         </h2>
-        {userInfo.role == "vendor" && (
+        {userInfo?.role == "vendor" && (
           <button
             onClick={() => setShowAddModal(true)}
             className="w-40 mr-8 rounded-md flex items-center justify-center bg-gray-800 px-3 py-1.5 text-md font-semibold leading-6 text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
@@ -140,7 +136,7 @@ function ProductList() {
                 <th scope="col" className="px-6 py-3">
                   Product
                 </th>
-                {userInfo.role === "admin" && (
+                {userInfo?.role === "admin" && (
                   <th scope="col" className="px-6 py-3">
                     Vendor
                   </th>
@@ -188,7 +184,7 @@ function ProductList() {
                       {product.name}
                     </Link>
                   </th>
-                  {userInfo.role === "admin" && (
+                  {userInfo?.role === "admin" && (
                     <td className="px-6 py-4">{product.vendor.name}</td>
                   )}
                   <td className="px-6 py-4">{product.category.name}</td>
@@ -206,7 +202,7 @@ function ProductList() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex gap-4 justify-center">
-                      {userInfo.role === "vendor" ? (
+                      {userInfo?.role === "vendor" ? (
                         <>
                           <button
                             onClick={() => {

@@ -100,7 +100,7 @@ export default function Navbar() {
         dispatch(setProductsForAutoComplete(res.products));
         setShowAutoComplete(true);
       } catch (err) {
-        toast.error(err?.data?.message);
+        toast.error(err?.data?.message || err.error);
       }
     };
 

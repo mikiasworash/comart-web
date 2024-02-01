@@ -10,6 +10,7 @@ import { CiBoxList } from "react-icons/ci";
 
 function VendorDashboard() {
   const [name, setName] = useState("");
+  const [role, setRole] = useState("");
   const [tabIndex, setTabIndex] = useState("1");
 
   const router = useRouter();
@@ -23,19 +24,12 @@ function VendorDashboard() {
       router.replace("/");
     } else {
       setName(userInfo.name);
+      setRole(userInfo.role);
       setTabIndex(1);
     }
   }, [router, userInfo]);
 
-  if (!userInfo) {
-    return (
-      <div className="h-screen mt-32">
-        <Spinner />
-      </div>
-    );
-  }
-
-  if (userInfo.role !== "vendor") {
+  if (role !== "vendor") {
     return (
       <div className="h-screen mt-32">
         <Spinner />

@@ -34,7 +34,7 @@ function ProductsByCategoryList() {
         dispatch(setProductsByCategory(res.products));
         setIsLoading(false);
       } catch (err) {
-        toast.error(err?.data?.message);
+        toast.error(err?.data?.message || err.error);
         setIsLoading(false);
       }
     };
