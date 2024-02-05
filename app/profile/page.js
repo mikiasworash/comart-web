@@ -58,7 +58,7 @@ function Profile() {
           formData.append("upload_preset", "comart_user_images");
 
           const cloudinaryRes = await axios.post(
-            process.env.cloudinaryURL,
+            process.env.NEXT_PUBLIC_CLOUDINARY_URL,
             formData
           );
 

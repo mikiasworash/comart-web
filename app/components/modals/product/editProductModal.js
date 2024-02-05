@@ -53,7 +53,7 @@ function editProductModal({ showEditModal, product, page, closeEditModal }) {
           formData.append("upload_preset", "comart_product_images");
 
           const cloudinaryRes = await axios.post(
-            process.env.cloudinaryURL,
+            process.env.NEXT_PUBLIC_CLOUDINARY_URL,
             formData
           );
 

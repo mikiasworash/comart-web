@@ -14,7 +14,7 @@ const nextConfig = {
   },
 
   env: {
-    cloudinaryURL:
+    NEXT_PUBLIC_CLOUDINARY_URL:
       "https://api.cloudinary.com/v1_1/<insert_cloudinary_key>/image/upload",
   },
 };
