@@ -12,9 +12,19 @@ function Footer() {
           <Image className="h-5 w-auto" src={logo} alt="" />
         </Link>
         <p className="text-white">
-          Copyright <span className="text-lg">&copy; </span> 2023 - All Rights
-          Reserved
+          Copyright <span className="text-lg">&copy; </span>{" "}
+          {new Date().getFullYear()} - All Rights Reserved.
         </p>
+        {/* <p className="text-sm text-gray-400 sm:text-center mt-3">
+          Made with ❤️ by{" "}
+          <a
+            href="http://mikiasworash.vercel.app"
+            target="_blank"
+            className="text-green-500 hover:underline underline-offset-4"
+          >
+            M
+          </a>
+        </p> */}
         <div className="flex items-center gap-5 my-4 text-white">
           <Link href="#">
             <div className="rounded-full shadow-lg shadow-gray-600 p-3 cursor-pointer hover:scale-125 ease-in duration-300">

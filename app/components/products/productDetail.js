@@ -6,7 +6,7 @@ import axios from "axios";
 import { setProduct } from "../../../redux/slices/productSlice";
 import { useGetProductMutation } from "../../../redux/slices/productsApiSlice";
 import Spinner from "../Spinner";
-import { toast as hotToast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { getCartItems } from "../../../redux/slices/cartSlice";
 
 function ProductDetail() {
@@ -26,7 +26,8 @@ function ProductDetail() {
         const res = await getProduct(productId).unwrap();
         dispatch(setProduct(res.product));
       } catch (err) {
-        hotToast.error(err?.data?.message || err.error);
+        toast.error("Something went wrong");
+        console.error(err?.data?.message || err.error);
       }
     };
 
@@ -35,7 +36,7 @@ function ProductDetail() {
 
   const handleAddToCart = async () => {
     if (!userInfo || userInfo.role !== "buyer") {
-      hotToast.error("please sign in as a customer");
+      toast.error("please sign in as a customer");
     } else {
       try {
         const res = await axios.post(`/api/cart/${product._id}`, {
@@ -45,10 +46,10 @@ function ProductDetail() {
         if (res) {
           dispatch(getCartItems(userInfo._id));
 
-          hotToast.success("product added to cart");
+          toast.success("product added to cart");
         }
       } catch (error) {
-        hotToast.error(error.response.data.message || "Adding Cart failed");
+        toast.error(error.response.data.message || "Adding Cart failed");
       }
     }
   };

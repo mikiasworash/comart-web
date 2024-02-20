@@ -41,7 +41,8 @@ function page() {
       toast.success("Logged In");
       router.replace("/");
     } catch (err) {
-      toast.error(err?.data?.message || err.error);
+      toast.error("Something went wrong");
+      console.error(err?.data?.message || err.error);
     }
   };
 

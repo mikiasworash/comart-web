@@ -60,7 +60,8 @@ function ProductList() {
       const res = await getProducts({ page: currentPage, limit: 5 }).unwrap();
       dispatch(setProducts(res.products));
     } catch (err) {
-      toast.error(err?.data?.message || err.error);
+      toast.error("Something went wrong");
+      console.error(err?.data?.message || err.error);
     }
   };
 
@@ -72,7 +73,8 @@ function ProductList() {
       }).unwrap();
       dispatch(setProducts(res.products));
     } catch (err) {
-      toast.error(err?.data?.message || err.error);
+      toast.error("Something went wrong");
+      console.error(err?.data?.message || err.error);
     }
   };
 

@@ -81,9 +81,8 @@ function Profile() {
         dispatch(setCredentials({ ...res }));
         toast.success("Profile updated");
       } catch (err) {
-        toast.error(
-          err?.data?.message || err.error || "Failed to update profile"
-        );
+        toast.error("Failed to update profile");
+        console.error(err?.data?.message || err.error);
       }
     }
   };

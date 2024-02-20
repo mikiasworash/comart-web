@@ -30,7 +30,8 @@ function OrderList() {
         const res = await getOrders(currentPage).unwrap();
         setOrders(res.orders);
       } catch (err) {
-        toast.error(err?.data?.message || err.error);
+        toast.error("Something went wrong");
+        console.error(err?.data?.message || err.error);
       }
     };
 
@@ -42,7 +43,8 @@ function OrderList() {
         }).unwrap();
         setOrders(res.orders);
       } catch (err) {
-        toast.error(err?.data?.message || err.error);
+        toast.error("Something went wrong");
+        console.error(err?.data?.message || err.error);
       }
     };
 

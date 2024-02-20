@@ -89,7 +89,8 @@ export default function Navbar() {
       toast.success("Logged Out");
       router.replace("/");
     } catch (error) {
-      toast.error(error);
+      toast.error("Something went wrong");
+      console.log(error);
     }
   };
 
@@ -100,7 +101,8 @@ export default function Navbar() {
         dispatch(setProductsForAutoComplete(res.products));
         setShowAutoComplete(true);
       } catch (err) {
-        toast.error(err?.data?.message || err.error);
+        toast.error("Something went wrong");
+        console.log(err?.data?.message || err.error);
       }
     };
 
