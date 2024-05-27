@@ -22,7 +22,7 @@ cd comart-web
 npm install
 ```
 
-### 3. Rename the `next.config-copy.js` file to `next.config.js` and update your environment variables
+### 3. Rename the `.env-copy` file to `.env` and update your environment variables
 
 ### 4. Run the development server
 
