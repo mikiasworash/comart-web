@@ -16,6 +16,7 @@ function AllProductsList() {
   const [getProducts] = useGetProductsMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(0);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -24,8 +25,10 @@ function AllProductsList() {
   useEffect(() => {
     const getAllProducts = async () => {
       try {
+        setIsLoading(true);
         const res = await getProducts({ page: currentPage }).unwrap();
         dispatch(setAllProducts(res.products));
+        setTotalProducts(res.totalProducts);
         setIsLoading(false);
       } catch (err) {
         toast.error("Something went wrong");
@@ -120,7 +123,12 @@ function AllProductsList() {
         </div>
       </div>
 
-      <Pagination page={currentPage} onPageChange={handlePageChange} />
+      <Pagination
+        page={currentPage}
+        onPageChange={handlePageChange}
+        total={totalProducts}
+        limit={8}
+      />
     </div>
   );
 }

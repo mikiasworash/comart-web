@@ -19,6 +19,7 @@ function FeaturedProductsList() {
   const [getFeaturedProducts] = useGetFeaturedProductsMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(0);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -27,8 +28,10 @@ function FeaturedProductsList() {
   useEffect(() => {
     const getAllFeaturedProducts = async () => {
       try {
+        setIsLoading(true);
         const res = await getFeaturedProducts(currentPage).unwrap();
         dispatch(setFeaturedProducts(res.products));
+        setTotalProducts(res.totalProducts);
         setIsLoading(false);
       } catch (err) {
         toast.error("Something went wrong");
@@ -123,7 +126,12 @@ function FeaturedProductsList() {
         </div>
       </div>
 
-      <Pagination page={currentPage} onPageChange={handlePageChange} />
+      <Pagination
+        page={currentPage}
+        onPageChange={handlePageChange}
+        total={totalProducts}
+        limit={8}
+      />
     </div>
   );
 }

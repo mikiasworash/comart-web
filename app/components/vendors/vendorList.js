@@ -33,6 +33,7 @@ function VendorList() {
   const [getVendors, { isLoading }] = useGetVendorsMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalVendors, setTotalVendors] = useState(0);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -43,6 +44,7 @@ function VendorList() {
       try {
         const res = await getVendors(currentPage).unwrap();
         dispatch(setVendors(res.vendors));
+        setTotalVendors(res.totalVendors);
       } catch (err) {
         toast.error("Something went wrong");
         console.error(err?.data?.message || err.error);
@@ -201,7 +203,12 @@ function VendorList() {
         </div>
       </div>
 
-      <Pagination page={currentPage} onPageChange={handlePageChange} />
+      <Pagination
+        page={currentPage}
+        onPageChange={handlePageChange}
+        total={totalVendors}
+        limit={5}
+      />
     </div>
   );
 }

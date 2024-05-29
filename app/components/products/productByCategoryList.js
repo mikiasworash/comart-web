@@ -23,15 +23,18 @@ function ProductsByCategoryList() {
   const [getProductsByCategory] = useGetProductsByCategoryMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(0);
 
   useEffect(() => {
     const getAllProductsByCategory = async () => {
       try {
+        setIsLoading(true);
         const res = await getProductsByCategory({
           category: category,
           page: currentPage,
         }).unwrap();
         dispatch(setProductsByCategory(res.products));
+        setTotalProducts(res.totalProducts);
         setIsLoading(false);
       } catch (err) {
         toast.error("Something went wrong");
@@ -130,7 +133,12 @@ function ProductsByCategoryList() {
         </div>
       </div>
 
-      <Pagination page={currentPage} onPageChange={handlePageChange} />
+      <Pagination
+        page={currentPage}
+        onPageChange={handlePageChange}
+        total={totalProducts}
+        limit={8}
+      />
     </div>
   );
 }

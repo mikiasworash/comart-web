@@ -19,6 +19,7 @@ function OrderList() {
     useGetOrdersByVendorMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalOrders, setTotalOrders] = useState(0);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -29,6 +30,7 @@ function OrderList() {
       try {
         const res = await getOrders(currentPage).unwrap();
         setOrders(res.orders);
+        setTotalOrders(res.totalOrders);
       } catch (err) {
         toast.error("Something went wrong");
         console.error(err?.data?.message || err.error);
@@ -42,6 +44,7 @@ function OrderList() {
           page: currentPage,
         }).unwrap();
         setOrders(res.orders);
+        setTotalOrders(res.totalOrders);
       } catch (err) {
         toast.error("Something went wrong");
         console.error(err?.data?.message || err.error);
@@ -172,7 +175,12 @@ function OrderList() {
         </div>
       </div>
 
-      <Pagination page={currentPage} onPageChange={handlePageChange} />
+      <Pagination
+        page={currentPage}
+        onPageChange={handlePageChange}
+        total={totalOrders}
+        limit={5}
+      />
     </div>
   );
 }

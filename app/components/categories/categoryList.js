@@ -42,6 +42,7 @@ function CategoryList() {
     useGetCategoriesPaginatedMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalCategories, setTotalCategories] = useState(0);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -52,6 +53,7 @@ function CategoryList() {
       try {
         const res = await getCategoriesPaginated(currentPage).unwrap();
         dispatch(setCategoriesPaginated(res.categories));
+        setTotalCategories(res.totalCategories);
       } catch (err) {
         toast.error("Something went wrong");
         console.error(err?.data?.message || err.error);
@@ -172,7 +174,12 @@ function CategoryList() {
         </div>
       </div>
 
-      <Pagination page={currentPage} onPageChange={handlePageChange} />
+      <Pagination
+        page={currentPage}
+        onPageChange={handlePageChange}
+        total={totalCategories}
+        limit={5}
+      />
     </div>
   );
 }

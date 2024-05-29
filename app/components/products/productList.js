@@ -50,6 +50,7 @@ function ProductList() {
     useGetProductsByVendorMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(0);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -59,6 +60,7 @@ function ProductList() {
     try {
       const res = await getProducts({ page: currentPage, limit: 5 }).unwrap();
       dispatch(setProducts(res.products));
+      setTotalProducts(res.totalProducts);
     } catch (err) {
       toast.error("Something went wrong");
       console.error(err?.data?.message || err.error);
@@ -72,6 +74,7 @@ function ProductList() {
         page: currentPage,
       }).unwrap();
       dispatch(setProducts(res.products));
+      setTotalProducts(res.totalProducts);
     } catch (err) {
       toast.error("Something went wrong");
       console.error(err?.data?.message || err.error);
@@ -278,7 +281,12 @@ function ProductList() {
         </div>
       </div>
 
-      <Pagination page={currentPage} onPageChange={handlePageChange} />
+      <Pagination
+        page={currentPage}
+        onPageChange={handlePageChange}
+        total={totalProducts}
+        limit={5}
+      />
     </div>
   );
 }
