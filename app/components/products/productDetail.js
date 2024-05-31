@@ -67,7 +67,7 @@ function ProductDetail() {
       <div className="container px-5 py-4 lg:py-24 mx-auto">
         <div className="lg:w-4/5 mx-auto flex flex-wrap lg:gap-16">
           <img
-            className="lg:w-2/5 w-full object-cover object-center rounded border border-gray-200 transition ease-in-out delay-150 hover:-translate-y-1 lg:hover:scale-110 duration-300"
+            className="lg:w-2/5 w-full object-cover object-center rounded-lg border border-gray-200 transition ease-in-out delay-150 hover:-translate-y-1 lg:hover:scale-125 duration-300"
             src={
               product.photo === "default"
                 ? "https://placehold.co/450x450"

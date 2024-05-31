@@ -6,8 +6,8 @@ import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import { setProducts, setProduct } from "../../../redux/slices/productSlice";
 import {
-  useGetProductsMutation,
-  useGetProductsByVendorMutation,
+  useGetProductsQuery,
+  useGetProductsByVendorQuery,
 } from "../../../redux/slices/productsApiSlice";
 import Pagination from "../pagination";
 import { toast } from "react-hot-toast";
@@ -44,11 +44,6 @@ function ProductList() {
   const { userInfo } = useSelector((state) => state.auth);
   const { products } = useSelector((state) => state.product);
 
-  const [getProducts, { isLoading: isProductLoading }] =
-    useGetProductsMutation();
-  const [getProductsByVendor, { isLoading: isProductsByVendorLoading }] =
-    useGetProductsByVendorMutation();
-
   const [currentPage, setCurrentPage] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
 
@@ -56,34 +51,33 @@ function ProductList() {
     setCurrentPage(newPage);
   };
 
-  const getAllProducts = async () => {
-    try {
-      const res = await getProducts({ page: currentPage, limit: 5 }).unwrap();
-      dispatch(setProducts(res.products));
-      setTotalProducts(res.totalProducts);
-    } catch (err) {
-      toast.error("Something went wrong");
-      console.error(err?.data?.message || err.error);
-    }
-  };
+  const isAdmin = userInfo?.role === "admin";
 
-  const getAllProductsByVendor = async () => {
-    try {
-      const res = await getProductsByVendor({
-        userId: userInfo._id,
-        page: currentPage,
-      }).unwrap();
-      dispatch(setProducts(res.products));
-      setTotalProducts(res.totalProducts);
-    } catch (err) {
-      toast.error("Something went wrong");
-      console.error(err?.data?.message || err.error);
-    }
-  };
+  const {
+    data: productsData,
+    isLoading: isAllProductsLoading,
+    isFetching: isAllProductsFetching,
+    refetch: refetchProducts,
+  } = useGetProductsQuery({ page: currentPage, limit: 5 }, { skip: !isAdmin });
+
+  const {
+    data: vendorProductsData,
+    isLoading: isProductsByVendorLoading,
+    isFetching: isProductsByVendorFetching,
+  } = useGetProductsByVendorQuery(
+    { userId: userInfo?._id, page: currentPage },
+    { skip: isAdmin }
+  );
 
   useEffect(() => {
-    userInfo.role == "admin" ? getAllProducts() : getAllProductsByVendor();
-  }, [currentPage]);
+    if (isAdmin && productsData) {
+      dispatch(setProducts(productsData.products));
+      setTotalProducts(productsData.totalProducts);
+    } else if (!isAdmin && vendorProductsData) {
+      dispatch(setProducts(vendorProductsData.products));
+      setTotalProducts(vendorProductsData.totalProducts);
+    }
+  }, [productsData, vendorProductsData, dispatch, isAdmin]);
 
   const handleFeature = async (product) => {
     try {
@@ -92,16 +86,28 @@ function ProductList() {
           "Content-Type": "application/json",
         },
       });
-
+      refetchProducts();
       toast.success("Feature status updated");
-      getAllProducts({ page: currentPage, limit: 5 });
     } catch (error) {
       toast.error("Feature status update failed");
       console.error("Error:", error);
     }
   };
 
-  if (isProductLoading || isProductsByVendorLoading) {
+  if (
+    isAllProductsLoading ||
+    isProductsByVendorLoading ||
+    isAllProductsFetching ||
+    isProductsByVendorFetching
+  ) {
+    return (
+      <div className="h-screen mt-32 mx-auto">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (!userInfo) {
     return (
       <div className="h-screen mt-32 mx-auto">
         <Spinner />
@@ -129,7 +135,7 @@ function ProductList() {
         {showAddModal && (
           <AddProductModal
             showAddModal={showAddModal}
-            page={currentPage}
+            totalProducts={totalProducts}
             closeAddModal={() => setShowAddModal(false)}
           />
         )}

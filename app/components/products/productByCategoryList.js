@@ -1,13 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useSelector, useDispatch } from "react-redux";
-import { useGetProductsByCategoryMutation } from "../../../redux/slices/productsApiSlice";
-import {
-  setProductsByCategory,
-  setProduct,
-} from "../../../redux/slices/productSlice";
-import Pagination from "../pagination";
+import { useDispatch } from "react-redux";
+import { useGetProductsByCategoryQuery } from "../../../redux/slices/productsApiSlice";
+import { setProduct } from "../../../redux/slices/productSlice";
+import { useInView } from "react-intersection-observer";
 import { useParams } from "next/navigation";
 import Spinner from "../Spinner";
 import { toast } from "react-hot-toast";
@@ -18,64 +15,64 @@ function ProductsByCategoryList() {
 
   const dispatch = useDispatch();
 
-  const { productsByCategory } = useSelector((state) => state.product);
-  const [isLoading, setIsLoading] = useState(true);
-  const [getProductsByCategory] = useGetProductsByCategoryMutation();
+  const [items, setItems] = useState([]);
+  const [page, setPage] = useState(1);
+  const limit = 8;
+  const [hasMore, setHasMore] = useState(true);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalProducts, setTotalProducts] = useState(0);
+  const { data, error, isLoading, isFetching } = useGetProductsByCategoryQuery({
+    category,
+    page,
+    limit,
+  });
 
   useEffect(() => {
-    const getAllProductsByCategory = async () => {
-      try {
-        setIsLoading(true);
-        const res = await getProductsByCategory({
-          category: category,
-          page: currentPage,
-        }).unwrap();
-        dispatch(setProductsByCategory(res.products));
-        setTotalProducts(res.totalProducts);
-        setIsLoading(false);
-      } catch (err) {
-        toast.error("Something went wrong");
-        console.error(err?.data?.message || err.error);
-        setIsLoading(false);
+    setItems([]);
+    setPage(1);
+    setHasMore(true);
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      setItems((prevItems) => [...prevItems, ...data.products]);
+      if (data.products.length < limit) {
+        setHasMore(false);
       }
-    };
+    }
+  }, [data]);
 
-    getAllProductsByCategory();
-  }, [category, currentPage]);
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
 
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-  };
+  useEffect(() => {
+    if (inView && !isFetching && hasMore) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, [inView, isFetching, hasMore]);
+
+  if (error) {
+    toast.error("Something went wrong");
+
+    return (
+      <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-48">
+        <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+          No Products
+        </span>{" "}
+        found!
+      </h1>
+    );
+  }
 
   if (isLoading) {
     return (
-      <div className="h-screen mt-32 lg:mt-48">
+      <div className="h-screen mt-32">
         <Spinner />
       </div>
     );
   }
 
-  if (productsByCategory.length == 0 && currentPage > 1)
-    return (
-      <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-32">
-        <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
-          No other products found
-        </span>{" "}
-        under "{category}"
-        <button
-          onClick={() => setCurrentPage(1)}
-          className={`flex w-fit mx-auto mt-4 items-center justify-center px-4 h-10 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-          } bg-white border border-gray-300 rounded-lg`}
-        >
-          Go Back
-        </button>
-      </h1>
-    );
-
-  if (productsByCategory.length == 0)
+  if (items.length == 0)
     return (
       <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-32">
         <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
@@ -97,7 +94,7 @@ function ProductsByCategoryList() {
       </div>
       <div className="bg-white">
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          {productsByCategory.map((product) => (
+          {items.map((product) => (
             <Link
               href={`/products/${product._id}`}
               key={product._id}
@@ -133,12 +130,13 @@ function ProductsByCategoryList() {
         </div>
       </div>
 
-      <Pagination
-        page={currentPage}
-        onPageChange={handlePageChange}
-        total={totalProducts}
-        limit={8}
-      />
+      <div ref={ref}>
+        {isFetching && (
+          <div className="mt-16">
+            <Spinner />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

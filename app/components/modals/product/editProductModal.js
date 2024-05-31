@@ -1,6 +1,6 @@
 import { useState, useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useGetProductsByVendorMutation } from "../../../../redux/slices/productsApiSlice";
+import { useGetProductsByVendorQuery } from "../../../../redux/slices/productsApiSlice";
 import { setProducts } from "../../../../redux/slices/productSlice";
 import { useGetCategoriesMutation } from "../../../../redux/slices/categoriesApiSlice";
 import axios from "axios";
@@ -18,7 +18,8 @@ function editProductModal({ showEditModal, product, page, closeEditModal }) {
 
   const [selectedImage, setSelectedImage] = useState(null);
   const { userInfo } = useSelector((state) => state.auth);
-  const [getProductsByVendor] = useGetProductsByVendorMutation();
+  const { data: vendorProductsData, refetch: refetchVendorProducts } =
+    useGetProductsByVendorQuery({ userId: userInfo?._id, page: page });
   const [getCategories] = useGetCategoriesMutation();
 
   useEffect(() => {
@@ -71,11 +72,8 @@ function editProductModal({ showEditModal, product, page, closeEditModal }) {
           photo: productPhoto,
         });
         if (res) {
-          const newProducts = await getProductsByVendor({
-            userId: userInfo._id,
-            page: page,
-          }).unwrap();
-          dispatch(setProducts(newProducts.products));
+          refetchVendorProducts();
+          dispatch(setProducts(vendorProductsData.products));
         }
 
         toast.success("Product updated");

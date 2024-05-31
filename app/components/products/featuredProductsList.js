@@ -1,78 +1,77 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useGetFeaturedProductsMutation } from "../../../redux/slices/productsApiSlice";
-import {
-  setFeaturedProducts,
-  setProduct,
-} from "../../../redux/slices/productSlice";
-import { useSelector, useDispatch } from "react-redux";
-import Pagination from "../pagination";
+import { useInView } from "react-intersection-observer";
+import { useGetFeaturedProductsQuery } from "../../../redux/slices/productsApiSlice";
+import { setProduct } from "../../../redux/slices/productSlice";
+import { useDispatch } from "react-redux";
 import Spinner from "../Spinner";
 import { toast } from "react-hot-toast";
 
 function FeaturedProductsList() {
   const dispatch = useDispatch();
 
-  const { featuredProducts } = useSelector((state) => state.product);
-  const [isLoading, setIsLoading] = useState(true);
-  const [getFeaturedProducts] = useGetFeaturedProductsMutation();
+  const [items, setItems] = useState([]);
+  const [page, setPage] = useState(1);
+  const limit = 8;
+  const [hasMore, setHasMore] = useState(true);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalProducts, setTotalProducts] = useState(0);
-
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-  };
+  const { data, error, isLoading, isFetching } = useGetFeaturedProductsQuery({
+    page,
+    limit,
+  });
 
   useEffect(() => {
-    const getAllFeaturedProducts = async () => {
-      try {
-        setIsLoading(true);
-        const res = await getFeaturedProducts(currentPage).unwrap();
-        dispatch(setFeaturedProducts(res.products));
-        setTotalProducts(res.totalProducts);
-        setIsLoading(false);
-      } catch (err) {
-        toast.error("Something went wrong");
-        console.error(err?.data?.message || err.error);
-        setIsLoading(false);
-      }
-    };
+    setItems([]);
+    setPage(1);
+    setHasMore(true);
+  }, []);
 
-    getAllFeaturedProducts();
-  }, [currentPage]);
+  useEffect(() => {
+    if (data) {
+      setItems((prevItems) => [...prevItems, ...data.products]);
+      if (data.products.length < limit) {
+        setHasMore(false);
+      }
+    }
+  }, [data]);
+
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+  });
+
+  useEffect(() => {
+    if (inView && !isFetching && hasMore) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, [inView, isFetching, hasMore]);
+
+  if (error) {
+    toast.error("Something went wrong");
+
+    return (
+      <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-48">
+        <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+          No Products
+        </span>{" "}
+        found!
+      </h1>
+    );
+  }
 
   if (isLoading) {
     return (
-      <div className="h-screen mt-32 lg:mt-48">
+      <div className="h-screen mt-32">
         <Spinner />
       </div>
     );
   }
 
-  if (featuredProducts.length === 0 && currentPage > 1)
+  if (items.length === 0)
     return (
       <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-48">
         <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
-          No other Featured Products
-        </span>{" "}
-        found!
-        <button
-          onClick={() => setCurrentPage(1)}
-          className={`flex w-fit mx-auto mt-4 items-center justify-center px-4 h-10 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-          } bg-white border border-gray-300 rounded-lg`}
-        >
-          Go Back
-        </button>
-      </h1>
-    );
-
-  if (featuredProducts.length === 0)
-    return (
-      <h1 className="text-center text-3xl w-fit h-screen mx-auto mt-48">
-        <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
-          No Featured Products
+          No Products
         </span>{" "}
         found!
       </h1>
@@ -90,7 +89,7 @@ function FeaturedProductsList() {
       </div>
       <div className="bg-white">
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          {featuredProducts.map((product) => (
+          {items.map((product) => (
             <Link
               href={`/products/${product._id}`}
               key={product._id}
@@ -126,12 +125,13 @@ function FeaturedProductsList() {
         </div>
       </div>
 
-      <Pagination
-        page={currentPage}
-        onPageChange={handlePageChange}
-        total={totalProducts}
-        limit={8}
-      />
+      <div ref={ref}>
+        {isFetching && (
+          <div className="mt-16">
+            <Spinner />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -9,21 +9,21 @@ export const productsApiSlices = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
-    getProducts: builder.mutation({
+    getProducts: builder.query({
       query: ({ page, limit = 8 }) => ({
         url: `${PRODUCTS_URL}/?page=${page}&limit=${limit}`,
         method: "GET",
       }),
     }),
-    getProductsByVendor: builder.mutation({
+    getProductsByVendor: builder.query({
       query: ({ userId, page }) => ({
         url: `${PRODUCTS_URL}/vendor/${userId}?page=${page}`,
         method: "GET",
       }),
     }),
-    getProductsByCategory: builder.mutation({
-      query: ({ category, page }) => ({
-        url: `${PRODUCTS_URL}/categories/${category}?page=${page}`,
+    getProductsByCategory: builder.query({
+      query: ({ category, page, limit = 8 }) => ({
+        url: `${PRODUCTS_URL}/categories/${category}?page=${page}&limit=${limit}`,
         method: "GET",
       }),
     }),
@@ -39,9 +39,9 @@ export const productsApiSlices = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
-    getFeaturedProducts: builder.mutation({
-      query: (page) => ({
-        url: `${PRODUCTS_URL}/featured?page=${page}`,
+    getFeaturedProducts: builder.query({
+      query: ({ page, limit = 8 }) => ({
+        url: `${PRODUCTS_URL}/featured?page=${page}&limit=${limit}`,
         method: "GET",
       }),
     }),
@@ -50,10 +50,10 @@ export const productsApiSlices = apiSlice.injectEndpoints({
 
 export const {
   useGetProductMutation,
-  useGetProductsMutation,
-  useGetProductsByVendorMutation,
-  useGetProductsByCategoryMutation,
+  useGetProductsQuery,
+  useGetProductsByVendorQuery,
+  useGetProductsByCategoryQuery,
   useGetProductsByNameMutation,
   useGetProductsForAutocompleteMutation,
-  useGetFeaturedProductsMutation,
+  useGetFeaturedProductsQuery,
 } = productsApiSlices;

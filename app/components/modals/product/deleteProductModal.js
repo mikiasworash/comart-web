@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useGetProductsByVendorMutation } from "../../../../redux/slices/productsApiSlice";
+import { useGetProductsByVendorQuery } from "../../../../redux/slices/productsApiSlice";
 import { setProducts } from "../../../../redux/slices/productSlice";
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -13,18 +13,16 @@ function DeleteProductModal({
 }) {
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state) => state.auth);
-  const [getProductsByVendor] = useGetProductsByVendorMutation();
+  const { data: vendorProductsData, refetch: refetchVendorProducts } =
+    useGetProductsByVendorQuery({ userId: userInfo?._id, page: page });
 
   const handleDelete = async () => {
     try {
       const res = await axios.delete(`/api/products/${product._id}`);
 
       if (res) {
-        const newProducts = await getProductsByVendor({
-          userId: userInfo._id,
-          page: page,
-        }).unwrap();
-        dispatch(setProducts(newProducts.products));
+        refetchVendorProducts();
+        dispatch(setProducts(vendorProductsData.products));
       }
 
       toast.success("Product deleted");

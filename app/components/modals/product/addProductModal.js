@@ -1,12 +1,12 @@
 import { useState, useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useGetProductsByVendorMutation } from "../../../../redux/slices/productsApiSlice";
+import { useGetProductsByVendorQuery } from "../../../../redux/slices/productsApiSlice";
 import { setProducts } from "../../../../redux/slices/productSlice";
 import { useGetCategoriesMutation } from "../../../../redux/slices/categoriesApiSlice";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
-function addProductModal({ showAddModal, page, closeAddModal }) {
+function addProductModal({ showAddModal, totalProducts, closeAddModal }) {
   const dispatch = useDispatch();
 
   const [name, setName] = useState("");
@@ -18,7 +18,12 @@ function addProductModal({ showAddModal, page, closeAddModal }) {
 
   const [selectedImage, setSelectedImage] = useState(null);
   const { userInfo } = useSelector((state) => state.auth);
-  const [getProductsByVendor] = useGetProductsByVendorMutation();
+  const endOfPage = totalProducts % 5 === 0;
+  const lastPage = endOfPage
+    ? Math.ceil(totalProducts / 5) + 1
+    : Math.ceil(totalProducts / 5);
+  const { data: vendorProductsData, refetch: refetchVendorProducts } =
+    useGetProductsByVendorQuery({ userId: userInfo?._id, page: lastPage });
   const [getCategories] = useGetCategoriesMutation();
 
   useEffect(() => {
@@ -74,11 +79,8 @@ function addProductModal({ showAddModal, page, closeAddModal }) {
       });
 
       if (res) {
-        const newProducts = await getProductsByVendor({
-          userId: userInfo._id,
-          page: page,
-        }).unwrap();
-        dispatch(setProducts(newProducts.products));
+        refetchVendorProducts();
+        dispatch(setProducts(vendorProductsData.products));
       }
 
       toast.success("Product added");
