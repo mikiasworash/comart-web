@@ -194,7 +194,7 @@ function Register() {
                       value="buyer"
                       name="list-radio"
                       onChange={(e) => setRole(e.target.value)}
-                      checked
+                      checked={role === "buyer"}
                       class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-30"
                     />
                     <label
@@ -212,6 +212,7 @@ function Register() {
                       type="radio"
                       value="vendor"
                       onChange={(e) => setRole(e.target.value)}
+                      checked={role === "vendor"}
                       name="list-radio"
                       class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300"
                     />
